@@ -3,6 +3,7 @@ package grytsenko.library.service;
 import static grytsenko.library.test.MockitoUtils.doReturnFirstArgument;
 import static grytsenko.library.test.TestUsers.GUEST_NAME;
 import static grytsenko.library.test.TestUsers.guest;
+import static grytsenko.library.test.TestUsers.guestLdap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
@@ -14,6 +15,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import grytsenko.library.model.User;
 import grytsenko.library.model.UserRole;
+import grytsenko.library.repository.LdapRepository;
 import grytsenko.library.repository.UserRepository;
 
 import org.junit.Before;
@@ -27,12 +29,18 @@ public class UserServiceTests {
     UserRepository userRepository;
 
     UserService userService;
+    LdapRepository ldapRepository;
 
     @Before
-    public void prepare() {
+    public void prepare() throws Exception {
+        // Setup data.
         userRepository = mock(UserRepository.class);
+        ldapRepository = mock(LdapRepository.class);
 
-        userService = new UserService(userRepository);
+        userService = new UserService(userRepository, ldapRepository);
+
+        // Setup behavior.
+        doReturn(guestLdap()).when(ldapRepository).findUserInLdap(anyString());
     }
 
     /**
@@ -44,7 +52,8 @@ public class UserServiceTests {
         User guest = guest();
 
         // Setup behavior.
-        doReturn(guest).when(userRepository).findByName(anyString());
+        doReturn(guest).when(userRepository).findByUsername(anyString());
+        doReturnFirstArgument().when(userRepository).save(any(User.class));
 
         // Execute.
         User user = userService.get(GUEST_NAME);
@@ -53,7 +62,10 @@ public class UserServiceTests {
         assertSame(guest, user);
 
         // Verify behavior.
-        verify(userRepository).findByName(GUEST_NAME);
+        verify(ldapRepository).findUserInLdap(GUEST_NAME);
+        verifyNoMoreInteractions(ldapRepository);
+        verify(userRepository).findByUsername(GUEST_NAME);
+        verify(userRepository).save(user);
         verifyNoMoreInteractions(userRepository);
     }
 
@@ -63,21 +75,22 @@ public class UserServiceTests {
     @Test
     public void testGetUnknownUser() throws Exception {
         // Setup behavior.
-        doReturn(null).when(userRepository).findByName(anyString());
-        doReturnFirstArgument().when(userRepository).saveAndFlush(
-                any(User.class));
+        doReturn(null).when(userRepository).findByUsername(anyString());
+        doReturnFirstArgument().when(userRepository).save(any(User.class));
 
         // Execute.
         User user = userService.get(GUEST_NAME);
 
         // Verify state.
         assertNotNull(user);
-        assertEquals(GUEST_NAME, user.getName());
+        assertEquals(GUEST_NAME, user.getUsername());
         assertEquals(UserRole.USER, user.getRole());
 
         // Verify behavior.
-        verify(userRepository).findByName(GUEST_NAME);
-        verify(userRepository).saveAndFlush(any(User.class));
+        verify(ldapRepository).findUserInLdap(GUEST_NAME);
+        verifyNoMoreInteractions(ldapRepository);
+        verify(userRepository).findByUsername(GUEST_NAME);
+        verify(userRepository).save(any(User.class));
         verifyNoMoreInteractions(userRepository);
     }
 

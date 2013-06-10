@@ -20,5 +20,6 @@
 
     <context:component-scan base-package="grytsenko.library.controller" />
     <context:component-scan base-package="grytsenko.library.service" />
+    <context:component-scan base-package="grytsenko.library.repository" />
 
 </beans>

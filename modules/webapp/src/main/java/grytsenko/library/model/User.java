@@ -24,8 +24,20 @@ public class User implements Serializable {
     private Long id;
 
     @Basic
-    @Column(name = "name", length = 20)
-    private String name;
+    @Column(name = "username", length = 20)
+    private String username;
+
+    @Basic
+    @Column(name = "firstname", length = 20)
+    private String firstname;
+    @Basic
+    @Column(name = "lastname", length = 20)
+    private String lastname;
+
+    @Basic
+    @Column(name = "mail", length = 50)
+    private String mail;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "role", length = 10)
     private UserRole role;
@@ -41,12 +53,36 @@ public class User implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
+    public String getMail() {
+        return mail;
+    }
+
+    public void setMail(String mail) {
+        this.mail = mail;
     }
 
     public UserRole getRole() {

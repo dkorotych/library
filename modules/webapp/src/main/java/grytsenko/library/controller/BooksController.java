@@ -53,7 +53,7 @@ public class BooksController {
     public User addCurrentUser(Principal principal) {
         String username = principal.getName();
         User user = userService.get(username);
-        LOGGER.debug("Found user {} with role {}.", user.getName(),
+        LOGGER.debug("Found user {} with role {}.", user.getUsername(),
                 user.getRole());
         return user;
     }
@@ -116,7 +116,7 @@ public class BooksController {
     public String reserve(@RequestParam("id") Long bookId,
             @ModelAttribute("user") User user,
             RedirectAttributes redirectAttributes) {
-        String username = user.getName();
+        String username = user.getUsername();
 
         LOGGER.debug("User {} reserves the book {}.", username, bookId);
 
@@ -140,7 +140,7 @@ public class BooksController {
     public String release(@RequestParam("id") Long bookId,
             @ModelAttribute("user") User user,
             RedirectAttributes redirectAttributes) {
-        String username = user.getName();
+        String username = user.getUsername();
 
         LOGGER.debug("User {} releases the book {}.", username, bookId);
 
@@ -164,7 +164,7 @@ public class BooksController {
     public String takeOut(@RequestParam("id") Long bookId,
             @ModelAttribute("user") User user,
             RedirectAttributes redirectAttributes) {
-        String username = user.getName();
+        String username = user.getUsername();
 
         LOGGER.debug("User {} takes out the book {}.", username, bookId);
 
@@ -188,7 +188,7 @@ public class BooksController {
     public String takeBack(@RequestParam("id") Long bookId,
             @ModelAttribute("user") User user,
             RedirectAttributes redirectAttributes) {
-        String username = user.getName();
+        String username = user.getUsername();
 
         LOGGER.debug("User {} takes back the book {}.", username, bookId);
 

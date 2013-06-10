@@ -1,5 +1,6 @@
 package grytsenko.library.test;
 
+import grytsenko.library.model.LdapUser;
 import grytsenko.library.model.User;
 import grytsenko.library.model.UserRole;
 
@@ -13,30 +14,41 @@ public final class TestUsers {
      */
     public static final String GUEST_NAME = "guest";
     /**
+     * The mail for guest.
+     */
+    private static final String GUEST_MAIL = "guest@test.com";
+
+    /**
      * The user name for manager.
      */
     public static final String MANAGER_NAME = "manager";
 
     /**
      * Creates a guest.
-     * 
-     * @return created user.
      */
     public static User guest() {
         User guest = new User();
-        guest.setName(GUEST_NAME);
+        guest.setUsername(GUEST_NAME);
         guest.setRole(UserRole.USER);
         return guest;
     }
 
     /**
+     * Creates a LDAP user for guest.
+     */
+    public static LdapUser guestLdap() {
+        LdapUser ldapGuest = new LdapUser();
+        ldapGuest.setUsername(GUEST_NAME);
+        ldapGuest.setMail(GUEST_MAIL);
+        return ldapGuest;
+    }
+
+    /**
      * Creates a manager.
-     * 
-     * @return created user.
      */
     public static User manager() {
         User manager = new User();
-        manager.setName(MANAGER_NAME);
+        manager.setUsername(MANAGER_NAME);
         manager.setRole(UserRole.MANAGER);
         return manager;
     }
