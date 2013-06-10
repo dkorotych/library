@@ -1,11 +1,13 @@
 package grytsenko.library.service;
 
 import static grytsenko.library.test.MockitoUtils.doReturnFirstArgument;
+import static grytsenko.library.test.TestUsers.GUEST_MAIL;
 import static grytsenko.library.test.TestUsers.GUEST_NAME;
 import static grytsenko.library.test.TestUsers.guest;
 import static grytsenko.library.test.TestUsers.guestLdap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -40,7 +42,7 @@ public class UserServiceTests {
         userService = new UserService(userRepository, ldapRepository);
 
         // Setup behavior.
-        doReturn(guestLdap()).when(ldapRepository).findUserInLdap(anyString());
+        doReturn(guestLdap()).when(ldapRepository).findByUsername(anyString());
     }
 
     /**
@@ -60,9 +62,10 @@ public class UserServiceTests {
 
         // Verify data.
         assertSame(guest, user);
+        assertEquals(GUEST_MAIL, user.getMail());
 
         // Verify behavior.
-        verify(ldapRepository).findUserInLdap(GUEST_NAME);
+        verify(ldapRepository).findByUsername(GUEST_NAME);
         verifyNoMoreInteractions(ldapRepository);
         verify(userRepository).findByUsername(GUEST_NAME);
         verify(userRepository).save(user);
@@ -85,9 +88,37 @@ public class UserServiceTests {
         assertNotNull(user);
         assertEquals(GUEST_NAME, user.getUsername());
         assertEquals(UserRole.USER, user.getRole());
+        assertEquals(GUEST_MAIL, user.getMail());
 
         // Verify behavior.
-        verify(ldapRepository).findUserInLdap(GUEST_NAME);
+        verify(ldapRepository).findByUsername(GUEST_NAME);
+        verifyNoMoreInteractions(ldapRepository);
+        verify(userRepository).findByUsername(GUEST_NAME);
+        verify(userRepository).save(any(User.class));
+        verifyNoMoreInteractions(userRepository);
+    }
+
+    /**
+     * User was not updated, because it was not found in LDAP.
+     */
+    @Test
+    public void testNotUpdatedFromLdap() throws Exception {
+        // Setup behavior.
+        doReturn(null).when(userRepository).findByUsername(anyString());
+        doReturn(null).when(ldapRepository).findByUsername(anyString());
+        doReturnFirstArgument().when(userRepository).save(any(User.class));
+
+        // Execute.
+        User user = userService.get(GUEST_NAME);
+
+        // Verify state.
+        assertNotNull(user);
+        assertEquals(GUEST_NAME, user.getUsername());
+        assertEquals(UserRole.USER, user.getRole());
+        assertNull(user.getMail());
+
+        // Verify behavior.
+        verify(ldapRepository).findByUsername(GUEST_NAME);
         verifyNoMoreInteractions(ldapRepository);
         verify(userRepository).findByUsername(GUEST_NAME);
         verify(userRepository).save(any(User.class));

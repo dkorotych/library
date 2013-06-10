@@ -16,7 +16,7 @@ public final class TestUsers {
     /**
      * The mail for guest.
      */
-    private static final String GUEST_MAIL = "guest@test.com";
+    public static final String GUEST_MAIL = "guest@test.com";
 
     /**
      * The user name for manager.

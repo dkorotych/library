@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Properties;
 
 import javax.naming.NamingException;
+import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 
 import org.slf4j.Logger;
@@ -59,7 +60,7 @@ public class LdapRepository {
      * 
      * @return the found user or <code>null</code> if user was not found.
      */
-    public LdapUser findUserInLdap(String username) {
+    public LdapUser findByUsername(String username) {
         LOGGER.debug("Search for the user {} in LDAP.", username);
 
         LdapTemplate ldapTemplate = new LdapTemplate(ldapContextSource);
@@ -96,12 +97,22 @@ public class LdapRepository {
             user.setUsername((String) attributes.get(usernameId).get());
 
             String firstnameId = ldapProperties.getProperty(USER_FIRSTNAME);
-            user.setFirstname((String) attributes.get(firstnameId).get());
+            Attribute firstnameAttr = attributes.get(firstnameId);
+            if (firstnameAttr != null) {
+                user.setFirstname((String) firstnameAttr.get());
+            }
+
             String lastnameId = ldapProperties.getProperty(USER_LASTNAME);
-            user.setLastname((String) attributes.get(lastnameId).get());
+            Attribute lastnameAttr = attributes.get(lastnameId);
+            if (lastnameAttr != null) {
+                user.setLastname((String) lastnameAttr.get());
+            }
 
             String mailId = ldapProperties.getProperty(USER_MAIL);
-            user.setMail((String) attributes.get(mailId).get());
+            Attribute mailAttr = attributes.get(mailId);
+            if (mailAttr != null) {
+                user.setMail((String) mailAttr.get());
+            }
 
             return user;
         }

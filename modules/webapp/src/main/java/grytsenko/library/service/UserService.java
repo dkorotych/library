@@ -42,29 +42,42 @@ public class UserService {
         if (user == null) {
             LOGGER.debug("User {} was not found.", username);
 
-            user = new User();
-            user.setUsername(username);
-            user.setRole(UserRole.USER);
+            user = createUser(username);
         }
 
-        return updateUserFromLdap(user);
+        updateUserFromLdap(user);
+
+        return userRepository.save(user);
+    }
+
+    /**
+     * Creates the default user with the given name.
+     */
+    private User createUser(String username) {
+        User user = new User();
+        user.setUsername(username);
+        user.setRole(UserRole.USER);
+        return user;
     }
 
     /**
      * Searches for a user in LDAP and then updates it using data from LDAP.
-     * User is saved after update.
      */
-    private User updateUserFromLdap(User user) {
+    private void updateUserFromLdap(User user) {
         String username = user.getUsername();
 
-        LdapUser ldapUser = ldapRepository.findUserInLdap(username);
+        LdapUser ldapUser = ldapRepository.findByUsername(username);
+
+        if (ldapUser == null) {
+            LOGGER.debug("User {} was not updated.", username);
+            return;
+        }
 
         user.setFirstname(ldapUser.getFirstname());
         user.setLastname(ldapUser.getLastname());
         user.setMail(ldapUser.getMail());
 
-        LOGGER.debug("User {} is updated from LDAP.", username);
-        return userRepository.save(user);
+        LOGGER.debug("User {} was updated using data from LDAP.", username);
     }
 
 }
