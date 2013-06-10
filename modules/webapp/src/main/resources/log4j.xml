@@ -19,6 +19,9 @@
     <logger name="org.hibernate">
         <level value="INFO" />
     </logger>
+    <logger name="com.mchange">
+        <level value="INFO" />
+    </logger>
 
     <!-- Root Logger -->
     <root>
