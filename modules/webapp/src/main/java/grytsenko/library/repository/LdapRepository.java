@@ -59,7 +59,7 @@ public class LdapRepository {
      * 
      * @return the found user or <code>null</code> if user was not found.
      */
-    public LdapUser findUserInLdap(String username) {
+    public LdapUser findByUsername(String username) {
         LOGGER.debug("Search for the user {} in LDAP.", username);
 
         LdapTemplate ldapTemplate = new LdapTemplate(ldapContextSource);
