@@ -3,7 +3,6 @@ package grytsenko.library.model;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -39,23 +38,23 @@ public class Book implements Serializable {
     @Column(name = "status_changed")
     private Date statusChanged;
 
-    @Basic
-    @Column(name = "reserved_by", length = 20)
-    private String reservedBy;
+    @ManyToOne
+    @JoinColumn(name = "reserved_by")
+    private User reservedBy;
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "reserved_since")
     private Date reservedSince;
 
-    @Basic
-    @Column(name = "borrowed_by", length = 20)
-    private String borrowedBy;
+    @ManyToOne
+    @JoinColumn(name = "borrowed_by")
+    private User borrowedBy;
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "borrowed_since")
     private Date borrowedSince;
 
-    @Basic
-    @Column(name = "managed_by", length = 20)
-    private String managedBy;
+    @ManyToOne
+    @JoinColumn(name = "managed_by")
+    private User managedBy;
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "managed_since")
     private Date managedSince;
@@ -95,11 +94,11 @@ public class Book implements Serializable {
         this.statusChanged = statusChanged;
     }
 
-    public String getReservedBy() {
+    public User getReservedBy() {
         return reservedBy;
     }
 
-    public void setReservedBy(String reservedBy) {
+    public void setReservedBy(User reservedBy) {
         this.reservedBy = reservedBy;
     }
 
@@ -111,11 +110,11 @@ public class Book implements Serializable {
         this.reservedSince = reservedSince;
     }
 
-    public String getBorrowedBy() {
+    public User getBorrowedBy() {
         return borrowedBy;
     }
 
-    public void setBorrowedBy(String borrowedBy) {
+    public void setBorrowedBy(User borrowedBy) {
         this.borrowedBy = borrowedBy;
     }
 
@@ -127,11 +126,11 @@ public class Book implements Serializable {
         this.borrowedSince = borrowedSince;
     }
 
-    public String getManagedBy() {
+    public User getManagedBy() {
         return managedBy;
     }
 
-    public void setManagedBy(String managedBy) {
+    public void setManagedBy(User managedBy) {
         this.managedBy = managedBy;
     }
 

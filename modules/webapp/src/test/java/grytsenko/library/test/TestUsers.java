@@ -10,6 +10,10 @@ import grytsenko.library.model.UserRole;
 public final class TestUsers {
 
     /**
+     * The identifier for quest.
+     */
+    public static final Long GUEST_ID = 1L;
+    /**
      * The user name for guest.
      */
     public static final String GUEST_NAME = "guest";
@@ -18,6 +22,10 @@ public final class TestUsers {
      */
     public static final String GUEST_MAIL = "guest@test.com";
 
+    /**
+     * The identifier for manager.
+     */
+    public static final Long MANAGER_ID = 5L;
     /**
      * The user name for manager.
      */
@@ -28,6 +36,7 @@ public final class TestUsers {
      */
     public static User guest() {
         User guest = new User();
+        guest.setId(GUEST_ID);
         guest.setUsername(GUEST_NAME);
         guest.setRole(UserRole.USER);
         return guest;
@@ -48,6 +57,7 @@ public final class TestUsers {
      */
     public static User manager() {
         User manager = new User();
+        manager.setId(MANAGER_ID);
         manager.setUsername(MANAGER_NAME);
         manager.setRole(UserRole.MANAGER);
         return manager;

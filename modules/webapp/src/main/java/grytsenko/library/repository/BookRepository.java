@@ -20,11 +20,11 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     /**
      * Finds all books, that were reserved by user.
      */
-    List<Book> findByReservedBy(String name);
+    List<Book> findByReservedById(Long user);
 
     /**
      * Finds all books, that were borrowed by user.
      */
-    List<Book> findByBorrowedBy(String name);
+    List<Book> findByBorrowedById(Long user);
 
 }

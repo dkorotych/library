@@ -5,8 +5,6 @@ import static grytsenko.library.test.TestBooks.BOOK_ID;
 import static grytsenko.library.test.TestBooks.availableBook;
 import static grytsenko.library.test.TestBooks.borrowedBook;
 import static grytsenko.library.test.TestBooks.reservedBook;
-import static grytsenko.library.test.TestUsers.GUEST_NAME;
-import static grytsenko.library.test.TestUsers.MANAGER_NAME;
 import static grytsenko.library.test.TestUsers.guest;
 import static grytsenko.library.test.TestUsers.manager;
 import static org.junit.Assert.assertEquals;
@@ -55,23 +53,23 @@ public class BookServiceTests {
     @Test
     public void testReserve() throws Exception {
         // Setup data.
-        User guest = guest();
-        Book storedBook = availableBook();
+        User reservedBy = guest();
+        Book availableBook = availableBook();
 
         // Setup behavior.
-        doReturn(storedBook).when(bookRepository).findOne(anyLong());
+        doReturn(availableBook).when(bookRepository).findOne(anyLong());
 
         // Execute.
-        Book updatedBook = bookService.reserve(BOOK_ID, guest);
+        Book reservedBook = bookService.reserve(BOOK_ID, reservedBy);
 
         // Verify state.
-        assertEquals(BookStatus.RESERVED, updatedBook.getStatus());
-        assertEquals(updatedBook.getReservedBy(), guest.getUsername());
-        assertNotNull(updatedBook.getReservedSince());
+        assertEquals(BookStatus.RESERVED, reservedBook.getStatus());
+        assertEquals(reservedBy, reservedBook.getReservedBy());
+        assertNotNull(reservedBook.getReservedSince());
 
         // Verify behavior.
         verify(bookRepository).findOne(BOOK_ID);
-        verify(bookRepository).saveAndFlush(storedBook);
+        verify(bookRepository).saveAndFlush(availableBook);
         verifyNoMoreInteractions(bookRepository);
     }
 
@@ -80,16 +78,12 @@ public class BookServiceTests {
      */
     @Test
     public void testReserveNotAvailable() throws Exception {
-        // Setup data.
-        User guest = guest();
-        Book storedBook = reservedBook(GUEST_NAME);
-
         // Setup behavior.
-        doReturn(storedBook).when(bookRepository).findOne(anyLong());
+        doReturn(reservedBook(guest())).when(bookRepository).findOne(anyLong());
 
         // Execute.
         try {
-            bookService.reserve(BOOK_ID, guest);
+            bookService.reserve(BOOK_ID, manager());
             fail();
         } catch (BookServiceException exception) {
         }
@@ -105,22 +99,22 @@ public class BookServiceTests {
     @Test
     public void testReleaseByUser() throws Exception {
         // Setup data.
-        User guest = guest();
-        Book storedBook = reservedBook(GUEST_NAME);
+        User reservedBy = guest();
+        Book reservedBook = reservedBook(reservedBy);
 
         // Setup behavior.
-        doReturn(storedBook).when(bookRepository).findOne(anyLong());
+        doReturn(reservedBook).when(bookRepository).findOne(anyLong());
 
         // Execute.
-        Book updatedBook = bookService.release(BOOK_ID, guest);
+        Book availableBook = bookService.release(BOOK_ID, reservedBy);
 
         // Verify state.
-        assertEquals(BookStatus.AVAILABLE, updatedBook.getStatus());
-        assertNull(updatedBook.getReservedBy());
+        assertEquals(BookStatus.AVAILABLE, availableBook.getStatus());
+        assertNull(availableBook.getReservedBy());
 
         // Verify behavior.
         verify(bookRepository).findOne(BOOK_ID);
-        verify(bookRepository).saveAndFlush(storedBook);
+        verify(bookRepository).saveAndFlush(reservedBook);
         verifyNoMoreInteractions(bookRepository);
     }
 
@@ -130,22 +124,21 @@ public class BookServiceTests {
     @Test
     public void testReleaseByManager() throws Exception {
         // Setup data.
-        User manager = manager();
-        Book storedBook = reservedBook(GUEST_NAME);
+        Book reservedBook = reservedBook(guest());
 
         // Setup behavior.
-        doReturn(storedBook).when(bookRepository).findOne(anyLong());
+        doReturn(reservedBook).when(bookRepository).findOne(anyLong());
 
         // Execute.
-        Book updatedBook = bookService.release(BOOK_ID, manager);
+        Book availableBook = bookService.release(BOOK_ID, manager());
 
         // Verify state.
-        assertEquals(BookStatus.AVAILABLE, updatedBook.getStatus());
-        assertNull(updatedBook.getReservedBy());
+        assertEquals(BookStatus.AVAILABLE, availableBook.getStatus());
+        assertNull(availableBook.getReservedBy());
 
         // Verify behavior.
         verify(bookRepository).findOne(BOOK_ID);
-        verify(bookRepository).saveAndFlush(storedBook);
+        verify(bookRepository).saveAndFlush(reservedBook);
         verifyNoMoreInteractions(bookRepository);
     }
 
@@ -156,17 +149,17 @@ public class BookServiceTests {
     @Test
     public void testReleaseNotAllowed() {
         // Setup data.
-        User other = new User();
-        other.setUsername("other");
-        other.setRole(UserRole.USER);
-        Book storedBook = reservedBook(GUEST_NAME);
+        User releasedBy = new User();
+        releasedBy.setId(8L);
+        releasedBy.setUsername("other");
+        releasedBy.setRole(UserRole.USER);
 
         // Setup behavior.
-        doReturn(storedBook).when(bookRepository).findOne(anyLong());
+        doReturn(reservedBook(guest())).when(bookRepository).findOne(anyLong());
 
         // Execute.
         try {
-            bookService.release(BOOK_ID, other);
+            bookService.release(BOOK_ID, releasedBy);
             fail();
         } catch (BookServiceException exception) {
         }
@@ -181,16 +174,12 @@ public class BookServiceTests {
      */
     @Test
     public void testReleaseNotReserved() throws Exception {
-        // Setup data.
-        User manager = manager();
-        Book storedBook = availableBook();
-
         // Setup behavior.
-        doReturn(storedBook).when(bookRepository).findOne(anyLong());
+        doReturn(availableBook()).when(bookRepository).findOne(anyLong());
 
         // Execute.
         try {
-            bookService.release(BOOK_ID, manager);
+            bookService.release(BOOK_ID, manager());
             fail();
         } catch (BookServiceException exception) {
         }
@@ -207,27 +196,27 @@ public class BookServiceTests {
     @Test
     public void testTakeOut() throws Exception {
         // Setup data.
-        User manager = manager();
-        Book storedBook = reservedBook(GUEST_NAME);
+        User borrowedBy = guest();
+        Book reservedBook = reservedBook(borrowedBy);
 
         // Setup behavior.
-        doReturn(storedBook).when(bookRepository).findOne(anyLong());
+        doReturn(reservedBook).when(bookRepository).findOne(anyLong());
 
         // Execute.
-        Book updatedBook = bookService.takeOut(BOOK_ID, manager);
+        Book borrowedBook = bookService.takeOut(BOOK_ID, manager());
 
         // Verify state.
-        assertEquals(BookStatus.BORROWED, updatedBook.getStatus());
+        assertEquals(BookStatus.BORROWED, borrowedBook.getStatus());
 
-        assertEquals(GUEST_NAME, updatedBook.getBorrowedBy());
-        assertNotNull(updatedBook.getBorrowedSince());
+        assertEquals(borrowedBy, borrowedBook.getBorrowedBy());
+        assertNotNull(borrowedBook.getBorrowedSince());
 
-        assertNull(updatedBook.getReservedBy());
-        assertNull(updatedBook.getReservedSince());
+        assertNull(borrowedBook.getReservedBy());
+        assertNull(borrowedBook.getReservedSince());
 
         // Verify behavior.
         verify(bookRepository).findOne(BOOK_ID);
-        verify(bookRepository).saveAndFlush(storedBook);
+        verify(bookRepository).saveAndFlush(reservedBook);
         verifyNoMoreInteractions(bookRepository);
     }
 
@@ -236,16 +225,12 @@ public class BookServiceTests {
      */
     @Test
     public void testTakeOutNotAllowed() throws Exception {
-        // Setup data.
-        User guest = guest();
-        Book storedBook = reservedBook(GUEST_NAME);
-
         // Setup behavior.
-        doReturn(storedBook).when(bookRepository).findOne(anyLong());
+        doReturn(reservedBook(guest())).when(bookRepository).findOne(anyLong());
 
         // Execute.
         try {
-            bookService.takeOut(BOOK_ID, guest);
+            bookService.takeOut(BOOK_ID, guest());
             fail();
         } catch (BookServiceException exception) {
         }
@@ -260,16 +245,12 @@ public class BookServiceTests {
      */
     @Test
     public void testTakeOutNotReserved() {
-        // Setup data.
-        User manager = manager();
-        Book storedBook = availableBook();
-
         // Setup behavior.
-        doReturn(storedBook).when(bookRepository).findOne(anyLong());
+        doReturn(availableBook()).when(bookRepository).findOne(anyLong());
 
         // Execute.
         try {
-            bookService.takeOut(BOOK_ID, manager);
+            bookService.takeOut(BOOK_ID, manager());
             fail();
         } catch (BookServiceException exception) {
         }
@@ -286,26 +267,26 @@ public class BookServiceTests {
     public void testTakeBack() throws Exception {
         // Setup data.
         User manager = manager();
-        Book storedBook = borrowedBook(GUEST_NAME);
+        Book borrowedBook = borrowedBook(guest());
 
         // Setup behavior.
-        doReturn(storedBook).when(bookRepository).findOne(anyLong());
+        doReturn(borrowedBook).when(bookRepository).findOne(anyLong());
 
         // Execute.
-        Book updatedBook = bookService.takeBack(BOOK_ID, manager);
+        Book availableBook = bookService.takeBack(BOOK_ID, manager);
 
         // Verify state.
-        assertEquals(BookStatus.AVAILABLE, updatedBook.getStatus());
+        assertEquals(BookStatus.AVAILABLE, availableBook.getStatus());
 
-        assertEquals(MANAGER_NAME, updatedBook.getManagedBy());
-        assertNotNull(updatedBook.getManagedSince());
+        assertEquals(manager, availableBook.getManagedBy());
+        assertNotNull(availableBook.getManagedSince());
 
-        assertNull(updatedBook.getBorrowedBy());
-        assertNull(updatedBook.getBorrowedSince());
+        assertNull(availableBook.getBorrowedBy());
+        assertNull(availableBook.getBorrowedSince());
 
         // Verify behavior.
         verify(bookRepository).findOne(BOOK_ID);
-        verify(bookRepository).saveAndFlush(storedBook);
+        verify(bookRepository).saveAndFlush(borrowedBook);
         verifyNoMoreInteractions(bookRepository);
     }
 
@@ -314,16 +295,12 @@ public class BookServiceTests {
      */
     @Test
     public void testTakeBackNotAllowed() throws Exception {
-        // Setup data.
-        User guest = guest();
-        Book storedBook = borrowedBook(GUEST_NAME);
-
         // Setup behavior.
-        doReturn(storedBook).when(bookRepository).findOne(anyLong());
+        doReturn(borrowedBook(guest())).when(bookRepository).findOne(anyLong());
 
         // Execute.
         try {
-            bookService.takeBack(BOOK_ID, guest);
+            bookService.takeBack(BOOK_ID, guest());
             fail();
         } catch (BookServiceException exception) {
         }
@@ -338,16 +315,12 @@ public class BookServiceTests {
      */
     @Test
     public void testTakeBackNotBorrowed() {
-        // Setup data.
-        User manager = manager();
-        Book storedBook = availableBook();
-
         // Setup behavior.
-        doReturn(storedBook).when(bookRepository).findOne(anyLong());
+        doReturn(availableBook()).when(bookRepository).findOne(anyLong());
 
         // Execute.
         try {
-            bookService.takeBack(BOOK_ID, manager);
+            bookService.takeBack(BOOK_ID, manager());
             fail();
         } catch (BookServiceException exception) {
         }

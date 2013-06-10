@@ -3,7 +3,6 @@ package grytsenko.library.controller;
 import static grytsenko.library.test.TestBooks.availableBook;
 import static grytsenko.library.test.TestBooks.borrowedBook;
 import static grytsenko.library.test.TestBooks.reservedBook;
-import static grytsenko.library.test.TestUsers.GUEST_NAME;
 import static grytsenko.library.test.TestUsers.guest;
 import static grytsenko.library.test.TestUsers.manager;
 import static org.mockito.Matchers.any;
@@ -86,7 +85,7 @@ public class BooksControllerTests {
     public void testReserve() throws Exception {
         // Setup data.
         User guest = guest();
-        Book book = reservedBook(guest.getUsername());
+        Book book = reservedBook(guest);
         RedirectAttributes redirectAttributes = mock(RedirectAttributes.class);
 
         // Setup behavior.
@@ -109,7 +108,7 @@ public class BooksControllerTests {
     public void testReserveFailed() throws Exception {
         // Setup data.
         User guest = guest();
-        Book book = reservedBook(guest.getUsername());
+        Book book = reservedBook(guest);
         RedirectAttributes redirectAttributes = mock(RedirectAttributes.class);
 
         // Setup behavior.
@@ -184,7 +183,7 @@ public class BooksControllerTests {
     public void testTakeOut() throws Exception {
         // Setup data.
         User manager = manager();
-        Book book = borrowedBook(GUEST_NAME);
+        Book book = borrowedBook(guest());
         RedirectAttributes redirectAttributes = mock(RedirectAttributes.class);
 
         // Setup behavior.
@@ -207,7 +206,7 @@ public class BooksControllerTests {
     public void testTakeOutFailed() throws Exception {
         // Setup data.
         User manager = manager();
-        Book book = borrowedBook(GUEST_NAME);
+        Book book = borrowedBook(guest());
         RedirectAttributes redirectAttributes = mock(RedirectAttributes.class);
 
         // Setup behavior.

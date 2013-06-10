@@ -2,6 +2,7 @@ package grytsenko.library.test;
 
 import grytsenko.library.model.Book;
 import grytsenko.library.model.BookStatus;
+import grytsenko.library.model.User;
 
 /**
  * Utilities for work with books in tests.
@@ -29,7 +30,7 @@ public final class TestBooks {
      * @param reservedBy
      *            the user, who reserved a book.
      */
-    public static Book reservedBook(String reservedBy) {
+    public static Book reservedBook(User reservedBy) {
         Book book = availableBook();
         book.setStatus(BookStatus.RESERVED);
         book.setReservedBy(reservedBy);
@@ -42,7 +43,7 @@ public final class TestBooks {
      * @param borrowedBy
      *            the user, who borrowed a book.
      */
-    public static Book borrowedBook(String borrowedBy) {
+    public static Book borrowedBook(User borrowedBy) {
         Book book = availableBook();
         book.setStatus(BookStatus.BORROWED);
         book.setBorrowedBy(borrowedBy);
