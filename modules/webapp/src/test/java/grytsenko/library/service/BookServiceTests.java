@@ -66,7 +66,7 @@ public class BookServiceTests {
 
         // Verify state.
         assertEquals(BookStatus.RESERVED, updatedBook.getStatus());
-        assertEquals(updatedBook.getReservedBy(), guest.getName());
+        assertEquals(updatedBook.getReservedBy(), guest.getUsername());
         assertNotNull(updatedBook.getReservedSince());
 
         // Verify behavior.
@@ -157,7 +157,7 @@ public class BookServiceTests {
     public void testReleaseNotAllowed() {
         // Setup data.
         User other = new User();
-        other.setName("other");
+        other.setUsername("other");
         other.setRole(UserRole.USER);
         Book storedBook = reservedBook(GUEST_NAME);
 

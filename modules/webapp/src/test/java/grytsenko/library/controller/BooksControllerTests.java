@@ -86,7 +86,7 @@ public class BooksControllerTests {
     public void testReserve() throws Exception {
         // Setup data.
         User guest = guest();
-        Book book = reservedBook(guest.getName());
+        Book book = reservedBook(guest.getUsername());
         RedirectAttributes redirectAttributes = mock(RedirectAttributes.class);
 
         // Setup behavior.
@@ -109,7 +109,7 @@ public class BooksControllerTests {
     public void testReserveFailed() throws Exception {
         // Setup data.
         User guest = guest();
-        Book book = reservedBook(guest.getName());
+        Book book = reservedBook(guest.getUsername());
         RedirectAttributes redirectAttributes = mock(RedirectAttributes.class);
 
         // Setup behavior.

@@ -67,7 +67,7 @@
                     value="${book.status eq 'AVAILABLE'}" />
                 <c:set var="bookIsReserved" value="${book.status eq 'RESERVED'}" />
                 <c:set var="bookIsReservedByThisUser"
-                    value="${bookIsReserved and book.reservedBy.equals(user.name)}" />
+                    value="${bookIsReserved and book.reservedBy.equals(user.username)}" />
                 <c:set var="bookIsBorrowed" value="${book.status eq 'BORROWED'}" />
 
                 <c:url var="bookAction" value="books">

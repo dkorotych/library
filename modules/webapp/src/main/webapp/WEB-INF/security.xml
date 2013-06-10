@@ -2,15 +2,18 @@
 
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:context="http://www.springframework.org/schema/context"
-    xmlns:security="http://www.springframework.org/schema/security" xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:security="http://www.springframework.org/schema/security" xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:p="http://www.springframework.org/schema/p"
     xsi:schemaLocation="
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
-        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
 
-    <bean id="ldapProperties"
+    <util:properties id="ldapProperties" location="classpath:ldap.properties" />
+    <bean id="ldapPropertiesConfigurer"
         class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
-        p:location="classpath:ldap.properties" />
+        p:properties-ref="ldapProperties" />
 
     <security:http pattern="/login" security="none" />
     <security:http pattern="/assets/**" security="none" />

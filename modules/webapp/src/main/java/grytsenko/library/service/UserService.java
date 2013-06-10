@@ -1,7 +1,9 @@
 package grytsenko.library.service;
 
+import grytsenko.library.model.LdapUser;
 import grytsenko.library.model.User;
 import grytsenko.library.model.UserRole;
+import grytsenko.library.repository.LdapRepository;
 import grytsenko.library.repository.UserRepository;
 
 import org.slf4j.Logger;
@@ -19,37 +21,50 @@ public class UserService {
             .getLogger(UserService.class);
 
     private UserRepository userRepository;
+    private LdapRepository ldapRepository;
 
     /**
      * Creates and initializes a service.
      */
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository,
+            LdapRepository ldapRepository) {
         this.userRepository = userRepository;
+        this.ldapRepository = ldapRepository;
     }
 
     /**
-     * Finds a user by its name.
-     * 
-     * @param name
-     *            the name of user.
-     * 
-     * @return found user.
+     * Finds a user by its name. If user is not found, then new user will be
+     * created.
      */
-    public User get(String name) {
-        User user = userRepository.findByName(name);
-        if (user != null) {
-            LOGGER.debug("User {} was found.", name);
-            return user;
+    public User get(String username) {
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            LOGGER.debug("User {} was not found.", username);
+
+            user = new User();
+            user.setUsername(username);
+            user.setRole(UserRole.USER);
         }
 
-        user = new User();
-        user.setName(name);
-        user.setRole(UserRole.USER);
-        user = userRepository.saveAndFlush(user);
+        return updateUserFromLdap(user);
+    }
 
-        LOGGER.debug("User {} was added.", name);
-        return user;
+    /**
+     * Searches for a user in LDAP and then updates it using data from LDAP.
+     * User is saved after update.
+     */
+    private User updateUserFromLdap(User user) {
+        String username = user.getUsername();
+
+        LdapUser ldapUser = ldapRepository.findUserInLdap(username);
+
+        user.setFirstname(ldapUser.getFirstname());
+        user.setLastname(ldapUser.getLastname());
+        user.setMail(ldapUser.getMail());
+
+        LOGGER.debug("User {} is updated from LDAP.", username);
+        return userRepository.save(user);
     }
 
 }

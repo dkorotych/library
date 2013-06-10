@@ -9,7 +9,7 @@
 <body>
     <div class="masthead">
         <div class="pull-right">
-            <i class="icon-user"></i> <strong>${user.name}</strong>
+            <i class="icon-user"></i> <strong>${user.username}</strong>
             <a href="<c:url value="j_spring_security_logout" />"
                 class="btn btn-inverse">
                 <fmt:message key="app.logout" />
