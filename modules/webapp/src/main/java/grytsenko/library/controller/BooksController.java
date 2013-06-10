@@ -113,7 +113,7 @@ public class BooksController {
      * User reserves a book for himself.
      */
     @RequestMapping(params = "reserve", method = RequestMethod.POST)
-    public String reserve(@RequestParam("id") Long bookId,
+    public String reserve(@RequestParam("bookId") Long bookId,
             @ModelAttribute("user") User user,
             RedirectAttributes redirectAttributes) {
         String username = user.getUsername();
@@ -137,7 +137,7 @@ public class BooksController {
      * User or manager releases a book.
      */
     @RequestMapping(params = "release", method = RequestMethod.POST)
-    public String release(@RequestParam("id") Long bookId,
+    public String release(@RequestParam("bookId") Long bookId,
             @ModelAttribute("user") User user,
             RedirectAttributes redirectAttributes) {
         String username = user.getUsername();
@@ -161,7 +161,7 @@ public class BooksController {
      * Manager takes out a book from library.
      */
     @RequestMapping(params = "takeOut", method = RequestMethod.POST)
-    public String takeOut(@RequestParam("id") Long bookId,
+    public String takeOut(@RequestParam("bookId") Long bookId,
             @ModelAttribute("user") User user,
             RedirectAttributes redirectAttributes) {
         String username = user.getUsername();
@@ -185,7 +185,7 @@ public class BooksController {
      * Manager takes back a book to library.
      */
     @RequestMapping(params = "takeBack", method = RequestMethod.POST)
-    public String takeBack(@RequestParam("id") Long bookId,
+    public String takeBack(@RequestParam("bookId") Long bookId,
             @ModelAttribute("user") User user,
             RedirectAttributes redirectAttributes) {
         String username = user.getUsername();

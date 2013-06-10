@@ -67,11 +67,11 @@
                     value="${book.status eq 'AVAILABLE'}" />
                 <c:set var="bookIsReserved" value="${book.status eq 'RESERVED'}" />
                 <c:set var="bookIsReservedByThisUser"
-                    value="${bookIsReserved and book.reservedBy.equals(user.username)}" />
+                    value="${bookIsReserved and user.id.equals(book.reservedBy.id)}" />
                 <c:set var="bookIsBorrowed" value="${book.status eq 'BORROWED'}" />
 
                 <c:url var="bookAction" value="books">
-                    <c:param name="id" value="${book.id}" />
+                    <c:param name="bookId" value="${book.id}" />
                 </c:url>
 
                 <!-- Book. -->
@@ -94,8 +94,7 @@
 
                     <!-- Information about book. -->
                     <p>
-                        <strong>${book.info.title}</strong>
-                        <br />
+                        <strong>${book.info.title}</strong> <br />
                         ${book.info.authors}
                     </p>
 
@@ -103,7 +102,7 @@
                         <!-- Information about user, who reserved this book. -->
                         <p>
                             <fmt:message key="book.message.reserved">
-                                <fmt:param value="${book.reservedBy}" />
+                                <fmt:param value="${book.reservedBy.username}" />
                                 <fmt:param>
                                     <fmt:formatDate type="date"
                                         dateStyle="short"
@@ -117,7 +116,7 @@
                         <!-- Information about user, who borrowed this book. -->
                         <p>
                             <fmt:message key="book.message.borrowed">
-                                <fmt:param value="${book.borrowedBy}" />
+                                <fmt:param value="${book.borrowedBy.username}" />
                                 <fmt:param>
                                     <fmt:formatDate type="date"
                                         dateStyle="short"

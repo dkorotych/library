@@ -50,13 +50,13 @@ public class BookService {
      */
     public List<Book> find(BookFilter filter, User user)
             throws BookServiceException {
-        String username = user.getUsername();
+        Long userId = user.getId();
         switch (filter) {
         case RELATED:
             List<Book> related = new ArrayList<>();
-            List<Book> reserved = bookRepository.findByReservedBy(username);
+            List<Book> reserved = bookRepository.findByReservedById(userId);
             related.addAll(reserved);
-            List<Book> borrowed = bookRepository.findByBorrowedBy(username);
+            List<Book> borrowed = bookRepository.findByBorrowedById(userId);
             related.addAll(borrowed);
             return related;
         case AVAILABLE:
@@ -92,7 +92,7 @@ public class BookService {
         book.setStatus(BookStatus.RESERVED);
         book.setStatusChanged(now);
 
-        book.setReservedBy(user.getUsername());
+        book.setReservedBy(user);
         book.setReservedSince(now);
 
         return bookRepository.saveAndFlush(book);
@@ -119,7 +119,7 @@ public class BookService {
         }
 
         if (user.getRole() != UserRole.MANAGER
-                && !user.getUsername().equals(book.getReservedBy())) {
+                && !user.getId().equals(book.getReservedBy().getId())) {
             throw new BookServiceException("Access denied.");
         }
 
@@ -204,7 +204,7 @@ public class BookService {
         book.setBorrowedBy(null);
         book.setBorrowedSince(null);
 
-        book.setManagedBy(user.getUsername());
+        book.setManagedBy(user);
         book.setManagedSince(now);
 
         return bookRepository.saveAndFlush(book);
