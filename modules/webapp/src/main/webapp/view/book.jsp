@@ -13,12 +13,14 @@
 
 <link href="<c:url value="/assets/css/bootstrap.css" />" rel="stylesheet"
     media="screen" />
+<link href="<c:url value="/assets/css/books.css" />" rel="stylesheet"
+    media="screen" />
 </head>
 
 <body>
-    <div class="container">
-        <%@include file="header.jsp"%>
+    <%@include file="navbar.jsp"%>
 
+    <div class="container">
         <c:if test="${not empty lastOperationFailed}">
             <!-- Alert about failed action. -->
             <div class="alert alert-error">

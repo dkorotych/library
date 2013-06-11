@@ -13,12 +13,14 @@
 
 <link href="<c:url value="/assets/css/bootstrap.css" />" rel="stylesheet"
     media="screen" />
+<link href="<c:url value="/assets/css/books.css" />" rel="stylesheet"
+    media="screen" />
 </head>
 
 <body>
-    <div class="container">
-        <%@include file="header.jsp"%>
+    <%@include file="navbar.jsp"%>
 
+    <div class="container">
         <!-- Actions over books. -->
         <div class="row-fluid">
             <div class="pull-right">
