@@ -17,7 +17,7 @@
 
 <body>
     <div class="container">
-        <jsp:include page="header.jsp" />
+        <%@include file="header.jsp"%>
 
         <!-- Actions over books. -->
         <div class="row-fluid">
