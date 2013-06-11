@@ -60,109 +60,46 @@
 
         <!-- List of books. -->
         <c:forEach items="${books}" var="book" varStatus="loop">
+            <!-- Book. -->
             <div class="row-fluid">
-                <c:set var="userIsManager" value="${user.role eq 'MANAGER'}" />
-
-                <c:set var="bookIsAvailable"
-                    value="${book.status eq 'AVAILABLE'}" />
-                <c:set var="bookIsReserved" value="${book.status eq 'RESERVED'}" />
-                <c:set var="bookIsReservedByThisUser"
-                    value="${bookIsReserved and user.id.equals(book.reservedBy.id)}" />
-                <c:set var="bookIsBorrowed" value="${book.status eq 'BORROWED'}" />
-
-                <c:url var="bookAction" value="books">
-                    <c:param name="bookId" value="${book.id}" />
-                </c:url>
-
-                <!-- Book. -->
-                <form action="${bookAction}" method="POST">
-                    <!-- Status of book. -->
-                    <div class="pull-right">
-                        <c:if test="${bookIsAvailable}">
-                            <span class="label label-success"><fmt:message
-                                    key="book.status.available" /></span>
-                        </c:if>
-                        <c:if test="${bookIsReserved}">
-                            <span class="label label-warning"><fmt:message
-                                    key="book.status.reserved" /></span>
-                        </c:if>
-                        <c:if test="${bookIsBorrowed}">
-                            <span class="label label-inverse"><fmt:message
-                                    key="book.status.borrowed" /></span>
-                        </c:if>
-                    </div>
-
-                    <!-- Information about book. -->
-                    <p>
-                        <strong>${book.info.title}</strong> <br />
-                        ${book.info.authors}
-                    </p>
-
-                    <c:if test="${bookIsReserved}">
-                        <!-- Information about user, who reserved this book. -->
-                        <p>
-                            <fmt:message key="book.message.reserved">
-                                <fmt:param value="${book.reservedBy.username}" />
-                                <fmt:param>
-                                    <fmt:formatDate type="date"
-                                        dateStyle="short"
-                                        value="${book.reservedSince}" />
-                                </fmt:param>
-                            </fmt:message>
-                        </p>
+                <!-- Status of book. -->
+                <div class="pull-right">
+                    <c:if test="${book.status eq 'AVAILABLE'}">
+                        <span class="label label-success">
+                            <fmt:message key="book.status.available" />
+                        </span>
                     </c:if>
-
-                    <c:if test="${bookIsBorrowed}">
-                        <!-- Information about user, who borrowed this book. -->
-                        <p>
-                            <fmt:message key="book.message.borrowed">
-                                <fmt:param value="${book.borrowedBy.username}" />
-                                <fmt:param>
-                                    <fmt:formatDate type="date"
-                                        dateStyle="short"
-                                        value="${book.borrowedSince}" />
-                                </fmt:param>
-                            </fmt:message>
-                        </p>
+                    <c:if test="${book.status eq 'RESERVED'}">
+                        <span class="label label-warning">
+                            <fmt:message key="book.status.reserved" />
+                        </span>
                     </c:if>
+                    <c:if test="${book.status eq 'BORROWED'}">
+                        <span class="label label-inverse">
+                            <fmt:message key="book.status.borrowed" />
+                        </span>
+                    </c:if>
+                </div>
 
+                <!-- Information about book. -->
+                <p>
+                    <strong>${book.info.title}</strong>
+                    <br />
+                    ${book.info.authors}
+                </p>
+
+                <div>
+                    <c:url var="detailsUrl" value="book">
+                        <c:param name="bookId" value="${book.id}" />
+                    </c:url>
                     <p>
-                        <c:if test="${bookIsAvailable}">
-                            <!-- Book is available, so it can be reserved. -->
-                            <button name="reserve" type="submit"
-                                class="btn btn-primary">
-                                <fmt:message key="book.action.reserve" />
-                            </button>
-                        </c:if>
-                        <c:if
-                            test="${bookIsReserved and (bookIsReservedByThisUser or userIsManager)}">
-                            <!-- User, who has reserved a book, or manager can release it. -->
-                            <button name="release" type="submit"
-                                class="btn btn-warning">
-                                <fmt:message key="book.action.release" />
-                            </button>
-                        </c:if>
-
-                        <c:if test="${userIsManager}">
-                            <c:if test="${bookIsReserved}">
-                                <!-- Manager can take out a book, which is reserved. -->
-                                <button name="takeOut" type="submit"
-                                    class="btn btn-primary">
-                                    <fmt:message key="book.action.takeout" />
-                                </button>
-                            </c:if>
-                            <c:if test="${bookIsBorrowed}">
-                                <!-- Manager can take back a book, which is borrowed. -->
-                                <button name="takeBack" type="submit"
-                                    class="btn btn-primary">
-                                    <fmt:message key="book.action.takeback" />
-                                </button>
-                            </c:if>
-                        </c:if>
+                        <a href="${detailsUrl}" class="btn btn-info">
+                            <fmt:message key="book.details" />
+                        </a>
                     </p>
-                </form>
-                <hr>
+                </div>
             </div>
+            <hr />
         </c:forEach>
     </div>
 
