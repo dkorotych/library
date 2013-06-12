@@ -10,6 +10,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Version;
 
 /**
  * Information about user.
@@ -41,6 +42,9 @@ public class User implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(name = "role", length = 10)
     private UserRole role;
+
+    @Version
+    private Integer version;
 
     public User() {
     }
@@ -91,6 +95,14 @@ public class User implements Serializable {
 
     public void setRole(UserRole role) {
         this.role = role;
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
     }
 
 }

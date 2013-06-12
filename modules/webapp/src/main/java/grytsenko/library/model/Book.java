@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Version;
 
 /**
  * Information about a copy of book.
@@ -58,6 +59,9 @@ public class Book implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "managed_since")
     private Date managedSince;
+
+    @Version
+    private Integer version;
 
     public Book() {
     }
@@ -140,6 +144,14 @@ public class Book implements Serializable {
 
     public void setManagedSince(Date managedSince) {
         this.managedSince = managedSince;
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
     }
 
 }

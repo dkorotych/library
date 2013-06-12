@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Manages books in library.
@@ -105,6 +106,7 @@ public class BookService {
      * @throws BookServiceException
      *             if book cannot be reserved.
      */
+    @Transactional(rollbackFor = { BookServiceException.class })
     public Book reserve(Book book, User user) throws BookServiceException {
         if (book.getStatus() != BookStatus.AVAILABLE) {
             throw new BookServiceException("Book is not available.");
@@ -118,7 +120,7 @@ public class BookService {
         book.setReservedBy(user);
         book.setReservedSince(now);
 
-        return bookRepository.saveAndFlush(book);
+        return saveBook(book);
     }
 
     /**
@@ -134,6 +136,7 @@ public class BookService {
      * @throws BookServiceException
      *             if book cannot be released.
      */
+    @Transactional(rollbackFor = { BookServiceException.class })
     public Book release(Book book, User user) throws BookServiceException {
         if (book.getStatus() != BookStatus.RESERVED) {
             throw new BookServiceException("Book is not reserved.");
@@ -152,7 +155,7 @@ public class BookService {
         book.setReservedBy(null);
         book.setReservedSince(null);
 
-        return bookRepository.saveAndFlush(book);
+        return saveBook(book);
     }
 
     /**
@@ -168,6 +171,7 @@ public class BookService {
      * @throws BookServiceException
      *             if book cannot be taken out.
      */
+    @Transactional(rollbackFor = { BookServiceException.class })
     public Book takeOut(Book book, User user) throws BookServiceException {
         if (book.getStatus() != BookStatus.RESERVED) {
             throw new BookServiceException("Book is not reserved.");
@@ -188,7 +192,7 @@ public class BookService {
         book.setReservedBy(null);
         book.setReservedSince(null);
 
-        return bookRepository.saveAndFlush(book);
+        return saveBook(book);
     }
 
     /**
@@ -204,6 +208,7 @@ public class BookService {
      * @throws BookServiceException
      *             if book cannot be taken back.
      */
+    @Transactional(rollbackFor = { BookServiceException.class })
     public Book takeBack(Book book, User user) throws BookServiceException {
         if (book.getStatus() != BookStatus.BORROWED) {
             throw new BookServiceException("Book is not borrowed.");
@@ -224,7 +229,15 @@ public class BookService {
         book.setManagedBy(user);
         book.setManagedSince(now);
 
-        return bookRepository.saveAndFlush(book);
+        return saveBook(book);
+    }
+
+    private Book saveBook(Book book) throws BookServiceException {
+        try {
+            return bookRepository.saveAndFlush(book);
+        } catch (Exception exception) {
+            throw new BookServiceException("Can not save a book.");
+        }
     }
 
     private Date now() {

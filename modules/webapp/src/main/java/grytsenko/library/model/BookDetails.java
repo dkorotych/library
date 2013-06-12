@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Version;
 
 /**
  * Information about book.
@@ -45,6 +46,9 @@ public class BookDetails implements Serializable {
     @Basic
     @Column(name = "isbn", length = 20)
     private String isbn;
+
+    @Version
+    private Integer version;
 
     public BookDetails() {
     }
@@ -111,6 +115,14 @@ public class BookDetails implements Serializable {
 
     public void setIsbn(String isbn) {
         this.isbn = isbn;
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
     }
 
 }
