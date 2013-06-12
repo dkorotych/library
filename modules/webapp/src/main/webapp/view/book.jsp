@@ -13,8 +13,7 @@
 
 <link href="<c:url value="/assets/css/bootstrap.css" />" rel="stylesheet"
     media="screen" />
-<link href="<c:url value="/assets/css/books.css" />" rel="stylesheet"
-    media="screen" />
+<link href="<c:url value="/assets/css/library.css" />" rel="stylesheet" />
 </head>
 
 <body>

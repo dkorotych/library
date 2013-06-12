@@ -13,8 +13,7 @@
 
 <link href="<c:url value="/assets/css/bootstrap.css" />" rel="stylesheet"
     media="screen" />
-<link href="<c:url value="/assets/css/login.css" />" rel="stylesheet"
-    media="screen" />
+<link href="<c:url value="/assets/css/library-login.css" />" rel="stylesheet" />
 </head>
 
 <body>
