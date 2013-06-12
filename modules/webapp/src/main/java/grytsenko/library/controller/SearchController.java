@@ -58,7 +58,7 @@ public class SearchController {
      */
     @ModelAttribute("filter")
     public BookFilter addDefaultFilter() {
-        BookFilter filter = BookFilter.ALL;
+        BookFilter filter = BookFilter.getDefault();
         LOGGER.debug("Current filter is {}.", filter);
         return filter;
     }
@@ -91,12 +91,7 @@ public class SearchController {
             @RequestParam("selectedFilter") String selectedFilter) {
         LOGGER.debug("User selects filter {}.", selectedFilter);
 
-        BookFilter filter = BookFilter.ALL;
-        try {
-            filter = BookFilter.valueOf(selectedFilter);
-        } catch (IllegalArgumentException exception) {
-            LOGGER.warn("Filter {} isn't recognized.", selectedFilter);
-        }
+        BookFilter filter = BookFilter.fromString(selectedFilter);
 
         model.addAttribute("filter", filter);
         LOGGER.debug("Current filter is {}.", filter);

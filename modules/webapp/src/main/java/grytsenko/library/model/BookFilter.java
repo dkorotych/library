@@ -19,6 +19,30 @@ public enum BookFilter {
     /**
      * Only books with status {@link BookStatus#AVAILABLE} will be shown.
      */
-    AVAILABLE
+    AVAILABLE;
+
+    /**
+     * Returns the default filter.
+     * 
+     * @return
+     */
+    public static BookFilter getDefault() {
+        return BookFilter.ALL;
+    }
+
+    /**
+     * Parses the string and returns appropriate filter.
+     * 
+     * <p>
+     * If the parsed string contains incorrect value, then returns a filter by
+     * default.
+     */
+    public static BookFilter fromString(String filter) {
+        try {
+            return BookFilter.valueOf(filter);
+        } catch (IllegalArgumentException exception) {
+            return BookFilter.getDefault();
+        }
+    }
 
 }
