@@ -26,12 +26,12 @@ import org.springframework.web.bind.annotation.SessionAttributes;
  * Manages a requests for books in library.
  */
 @Controller
-@RequestMapping("/books")
+@RequestMapping("/search")
 @SessionAttributes({ "user", "filter" })
-public class BooksController {
+public class SearchController {
 
     private static final Logger LOGGER = LoggerFactory
-            .getLogger(BooksController.class);
+            .getLogger(SearchController.class);
 
     private UserService userService;
     private BookService bookService;
@@ -40,7 +40,7 @@ public class BooksController {
      * Creates and initializes a controller.
      */
     @Autowired
-    public BooksController(UserService userService, BookService bookService) {
+    public SearchController(UserService userService, BookService bookService) {
         this.userService = userService;
         this.bookService = bookService;
     }
@@ -67,7 +67,7 @@ public class BooksController {
      * User views list of books.
      */
     @RequestMapping(method = RequestMethod.GET)
-    public String books(Model model, @ModelAttribute("user") User user,
+    public String search(Model model, @ModelAttribute("user") User user,
             @ModelAttribute("filter") BookFilter filter) {
         LOGGER.debug("Get {} books.", filter);
 
@@ -80,7 +80,7 @@ public class BooksController {
             model.addAttribute("books", emptyList());
         }
 
-        return "books";
+        return "search";
     }
 
     /**
@@ -101,7 +101,7 @@ public class BooksController {
         model.addAttribute("filter", filter);
         LOGGER.debug("Current filter is {}.", filter);
 
-        return "redirect:/books";
+        return "redirect:/search";
     }
 
 }

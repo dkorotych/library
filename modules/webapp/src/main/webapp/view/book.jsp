@@ -9,7 +9,7 @@
 <head>
 <meta charset="utf-8">
 
-<title>Books</title>
+<title>Book</title>
 
 <link href="<c:url value="/assets/css/bootstrap.css" />" rel="stylesheet"
     media="screen" />

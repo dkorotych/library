@@ -16,7 +16,7 @@ public class RootController {
      */
     @RequestMapping(method = RequestMethod.GET)
     public String root() {
-        return "redirect:/books";
+        return "redirect:/search";
     }
 
 }

@@ -25,7 +25,7 @@
             access="isAuthenticated()" />
 
         <security:form-login login-page="/login"
-            default-target-url="/books" username-parameter="username"
+            default-target-url="/search" username-parameter="username"
             password-parameter="password" authentication-failure-url="/login?retry" />
     </security:http>
 

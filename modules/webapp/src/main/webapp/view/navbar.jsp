@@ -10,10 +10,10 @@
             </div>
             <div class="nav-collapse collapse">
                 <ul class="nav">
-                    <c:url var="booksUrl" value="/books" />
+                    <c:url var="searchUrl" value="/search" />
                     <li>
-                        <a href="${booksUrl}">
-                            <fmt:message key="app.page.books" />
+                        <a href="${searchUrl}">
+                            <fmt:message key="app.page.search" />
                         </a>
                     </li>
                 </ul>

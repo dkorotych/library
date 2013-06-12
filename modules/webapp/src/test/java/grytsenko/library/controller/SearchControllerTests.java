@@ -11,19 +11,19 @@ import org.junit.Test;
 import org.springframework.ui.Model;
 
 /**
- * Test for {@link BooksController}.
+ * Test for {@link SearchController}.
  */
-public class BooksControllerTests {
+public class SearchControllerTests {
 
     BookService bookService;
-    BooksController booksController;
+    SearchController searchController;
 
     @Before
     public void prepare() {
         // Setup SUT.
         bookService = mock(BookService.class);
 
-        booksController = new BooksController(null, bookService);
+        searchController = new SearchController(null, bookService);
     }
 
     /**
@@ -38,7 +38,7 @@ public class BooksControllerTests {
         // Setup behavior.
 
         // Execute.
-        booksController.filter(model, selectedFilter);
+        searchController.filter(model, selectedFilter);
 
         // Verify behavior.
         verify(model).addAttribute("filter", BookFilter.RELATED);
@@ -57,7 +57,7 @@ public class BooksControllerTests {
         // Setup behavior.
 
         // Execute.
-        booksController.filter(model, selectedFilter);
+        searchController.filter(model, selectedFilter);
 
         // Verify behavior.
         verify(model).addAttribute("filter", BookFilter.ALL);
