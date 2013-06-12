@@ -30,52 +30,105 @@
         </c:if>
 
         <div class="row-fluid">
-            <c:set var="userIsManager" value="${user.role eq 'MANAGER'}" />
+            <!-- Information about book. -->
+            <h3>${book.info.title}</h3>
+            <p>${book.info.authors}</p>
+        </div>
 
-            <c:set var="bookIsAvailable" value="${book.status eq 'AVAILABLE'}" />
-            <c:set var="bookIsReserved" value="${book.status eq 'RESERVED'}" />
-            <c:set var="bookIsReservedByThisUser"
-                value="${bookIsReserved and user.id.equals(book.reservedBy.id)}" />
-            <c:set var="bookIsBorrowed" value="${book.status eq 'BORROWED'}" />
+        <hr />
 
-            <!-- Book. -->
+        <!-- Details. -->
+        <div class="row-fluid">
+            <h4 class="text-info">
+                <fmt:message key="book.details" />
+            </h4>
+            <ul class="unstyled">
+                <li>
+                    <strong>
+                        <fmt:message key="book.details.publisher" />
+                    </strong>
+                    ${book.info.publisher}
+                </li>
+                <li>
+                    <strong>
+                        <fmt:message key="book.details.year" />
+                    </strong>
+                    ${book.info.year}
+                </li>
+                <li>
+                    <strong>
+                        <fmt:message key="book.details.language" />
+                    </strong>
+                    ${book.info.language}
+                </li>
+                <li>
+                    <strong>
+                        <fmt:message key="book.details.pages" />
+                    </strong>
+                    ${book.info.pages}
+                </li>
+                <li>
+                    <strong>
+                        <fmt:message key="book.details.isbn" />
+                    </strong>
+                    ${book.info.isbn}
+                </li>
+            </ul>
+        </div>
+
+        <hr />
+
+        <!-- Status -->
+        <div class="row-fluid">
+            <h4 class="text-info">
+                <fmt:message key="book.status" />
+            </h4>
             <form:form method="POST">
-                <!-- Information about book. -->
-                <p>
-                    <strong>${book.info.title}</strong>
-                    <br />
-                    ${book.info.authors}
-                </p>
+                <c:set var="userIsManager" value="${user.role eq 'MANAGER'}" />
 
-                <c:if test="${bookIsReserved}">
-                    <!-- Information about user, who reserved this book. -->
-                    <p>
-                        <fmt:message key="book.message.reserved">
-                            <fmt:param value="${book.reservedBy.username}" />
-                            <fmt:param>
-                                <fmt:formatDate type="date" dateStyle="short"
-                                    value="${book.reservedSince}" />
-                            </fmt:param>
-                        </fmt:message>
-                    </p>
-                </c:if>
+                <c:set var="bookIsAvailable"
+                    value="${book.status eq 'AVAILABLE'}" />
+                <c:set var="bookIsReserved" value="${book.status eq 'RESERVED'}" />
+                <c:set var="bookIsReservedByThisUser"
+                    value="${bookIsReserved and user.id.equals(book.reservedBy.id)}" />
+                <c:set var="bookIsBorrowed" value="${book.status eq 'BORROWED'}" />
 
-                <c:if test="${bookIsBorrowed}">
-                    <!-- Information about user, who borrowed this book. -->
-                    <p>
-                        <fmt:message key="book.message.borrowed">
-                            <fmt:param value="${book.borrowedBy.username}" />
-                            <fmt:param>
-                                <fmt:formatDate type="date" dateStyle="short"
-                                    value="${book.borrowedSince}" />
-                            </fmt:param>
-                        </fmt:message>
-                    </p>
-                </c:if>
+                <!-- Status Message -->
+                <c:choose>
+                    <c:when test="${bookIsAvailable}">
+                        <p>
+                            <fmt:message key="book.message.available" />
+                        </p>
+                    </c:when>
+                    <c:when test="${bookIsReserved}">
+                        <p>
+                            <fmt:message key="book.message.reserved">
+                                <fmt:param value="${book.reservedBy.username}" />
+                                <fmt:param>
+                                    <fmt:formatDate type="date"
+                                        dateStyle="short"
+                                        value="${book.reservedSince}" />
+                                </fmt:param>
+                            </fmt:message>
+                        </p>
+                    </c:when>
+                    <c:when test="${bookIsBorrowed}">
+                        <p>
+                            <fmt:message key="book.message.borrowed">
+                                <fmt:param value="${book.borrowedBy.username}" />
+                                <fmt:param>
+                                    <fmt:formatDate type="date"
+                                        dateStyle="short"
+                                        value="${book.borrowedSince}" />
+                                </fmt:param>
+                            </fmt:message>
+                        </p>
+                    </c:when>
+                </c:choose>
 
+                <!-- Actions -->
                 <p>
                     <c:if test="${bookIsAvailable}">
-                        <!-- Book is available, so it can be reserved. -->
                         <button name="reserve" type="submit"
                             class="btn btn-primary">
                             <fmt:message key="book.action.reserve" />
@@ -83,7 +136,6 @@
                     </c:if>
                     <c:if
                         test="${bookIsReserved and (bookIsReservedByThisUser or userIsManager)}">
-                        <!-- User, who has reserved a book, or manager can release it. -->
                         <button name="release" type="submit"
                             class="btn btn-warning">
                             <fmt:message key="book.action.release" />
@@ -92,14 +144,12 @@
 
                     <c:if test="${userIsManager}">
                         <c:if test="${bookIsReserved}">
-                            <!-- Manager can take out a book, which is reserved. -->
                             <button name="takeOut" type="submit"
                                 class="btn btn-primary">
                                 <fmt:message key="book.action.takeout" />
                             </button>
                         </c:if>
                         <c:if test="${bookIsBorrowed}">
-                            <!-- Manager can take back a book, which is borrowed. -->
                             <button name="takeBack" type="submit"
                                 class="btn btn-primary">
                                 <fmt:message key="book.action.takeback" />

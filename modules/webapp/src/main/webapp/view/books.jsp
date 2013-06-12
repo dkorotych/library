@@ -96,7 +96,7 @@
                     </c:url>
                     <p>
                         <a href="${detailsUrl}" class="btn btn-info">
-                            <fmt:message key="book.details" />
+                            <fmt:message key="book.action.view" />
                         </a>
                     </p>
                 </div>

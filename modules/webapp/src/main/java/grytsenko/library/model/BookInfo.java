@@ -28,6 +28,24 @@ public class BookInfo implements Serializable {
     @Column(name = "title", length = 100)
     private String title;
 
+    @Basic
+    @Column(name = "publisher")
+    private String publisher;
+    @Basic
+    @Column(name = "year")
+    private Integer year;
+
+    @Basic
+    @Column(name = "language", length = 20)
+    private String language;
+    @Basic
+    @Column(name = "pages")
+    private Integer pages;
+
+    @Basic
+    @Column(name = "isbn", length = 20)
+    private String isbn;
+
     public BookInfo() {
     }
 
@@ -53,6 +71,46 @@ public class BookInfo implements Serializable {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getPublisher() {
+        return publisher;
+    }
+
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
+    }
+
+    public Integer getYear() {
+        return year;
+    }
+
+    public void setYear(Integer year) {
+        this.year = year;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public Integer getPages() {
+        return pages;
+    }
+
+    public void setPages(Integer pages) {
+        this.pages = pages;
+    }
+
+    public String getIsbn() {
+        return isbn;
+    }
+
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
     }
 
 }
