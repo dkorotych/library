@@ -21,10 +21,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
- * Processes a requests for managing books.
+ * Manages a requests for books in library.
  */
 @Controller
 @RequestMapping("/books")
@@ -50,12 +49,8 @@ public class BooksController {
      * Adds current user.
      */
     @ModelAttribute("user")
-    public User addCurrentUser(Principal principal) {
-        String username = principal.getName();
-        User user = userService.get(username);
-        LOGGER.debug("Found user {} with role {}.", user.getUsername(),
-                user.getRole());
-        return user;
+    public User currentUser(Principal principal) {
+        return userService.get(principal.getName());
     }
 
     /**
@@ -105,103 +100,6 @@ public class BooksController {
 
         model.addAttribute("filter", filter);
         LOGGER.debug("Current filter is {}.", filter);
-
-        return "redirect:/books";
-    }
-
-    /**
-     * User reserves a book for himself.
-     */
-    @RequestMapping(params = "reserve", method = RequestMethod.POST)
-    public String reserve(@RequestParam("bookId") Long bookId,
-            @ModelAttribute("user") User user,
-            RedirectAttributes redirectAttributes) {
-        String username = user.getUsername();
-
-        LOGGER.debug("User {} reserves the book {}.", username, bookId);
-
-        try {
-            bookService.reserve(bookId, user);
-            LOGGER.debug("The book {} was reserved for {}.", bookId, username);
-        } catch (BookServiceException exception) {
-            LOGGER.warn("The book {} wasn't reserved for {}.", bookId, username);
-            LOGGER.warn("Reason: '{}'.", exception.getMessage());
-
-            redirectAttributes.addFlashAttribute("lastOperationFailed", true);
-        }
-
-        return "redirect:/books";
-    }
-
-    /**
-     * User or manager releases a book.
-     */
-    @RequestMapping(params = "release", method = RequestMethod.POST)
-    public String release(@RequestParam("bookId") Long bookId,
-            @ModelAttribute("user") User user,
-            RedirectAttributes redirectAttributes) {
-        String username = user.getUsername();
-
-        LOGGER.debug("User {} releases the book {}.", username, bookId);
-
-        try {
-            bookService.release(bookId, user);
-            LOGGER.debug("The book {} was released by {}.", bookId, username);
-        } catch (BookServiceException exception) {
-            LOGGER.warn("The book {} wasn't released by {}.", bookId, username);
-            LOGGER.warn("Reason: '{}'.", exception.getMessage());
-
-            redirectAttributes.addFlashAttribute("lastOperationFailed", true);
-        }
-
-        return "redirect:/books";
-    }
-
-    /**
-     * Manager takes out a book from library.
-     */
-    @RequestMapping(params = "takeOut", method = RequestMethod.POST)
-    public String takeOut(@RequestParam("bookId") Long bookId,
-            @ModelAttribute("user") User user,
-            RedirectAttributes redirectAttributes) {
-        String username = user.getUsername();
-
-        LOGGER.debug("User {} takes out the book {}.", username, bookId);
-
-        try {
-            bookService.takeOut(bookId, user);
-            LOGGER.debug("The book {} was taken out by {}.", bookId, username);
-        } catch (BookServiceException exception) {
-            LOGGER.warn("The book {} wasn't taken out by {}.", bookId, username);
-            LOGGER.warn("Reason: '{}'.", exception.getMessage());
-
-            redirectAttributes.addFlashAttribute("lastOperationFailed", true);
-        }
-
-        return "redirect:/books";
-    }
-
-    /**
-     * Manager takes back a book to library.
-     */
-    @RequestMapping(params = "takeBack", method = RequestMethod.POST)
-    public String takeBack(@RequestParam("bookId") Long bookId,
-            @ModelAttribute("user") User user,
-            RedirectAttributes redirectAttributes) {
-        String username = user.getUsername();
-
-        LOGGER.debug("User {} takes back the book {}.", username, bookId);
-
-        try {
-            bookService.takeBack(bookId, user);
-            LOGGER.debug("The book {} was taken back by {}.", bookId, username);
-        } catch (BookServiceException exception) {
-            LOGGER.warn("The book {} wasn't taken back by {}.", bookId,
-                    username);
-            LOGGER.warn("Reason: '{}'.", exception.getMessage());
-
-            redirectAttributes.addFlashAttribute("lastOperationFailed", true);
-        }
 
         return "redirect:/books";
     }

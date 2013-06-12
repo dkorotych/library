@@ -16,7 +16,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 /**
- * Information about hard copy of book.
+ * Information about a copy of book.
  */
 @Entity(name = "books")
 public class Book implements Serializable {
@@ -28,8 +28,8 @@ public class Book implements Serializable {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "info_id", nullable = false)
-    private BookInfo info;
+    @JoinColumn(name = "details_id", nullable = false)
+    private BookDetails details;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", length = 10)
@@ -70,12 +70,12 @@ public class Book implements Serializable {
         this.id = id;
     }
 
-    public BookInfo getInfo() {
-        return info;
+    public BookDetails getDetails() {
+        return details;
     }
 
-    public void setInfo(BookInfo info) {
-        this.info = info;
+    public void setDetails(BookDetails details) {
+        this.details = details;
     }
 
     public BookStatus getStatus() {

@@ -7,6 +7,7 @@ import grytsenko.library.model.User;
 import grytsenko.library.model.UserRole;
 import grytsenko.library.repository.BookRepository;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -68,10 +69,34 @@ public class BookService {
     }
 
     /**
-     * Reserves a book for user.
+     * Finds a book by its identifier.
      * 
      * @param bookId
-     *            the identifier of reserved book.
+     *            the identifier of book.
+     * 
+     * @return the found book.
+     * 
+     * @throws BookServiceException
+     *             a book was not found in library.
+     */
+    public Book find(long bookId) throws BookServiceException {
+        Book book = bookRepository.findOne(bookId);
+
+        if (book == null) {
+            String errorMessage = MessageFormat.format(
+                    "Book {0} was not found.", bookId);
+            LOGGER.warn(errorMessage);
+            throw new BookServiceException(errorMessage);
+        }
+
+        return book;
+    }
+
+    /**
+     * Reserves a book for user.
+     * 
+     * @param book
+     *            the book which is reserved by user.
      * @param user
      *            the user who reserves a book.
      * 
@@ -80,9 +105,7 @@ public class BookService {
      * @throws BookServiceException
      *             if book cannot be reserved.
      */
-    public Book reserve(long bookId, User user) throws BookServiceException {
-        Book book = getBook(bookId);
-
+    public Book reserve(Book book, User user) throws BookServiceException {
         if (book.getStatus() != BookStatus.AVAILABLE) {
             throw new BookServiceException("Book is not available.");
         }
@@ -101,8 +124,8 @@ public class BookService {
     /**
      * Releases a book.
      * 
-     * @param bookId
-     *            the identifier of book.
+     * @param book
+     *            the book which is released by user.
      * @param user
      *            the user who releases a book.
      * 
@@ -111,9 +134,7 @@ public class BookService {
      * @throws BookServiceException
      *             if book cannot be released.
      */
-    public Book release(long bookId, User user) throws BookServiceException {
-        Book book = getBook(bookId);
-
+    public Book release(Book book, User user) throws BookServiceException {
         if (book.getStatus() != BookStatus.RESERVED) {
             throw new BookServiceException("Book is not reserved.");
         }
@@ -137,8 +158,8 @@ public class BookService {
     /**
      * Takes out a book from library.
      * 
-     * @param bookId
-     *            the identifier of book.
+     * @param book
+     *            the book which is taken out from library.
      * @param user
      *            the user who takes out a book from library.
      * 
@@ -147,9 +168,7 @@ public class BookService {
      * @throws BookServiceException
      *             if book cannot be taken out.
      */
-    public Book takeOut(long bookId, User user) throws BookServiceException {
-        Book book = getBook(bookId);
-
+    public Book takeOut(Book book, User user) throws BookServiceException {
         if (book.getStatus() != BookStatus.RESERVED) {
             throw new BookServiceException("Book is not reserved.");
         }
@@ -175,8 +194,8 @@ public class BookService {
     /**
      * Takes back a book to library.
      * 
-     * @param bookId
-     *            the identifier of book.
+     * @param book
+     *            the book which is taken back to library.
      * @param user
      *            the user who takes back a book to library.
      * 
@@ -185,9 +204,7 @@ public class BookService {
      * @throws BookServiceException
      *             if book cannot be taken back.
      */
-    public Book takeBack(long bookId, User user) throws BookServiceException {
-        Book book = getBook(bookId);
-
+    public Book takeBack(Book book, User user) throws BookServiceException {
         if (book.getStatus() != BookStatus.BORROWED) {
             throw new BookServiceException("Book is not borrowed.");
         }
@@ -208,17 +225,6 @@ public class BookService {
         book.setManagedSince(now);
 
         return bookRepository.saveAndFlush(book);
-    }
-
-    private Book getBook(long bookId) throws BookServiceException {
-        Book book = bookRepository.findOne(bookId);
-
-        if (book == null) {
-            LOGGER.warn("Book {} wasn't found in repository.", bookId);
-            throw new BookServiceException("Book not found.");
-        }
-
-        return book;
     }
 
     private Date now() {
