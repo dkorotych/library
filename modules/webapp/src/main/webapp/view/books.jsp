@@ -85,9 +85,9 @@
 
                 <!-- Information about book. -->
                 <p>
-                    <strong>${book.info.title}</strong>
+                    <strong>${book.details.title}</strong>
                     <br />
-                    ${book.info.authors}
+                    ${book.details.authors}
                 </p>
 
                 <div>

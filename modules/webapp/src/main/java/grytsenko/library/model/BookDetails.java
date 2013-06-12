@@ -12,8 +12,8 @@ import javax.persistence.Id;
 /**
  * Information about book.
  */
-@Entity(name = "books_info")
-public class BookInfo implements Serializable {
+@Entity(name = "books_details")
+public class BookDetails implements Serializable {
 
     private static final long serialVersionUID = 341757671464199966L;
 
@@ -46,7 +46,7 @@ public class BookInfo implements Serializable {
     @Column(name = "isbn", length = 20)
     private String isbn;
 
-    public BookInfo() {
+    public BookDetails() {
     }
 
     public Long getId() {

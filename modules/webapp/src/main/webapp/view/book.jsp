@@ -31,8 +31,8 @@
 
         <div class="row-fluid">
             <!-- Information about book. -->
-            <h3>${book.info.title}</h3>
-            <p>${book.info.authors}</p>
+            <h3>${book.details.title}</h3>
+            <p>${book.details.authors}</p>
         </div>
 
         <hr />
@@ -47,31 +47,31 @@
                     <strong>
                         <fmt:message key="book.details.publisher" />
                     </strong>
-                    ${book.info.publisher}
+                    ${book.details.publisher}
                 </li>
                 <li>
                     <strong>
                         <fmt:message key="book.details.year" />
                     </strong>
-                    ${book.info.year}
+                    ${book.details.year}
                 </li>
                 <li>
                     <strong>
                         <fmt:message key="book.details.language" />
                     </strong>
-                    ${book.info.language}
+                    ${book.details.language}
                 </li>
                 <li>
                     <strong>
                         <fmt:message key="book.details.pages" />
                     </strong>
-                    ${book.info.pages}
+                    ${book.details.pages}
                 </li>
                 <li>
                     <strong>
                         <fmt:message key="book.details.isbn" />
                     </strong>
-                    ${book.info.isbn}
+                    ${book.details.isbn}
                 </li>
             </ul>
         </div>
