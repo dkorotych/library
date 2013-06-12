@@ -21,14 +21,6 @@
     <%@include file="navbar.jsp"%>
 
     <div class="container">
-        <c:if test="${not empty lastOperationFailed}">
-            <!-- Alert about failed action. -->
-            <div class="alert alert-error">
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                <fmt:message key="book.message.error" />
-            </div>
-        </c:if>
-
         <div class="row-fluid">
             <!-- Information about book. -->
             <h3>${book.details.title}</h3>
@@ -83,6 +75,15 @@
             <h4 class="text-info">
                 <fmt:message key="book.status" />
             </h4>
+
+            <c:if test="${not empty lastOperationFailed}">
+                <!-- Alert about failed action. -->
+                <div class="alert alert-error">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <fmt:message key="book.message.error" />
+                </div>
+            </c:if>
+
             <form:form method="POST">
                 <c:set var="userIsManager" value="${user.role eq 'MANAGER'}" />
 
