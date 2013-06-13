@@ -4,6 +4,8 @@ import grytsenko.library.model.Book;
 import grytsenko.library.model.User;
 import grytsenko.library.service.BookService;
 import grytsenko.library.service.BookServiceException;
+import grytsenko.library.service.MailService;
+import grytsenko.library.service.MailServiceException;
 import grytsenko.library.service.UserService;
 
 import java.security.Principal;
@@ -33,11 +35,14 @@ public class BookController {
 
     private UserService userService;
     private BookService bookService;
+    private MailService mailService;
 
     @Autowired
-    public BookController(UserService userService, BookService bookService) {
+    public BookController(UserService userService, BookService bookService,
+            MailService mailService) {
         this.userService = userService;
         this.bookService = bookService;
+        this.mailService = mailService;
     }
 
     @ModelAttribute("user")
@@ -77,6 +82,15 @@ public class BookController {
             LOGGER.warn("Reason: '{}'.", exception.getMessage());
 
             redirectAttributes.addFlashAttribute("lastOperationFailed", true);
+
+            return redirectToBook(bookId);
+        }
+
+        try {
+            mailService.notifyReserved(book, book.getReservedBy());
+            LOGGER.debug("Notification was sent to {}.", username);
+        } catch (MailServiceException exception) {
+            LOGGER.warn("Notification was not sent to {}.", username);
         }
 
         return redirectToBook(bookId);
@@ -102,6 +116,15 @@ public class BookController {
             LOGGER.warn("Reason: '{}'.", exception.getMessage());
 
             redirectAttributes.addFlashAttribute("lastOperationFailed", true);
+
+            return redirectToBook(bookId);
+        }
+
+        try {
+            mailService.notifyReleased(book, user);
+            LOGGER.debug("Notification was sent to {}.", username);
+        } catch (MailServiceException exception) {
+            LOGGER.warn("Notification was not sent to {}.", username);
         }
 
         return redirectToBook(bookId);
@@ -127,6 +150,15 @@ public class BookController {
             LOGGER.warn("Reason: '{}'.", exception.getMessage());
 
             redirectAttributes.addFlashAttribute("lastOperationFailed", true);
+
+            return redirectToBook(bookId);
+        }
+
+        try {
+            mailService.notifyBorrowed(book, book.getBorrowedBy());
+            LOGGER.debug("Notification was sent to {}.", username);
+        } catch (MailServiceException exception) {
+            LOGGER.warn("Notification was not sent to {}.", username);
         }
 
         return redirectToBook(bookId);
@@ -153,6 +185,15 @@ public class BookController {
             LOGGER.warn("Reason: '{}'.", exception.getMessage());
 
             redirectAttributes.addFlashAttribute("lastOperationFailed", true);
+
+            return redirectToBook(bookId);
+        }
+
+        try {
+            mailService.notifyReturned(book, user);
+            LOGGER.debug("Notification was sent to {}.", username);
+        } catch (MailServiceException exception) {
+            LOGGER.warn("Notification was not sent to {}.", username);
         }
 
         return redirectToBook(bookId);

@@ -13,7 +13,7 @@
     <util:properties id="ldapProperties" location="classpath:ldap.properties" />
     <bean id="ldapPropertiesConfigurer"
         class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
-        p:properties-ref="ldapProperties" />
+        p:properties-ref="ldapProperties" p:placeholderPrefix="ldap-${" />
 
     <security:http pattern="/login" security="none" />
     <security:http pattern="/assets/**" security="none" />
@@ -29,11 +29,11 @@
             password-parameter="password" authentication-failure-url="/login?retry" />
     </security:http>
 
-    <security:ldap-server url="${ldap.url}/${ldap.dc}" />
+    <security:ldap-server url="ldap-${ldap.url}/ldap-${ldap.dc}" />
 
     <security:authentication-manager>
         <security:ldap-authentication-provider
-            user-search-base="${ldap.users}" user-search-filter="${ldap.users.filter}" />
+            user-search-base="ldap-${ldap.users}" user-search-filter="ldap-${ldap.users.filter}" />
     </security:authentication-manager>
 
 </beans>

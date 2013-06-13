@@ -108,9 +108,13 @@ public class BookService {
      */
     @Transactional(rollbackFor = { BookServiceException.class })
     public Book reserve(Book book, User user) throws BookServiceException {
+        LOGGER.debug("Checking that the book {} can be reserved.", book.getId());
+
         if (book.getStatus() != BookStatus.AVAILABLE) {
             throw new BookServiceException("Book is not available.");
         }
+
+        LOGGER.debug("Book {} can be reserved.", book.getId());
 
         Date now = now();
 
@@ -138,6 +142,8 @@ public class BookService {
      */
     @Transactional(rollbackFor = { BookServiceException.class })
     public Book release(Book book, User user) throws BookServiceException {
+        LOGGER.debug("Checking that the book {} can be released.", book.getId());
+
         if (book.getStatus() != BookStatus.RESERVED) {
             throw new BookServiceException("Book is not reserved.");
         }
@@ -146,6 +152,8 @@ public class BookService {
                 && !user.getId().equals(book.getReservedBy().getId())) {
             throw new BookServiceException("Access denied.");
         }
+
+        LOGGER.debug("Book {} can be released.", book.getId());
 
         Date now = now();
 
@@ -173,6 +181,8 @@ public class BookService {
      */
     @Transactional(rollbackFor = { BookServiceException.class })
     public Book takeOut(Book book, User user) throws BookServiceException {
+        LOGGER.debug("Checking that the book {} can be borrowed.", book.getId());
+
         if (book.getStatus() != BookStatus.RESERVED) {
             throw new BookServiceException("Book is not reserved.");
         }
@@ -180,6 +190,8 @@ public class BookService {
         if (user.getRole() != UserRole.MANAGER) {
             throw new BookServiceException("Access denied.");
         }
+
+        LOGGER.debug("Book {} can be borrowed.", book.getId());
 
         Date now = now();
 
@@ -210,6 +222,8 @@ public class BookService {
      */
     @Transactional(rollbackFor = { BookServiceException.class })
     public Book takeBack(Book book, User user) throws BookServiceException {
+        LOGGER.debug("Checking that the book {} can be returned.", book.getId());
+
         if (book.getStatus() != BookStatus.BORROWED) {
             throw new BookServiceException("Book is not borrowed.");
         }
@@ -217,6 +231,8 @@ public class BookService {
         if (user.getRole() != UserRole.MANAGER) {
             throw new BookServiceException("Access denied.");
         }
+
+        LOGGER.debug("Book {} can be returned.", book.getId());
 
         Date now = now();
 
@@ -236,7 +252,10 @@ public class BookService {
         try {
             return bookRepository.saveAndFlush(book);
         } catch (Exception exception) {
-            throw new BookServiceException("Can not save a book.");
+            LOGGER.warn("Can not save the book {}, because: '{}'.",
+                    book.getId(), exception.getMessage());
+
+            throw new BookServiceException("Can not save the book.");
         }
     }
 

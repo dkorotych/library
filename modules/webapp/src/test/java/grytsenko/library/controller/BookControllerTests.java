@@ -6,6 +6,7 @@ import static grytsenko.library.test.TestBooks.reservedBook;
 import static grytsenko.library.test.TestUsers.guest;
 import static grytsenko.library.test.TestUsers.manager;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -16,6 +17,7 @@ import grytsenko.library.model.Book;
 import grytsenko.library.model.User;
 import grytsenko.library.service.BookService;
 import grytsenko.library.service.BookServiceException;
+import grytsenko.library.service.MailService;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -24,14 +26,27 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class BookControllerTests {
 
     BookService bookService;
+    MailService mailService;
+
     BookController bookController;
 
     @Before
-    public void prepare() {
+    public void prepare() throws Exception {
         // Setup SUT.
         bookService = mock(BookService.class);
+        mailService = mock(MailService.class);
 
-        bookController = new BookController(null, bookService);
+        bookController = new BookController(null, bookService, mailService);
+
+        // Setup behavior.
+        doNothing().when(mailService).notifyReserved(any(Book.class),
+                any(User.class));
+        doNothing().when(mailService).notifyReleased(any(Book.class),
+                any(User.class));
+        doNothing().when(mailService).notifyBorrowed(any(Book.class),
+                any(User.class));
+        doNothing().when(mailService).notifyReturned(any(Book.class),
+                any(User.class));
     }
 
     /**
@@ -40,8 +55,8 @@ public class BookControllerTests {
     @Test
     public void testReserve() throws Exception {
         // Setup data.
-        User guest = guest();
-        Book reservedBook = reservedBook(guest);
+        User reservedBy = guest();
+        Book reservedBook = reservedBook(reservedBy);
         RedirectAttributes redirectAttributes = mock(RedirectAttributes.class);
 
         // Setup behavior.
@@ -49,11 +64,14 @@ public class BookControllerTests {
                 any(User.class));
 
         // Execute.
-        bookController.reserve(reservedBook, guest, redirectAttributes);
+        bookController.reserve(reservedBook, reservedBy, redirectAttributes);
 
         // Verify behavior.
-        verify(bookService).reserve(reservedBook, guest);
+        verify(bookService).reserve(reservedBook, reservedBy);
         verifyNoMoreInteractions(bookService);
+
+        verify(mailService).notifyReserved(reservedBook, reservedBy);
+        verifyNoMoreInteractions(mailService);
 
         verifyZeroInteractions(redirectAttributes);
     }
@@ -64,8 +82,8 @@ public class BookControllerTests {
     @Test
     public void testReserveFailed() throws Exception {
         // Setup data.
-        User guest = guest();
-        Book reservedBook = reservedBook(guest);
+        User reservedBy = guest();
+        Book reservedBook = reservedBook(reservedBy);
         RedirectAttributes redirectAttributes = mock(RedirectAttributes.class);
 
         // Setup behavior.
@@ -73,11 +91,13 @@ public class BookControllerTests {
                 any(Book.class), any(User.class));
 
         // Execute.
-        bookController.reserve(reservedBook, guest, redirectAttributes);
+        bookController.reserve(reservedBook, reservedBy, redirectAttributes);
 
         // Verify behavior.
-        verify(bookService).reserve(reservedBook, guest);
+        verify(bookService).reserve(reservedBook, reservedBy);
         verifyNoMoreInteractions(bookService);
+
+        verifyZeroInteractions(mailService);
 
         verify(redirectAttributes).addFlashAttribute("lastOperationFailed",
                 true);
@@ -90,20 +110,23 @@ public class BookControllerTests {
     @Test
     public void testRelease() throws Exception {
         // Setup data.
-        User guest = guest();
-        Book availableBook = availableBook();
+        User reservedBy = guest();
+        Book reservedBook = reservedBook(reservedBy);
         RedirectAttributes redirectAttributes = mock(RedirectAttributes.class);
 
         // Setup behavior.
-        doReturn(availableBook).when(bookService).release(any(Book.class),
+        doReturn(reservedBook).when(bookService).release(any(Book.class),
                 any(User.class));
 
         // Execute.
-        bookController.release(availableBook, guest, redirectAttributes);
+        bookController.release(reservedBook, reservedBy, redirectAttributes);
 
         // Verify behavior.
-        verify(bookService).release(availableBook, guest);
+        verify(bookService).release(reservedBook, reservedBy);
         verifyNoMoreInteractions(bookService);
+
+        verify(mailService).notifyReleased(reservedBook, reservedBy);
+        verifyNoMoreInteractions(mailService);
 
         verifyZeroInteractions(redirectAttributes);
     }
@@ -129,6 +152,8 @@ public class BookControllerTests {
         verify(bookService).release(availableBook, guest);
         verifyNoMoreInteractions(bookService);
 
+        verifyZeroInteractions(mailService);
+
         verify(redirectAttributes).addFlashAttribute("lastOperationFailed",
                 true);
         verifyNoMoreInteractions(redirectAttributes);
@@ -141,7 +166,8 @@ public class BookControllerTests {
     public void testTakeOut() throws Exception {
         // Setup data.
         User manager = manager();
-        Book borrowedBook = borrowedBook(guest());
+        User borrowedBy = guest();
+        Book borrowedBook = borrowedBook(borrowedBy);
         RedirectAttributes redirectAttributes = mock(RedirectAttributes.class);
 
         // Setup behavior.
@@ -155,6 +181,9 @@ public class BookControllerTests {
         verify(bookService).takeOut(borrowedBook, manager);
         verifyNoMoreInteractions(bookService);
 
+        verify(mailService).notifyBorrowed(borrowedBook, borrowedBy);
+        verifyNoMoreInteractions(mailService);
+
         verifyZeroInteractions(redirectAttributes);
     }
 
@@ -165,7 +194,8 @@ public class BookControllerTests {
     public void testTakeOutFailed() throws Exception {
         // Setup data.
         User manager = manager();
-        Book borrowedBook = borrowedBook(guest());
+        User borrowedBy = guest();
+        Book borrowedBook = borrowedBook(borrowedBy);
         RedirectAttributes redirectAttributes = mock(RedirectAttributes.class);
 
         // Setup behavior.
@@ -179,6 +209,8 @@ public class BookControllerTests {
         verify(bookService).takeOut(borrowedBook, manager);
         verifyNoMoreInteractions(bookService);
 
+        verifyZeroInteractions(mailService);
+
         verify(redirectAttributes).addFlashAttribute("lastOperationFailed",
                 true);
         verifyNoMoreInteractions(redirectAttributes);
@@ -191,19 +223,23 @@ public class BookControllerTests {
     public void testTakeBack() throws Exception {
         // Setup data.
         User manager = manager();
-        Book availableBook = availableBook();
+        User borrowedBy = guest();
+        Book borrowedBook = borrowedBook(borrowedBy);
         RedirectAttributes redirectAttributes = mock(RedirectAttributes.class);
 
         // Setup behavior.
-        doReturn(availableBook).when(bookService).takeBack(any(Book.class),
+        doReturn(borrowedBook).when(bookService).takeBack(any(Book.class),
                 any(User.class));
 
         // Execute.
-        bookController.takeBack(availableBook, manager, redirectAttributes);
+        bookController.takeBack(borrowedBook, manager, redirectAttributes);
 
         // Verify behavior.
-        verify(bookService).takeBack(availableBook, manager);
+        verify(bookService).takeBack(borrowedBook, manager);
         verifyNoMoreInteractions(bookService);
+
+        verify(mailService).notifyReturned(borrowedBook, manager);
+        verifyNoMoreInteractions(mailService);
 
         verifyZeroInteractions(redirectAttributes);
     }
@@ -215,7 +251,8 @@ public class BookControllerTests {
     public void testTakeBackFailed() throws Exception {
         // Setup data.
         User manager = manager();
-        Book availableBook = availableBook();
+        User borrowedBy = guest();
+        Book borrowedBook = borrowedBook(borrowedBy);
         RedirectAttributes redirectAttributes = mock(RedirectAttributes.class);
 
         // Setup behavior.
@@ -223,11 +260,13 @@ public class BookControllerTests {
                 any(Book.class), any(User.class));
 
         // Execute.
-        bookController.takeBack(availableBook, manager, redirectAttributes);
+        bookController.takeBack(borrowedBook, manager, redirectAttributes);
 
         // Verify behavior.
-        verify(bookService).takeBack(availableBook, manager);
+        verify(bookService).takeBack(borrowedBook, manager);
         verifyNoMoreInteractions(bookService);
+
+        verifyZeroInteractions(mailService);
 
         verify(redirectAttributes).addFlashAttribute("lastOperationFailed",
                 true);
