@@ -18,6 +18,7 @@ import grytsenko.library.model.User;
 import grytsenko.library.service.BookService;
 import grytsenko.library.service.BookServiceException;
 import grytsenko.library.service.MailService;
+import grytsenko.library.service.MailServiceException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -267,6 +268,102 @@ public class BookControllerTests {
         verifyNoMoreInteractions(bookService);
 
         verifyZeroInteractions(mailService);
+
+        verify(redirectAttributes).addFlashAttribute("lastOperationFailed",
+                true);
+        verifyNoMoreInteractions(redirectAttributes);
+    }
+
+    /**
+     * Manager reminds a user about the reserved book.
+     */
+    @Test
+    public void testRemindAboutReserved() throws Exception {
+        // Setup data.
+        User manager = manager();
+        User reservedBy = guest();
+        Book reservedBook = reservedBook(reservedBy);
+        RedirectAttributes redirectAttributes = mock(RedirectAttributes.class);
+
+        // Execute.
+        bookController.remind(reservedBook, manager, redirectAttributes);
+
+        // Verify behavior.
+        verifyZeroInteractions(bookService);
+
+        verify(mailService).notifyReserved(reservedBook, reservedBy);
+        verifyNoMoreInteractions(mailService);
+
+        verifyZeroInteractions(redirectAttributes);
+    }
+
+    /**
+     * Manager reminds a user about the borrowed book.
+     */
+    @Test
+    public void testRemindAboutBorrowed() throws Exception {
+        // Setup data.
+        User manager = manager();
+        User borrowedBy = guest();
+        Book borrowedBook = borrowedBook(borrowedBy);
+        RedirectAttributes redirectAttributes = mock(RedirectAttributes.class);
+
+        // Execute.
+        bookController.remind(borrowedBook, manager, redirectAttributes);
+
+        // Verify behavior.
+        verifyZeroInteractions(bookService);
+
+        verify(mailService).notifyBorrowed(borrowedBook, borrowedBy);
+        verifyNoMoreInteractions(mailService);
+
+        verifyZeroInteractions(redirectAttributes);
+    }
+
+    /**
+     * Manager reminds a user about the available book.
+     */
+    @Test
+    public void testRemindAboutAvailable() throws Exception {
+        // Setup data.
+        User manager = manager();
+        Book availableBook = availableBook();
+        RedirectAttributes redirectAttributes = mock(RedirectAttributes.class);
+
+        // Execute.
+        bookController.remind(availableBook, manager, redirectAttributes);
+
+        // Verify behavior.
+        verifyZeroInteractions(bookService);
+
+        verifyZeroInteractions(mailService);
+
+        verifyZeroInteractions(redirectAttributes);
+    }
+
+    /**
+     * Manager tried to remind, but error has occurred.
+     */
+    @Test
+    public void testRemindFailed() throws Exception {
+        // Setup data.
+        User manager = manager();
+        User reservedBy = guest();
+        Book reservedBook = reservedBook(reservedBy);
+        RedirectAttributes redirectAttributes = mock(RedirectAttributes.class);
+
+        // Setup behavior.
+        doThrow(new MailServiceException()).when(mailService).notifyReserved(
+                any(Book.class), any(User.class));
+
+        // Execute.
+        bookController.remind(reservedBook, manager, redirectAttributes);
+
+        // Verify behavior.
+        verifyZeroInteractions(bookService);
+
+        verify(mailService).notifyReserved(reservedBook, reservedBy);
+        verifyNoMoreInteractions(mailService);
 
         verify(redirectAttributes).addFlashAttribute("lastOperationFailed",
                 true);

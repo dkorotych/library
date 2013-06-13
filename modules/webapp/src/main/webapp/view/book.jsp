@@ -128,6 +128,16 @@
 
                 <!-- Actions -->
                 <p>
+                    <c:if test="${userIsManager}">
+                        <c:if test="${bookIsReserved or bookIsBorrowed}">
+                            <button name="remind" type="submit"
+                                class="btn btn-info">
+                                <i class="icon-envelope"></i>
+                                <fmt:message key="book.action.remind" />
+                            </button>
+                        </c:if>
+                    </c:if>
+
                     <c:if test="${bookIsAvailable}">
                         <button name="reserve" type="submit"
                             class="btn btn-primary">
@@ -145,13 +155,13 @@
                     <c:if test="${userIsManager}">
                         <c:if test="${bookIsReserved}">
                             <button name="takeOut" type="submit"
-                                class="btn btn-primary">
+                                class="btn btn-warning">
                                 <fmt:message key="book.action.takeout" />
                             </button>
                         </c:if>
                         <c:if test="${bookIsBorrowed}">
                             <button name="takeBack" type="submit"
-                                class="btn btn-primary">
+                                class="btn btn-warning">
                                 <fmt:message key="book.action.takeback" />
                             </button>
                         </c:if>

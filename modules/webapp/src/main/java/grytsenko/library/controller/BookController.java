@@ -1,6 +1,7 @@
 package grytsenko.library.controller;
 
 import grytsenko.library.model.Book;
+import grytsenko.library.model.BookStatus;
 import grytsenko.library.model.User;
 import grytsenko.library.service.BookService;
 import grytsenko.library.service.BookServiceException;
@@ -194,6 +195,35 @@ public class BookController {
             LOGGER.debug("Notification was sent to {}.", username);
         } catch (MailServiceException exception) {
             LOGGER.warn("Notification was not sent to {}.", username);
+        }
+
+        return redirectToBook(bookId);
+    }
+
+    /**
+     * Manager reminds that book is reserved or is borrowed by user.
+     */
+    @RequestMapping(params = "remind", method = RequestMethod.POST)
+    public String remind(@ModelAttribute("book") Book book,
+            @ModelAttribute("user") User user,
+            RedirectAttributes redirectAttributes) {
+        String username = user.getUsername();
+        Long bookId = book.getId();
+        BookStatus bookStatus = book.getStatus();
+
+        LOGGER.debug("Manager {} reminds that the book {} is {}.", username,
+                bookId, bookStatus);
+
+        try {
+            if (book.getStatus() == BookStatus.RESERVED) {
+                mailService.notifyReserved(book, book.getReservedBy());
+            } else if (book.getStatus() == BookStatus.BORROWED) {
+                mailService.notifyBorrowed(book, book.getBorrowedBy());
+            }
+        } catch (MailServiceException exception) {
+            LOGGER.warn("Notification was not sent to {}.", username);
+
+            redirectAttributes.addFlashAttribute("lastOperationFailed", true);
         }
 
         return redirectToBook(bookId);

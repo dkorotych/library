@@ -13,12 +13,14 @@
                     <c:url var="searchUrl" value="/search" />
                     <li>
                         <a href="${searchUrl}">
+                            <i class="icon-search"></i>
                             <fmt:message key="app.page.search" />
                         </a>
                     </li>
                 </ul>
                 <div class="pull-right">
-                    <i class="icon-user"></i> <strong>${user.username}</strong>
+                    <i class="icon-user"></i>
+                    <strong>${user.username}</strong>
                     <c:url var="logoutUrl" value="j_spring_security_logout" />
                     <a href="${logoutUrl}" class="btn btn-inverse">
                         <fmt:message key="app.logout" />
