@@ -9,7 +9,7 @@
 <head>
 <meta charset="utf-8">
 
-<title>Book</title>
+<title><fmt:message key="app.title" /></title>
 
 <link href="<c:url value="/assets/css/bootstrap.css" />" rel="stylesheet"
     media="screen" />
