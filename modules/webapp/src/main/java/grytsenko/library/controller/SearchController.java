@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 /**
- * Manages a requests for books in library.
+ * Manages requests for search of books in library.
  */
 @Controller
 @RequestMapping("/search")

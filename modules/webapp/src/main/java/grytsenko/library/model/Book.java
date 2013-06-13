@@ -54,7 +54,7 @@ public class Book implements Serializable {
     private Date borrowedSince;
 
     @ManyToOne
-    @JoinColumn(name = "managed_by")
+    @JoinColumn(name = "managed_by", nullable = false)
     private User managedBy;
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "managed_since")
