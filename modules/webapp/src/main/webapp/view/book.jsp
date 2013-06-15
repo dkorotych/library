@@ -80,9 +80,9 @@
 
             <c:if test="${not empty lastOperationFailed}">
                 <!-- Alert about failed action. -->
-                <div class="alert alert-error">
+                <div class="alert alert-warning">
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    <fmt:message key="book.message.error" />
+                    <fmt:message key="warning.retry" />
                 </div>
             </c:if>
 

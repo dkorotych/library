@@ -20,16 +20,6 @@
     <%@include file="components/navbar.jsp"%>
 
     <div class="container">
-        <div class="row-fluid">
-            <c:if test="${not empty lastOperationFailed}">
-                <!-- Alert about failed action. -->
-                <div class="alert alert-error">
-                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    <fmt:message key="book.message.error" />
-                </div>
-            </c:if>
-        </div>
-
         <c:set var="books" value="${searchResults.content}" />
 
         <c:if test="${searchResults.pagesTotal gt 1}">

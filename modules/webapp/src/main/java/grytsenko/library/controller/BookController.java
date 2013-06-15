@@ -52,14 +52,16 @@ public class BookController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public String getBook(@RequestParam("bookId") Long bookId, Model model) {
+    public String getBook(@RequestParam("bookId") Long bookId, Model model)
+            throws BookServiceException {
         try {
             Book book = bookService.find(bookId);
             model.addAttribute("book", book);
         } catch (BookServiceException exception) {
             LOGGER.warn("Book {} was not found.", bookId);
-            model.addAttribute("lastOperationFailed", true);
+            throw exception;
         }
+
         return "book";
     }
 
