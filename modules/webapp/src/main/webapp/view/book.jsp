@@ -13,7 +13,7 @@
 
 <link href="<c:url value="/assets/css/bootstrap.css" />" rel="stylesheet"
     media="screen" />
-<link href="<c:url value="/assets/css/library.css" />" rel="stylesheet" />
+<link href="<c:url value="/assets/css/library-common.css" />" rel="stylesheet" />
 </head>
 
 <body>
@@ -22,49 +22,51 @@
     <div class="container">
         <div class="row-fluid">
             <!-- Information about book. -->
-            <h3>${book.details.title}</h3>
-            <p>${book.details.authors}</p>
-        </div>
+            <div class="media">
+                <div class="pull-left">
+                    <img class="media-object" src="${book.details.imageUrl}" />
+                </div>
+                <div class="media-body">
+                    <h4>${book.details.title}</h4>
+                    <p>${book.details.authors}</p>
 
-        <hr />
+                    <br />
 
-        <!-- Details. -->
-        <div class="row-fluid">
-            <h4 class="text-info">
-                <fmt:message key="book.details" />
-            </h4>
-            <ul class="unstyled">
-                <li>
-                    <strong>
-                        <fmt:message key="book.details.publisher" />
-                    </strong>
-                    ${book.details.publisher}
-                </li>
-                <li>
-                    <strong>
-                        <fmt:message key="book.details.year" />
-                    </strong>
-                    ${book.details.year}
-                </li>
-                <li>
-                    <strong>
-                        <fmt:message key="book.details.language" />
-                    </strong>
-                    ${book.details.language}
-                </li>
-                <li>
-                    <strong>
-                        <fmt:message key="book.details.pages" />
-                    </strong>
-                    ${book.details.pages}
-                </li>
-                <li>
-                    <strong>
-                        <fmt:message key="book.details.isbn" />
-                    </strong>
-                    ${book.details.isbn}
-                </li>
-            </ul>
+                    <!-- Details. -->
+                    <ul class="unstyled">
+                        <li>
+                            <strong>
+                                <fmt:message key="book.details.publisher" />
+                            </strong>
+                            ${book.details.publisher}
+                        </li>
+                        <li>
+                            <strong>
+                                <fmt:message key="book.details.year" />
+                            </strong>
+                            ${book.details.year}
+                        </li>
+                        <li>
+                            <strong>
+                                <fmt:message key="book.details.language" />
+                            </strong>
+                            ${book.details.language}
+                        </li>
+                        <li>
+                            <strong>
+                                <fmt:message key="book.details.pages" />
+                            </strong>
+                            ${book.details.pages}
+                        </li>
+                        <li>
+                            <strong>
+                                <fmt:message key="book.details.isbn" />
+                            </strong>
+                            ${book.details.isbn}
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
 
         <hr />

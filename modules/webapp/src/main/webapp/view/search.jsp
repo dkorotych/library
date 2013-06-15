@@ -13,36 +13,13 @@
 
 <link href="<c:url value="/assets/css/bootstrap.css" />" rel="stylesheet"
     media="screen" />
-<link href="<c:url value="/assets/css/library.css" />" rel="stylesheet" />
+<link href="<c:url value="/assets/css/library-common.css" />" rel="stylesheet" />
 </head>
 
 <body>
     <%@include file="navbar.jsp"%>
 
     <div class="container">
-        <div class="row-fluid">
-            <div class="pull-right">
-                <!-- Filter for books. -->
-                <c:url var="doFilter" value="/search/filter" />
-                <form action="${doFilter}" method="POST" class="form-inline">
-                    <select name="selectedFilter">
-                        <option value="ALL">
-                            <fmt:message key="book.filter.all" />
-                        </option>
-                        <option value="RELATED">
-                            <fmt:message key="book.filter.related" />
-                        </option>
-                        <option value="AVAILABLE">
-                            <fmt:message key="book.filter.available" />
-                        </option>
-                    </select>
-                    <button name="filter" type="submit" class="btn">
-                        <i class="icon-filter"></i>
-                    </button>
-                </form>
-            </div>
-        </div>
-
         <div class="row-fluid">
             <c:if test="${not empty lastOperationFailed}">
                 <!-- Alert about failed action. -->
@@ -53,6 +30,31 @@
             </c:if>
         </div>
 
+        <c:set var="books" value="${searchResults.content}" />
+
+        <c:if test="${searchResults.pagesTotal gt 1}">
+            <div class="pagination pagination-centered">
+                <ul>
+                    <c:forEach var="i" begin="1"
+                        end="${searchResults.pagesTotal}">
+                        <c:set var="pageNum" value="${i - 1}" />
+                        <c:url var="pageUrl" value="/search">
+                            <c:param name="pageNum" value="${pageNum}" />
+                        </c:url>
+
+                        <c:set var="pageIsActive" value="" />
+                        <c:if test="${pageNum eq searchResults.pageNum}">
+                            <c:set var="pageIsActive" value="active" />
+                        </c:if>
+
+                        <li class="${pageIsActive}">
+                            <a href="${pageUrl}">${i}</a>
+                        </li>
+                    </c:forEach>
+                </ul>
+            </div>
+        </c:if>
+
         <div class="row-fluid">
             <c:if test="${books.isEmpty()}">
                 <!-- Message about empty list of books. -->
@@ -61,60 +63,18 @@
                 </p>
             </c:if>
 
-            <!-- List of books. -->
-            <c:forEach items="${books}" var="book" varStatus="loop">
-                <!-- Book. -->
-                <div class="row-fluid">
-                    <!-- Status of book. -->
-                    <div class="pull-right">
-                        <c:if test="${book.status eq 'AVAILABLE'}">
-                            <span class="label label-success">
-                                <fmt:message key="book.status.available" />
-                            </span>
-                        </c:if>
-                        <c:if test="${book.status eq 'RESERVED'}">
-                            <span class="label label-warning">
-                                <fmt:message key="book.status.reserved" />
-                            </span>
-                        </c:if>
-                        <c:if test="${book.status eq 'BORROWED'}">
-                            <span class="label label-inverse">
-                                <fmt:message key="book.status.borrowed" />
-                            </span>
-                        </c:if>
-                    </div>
-
-                    <!-- Information about book. -->
-                    <p>
-                        <strong>${book.details.title}</strong>
-                        <br />
-                        ${book.details.authors}
-                    </p>
-
-                    <div>
-                        <c:url var="detailsUrl" value="book">
-                            <c:param name="bookId" value="${book.id}" />
-                        </c:url>
-                        <p>
-                            <a href="${detailsUrl}" class="btn btn-info">
-                                <fmt:message key="book.action.view" />
-                            </a>
-                        </p>
-                    </div>
-                </div>
-                <hr />
-            </c:forEach>
+            <ul class="thumbnails">
+                <c:forEach items="${books}" var="book" varStatus="loop">
+                    <li class="span4">
+                        <%@include file="book-thumbnail.jsp"%>
+                    </li>
+                </c:forEach>
+            </ul>
         </div>
     </div>
 
     <script src="<c:url value="/assets/js/jquery.js" />"></script>
     <script src="<c:url value="/assets/js/bootstrap.js" />"></script>
-    <script>
-        // Selects current filter.
-        jQuery(document).ready(function() {
-            jQuery('select[name="selectedFilter"]').val("${filter}");
-        });
-    </script>
 </body>
 
 </html>

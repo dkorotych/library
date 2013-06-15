@@ -1,20 +1,20 @@
 package grytsenko.library.service;
 
 import grytsenko.library.model.Book;
-import grytsenko.library.model.BookFilter;
 import grytsenko.library.model.BookStatus;
+import grytsenko.library.model.SearchResults;
 import grytsenko.library.model.User;
 import grytsenko.library.model.UserRole;
 import grytsenko.library.repository.BookRepository;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,38 +35,6 @@ public class BookService {
     @Autowired
     public BookService(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
-    }
-
-    /**
-     * Finds books.
-     * 
-     * @param filter
-     *            the filter for search.
-     * @param user
-     *            the user who searches books.
-     * 
-     * @return list of found books.
-     * 
-     * @throws BookServiceException
-     *             if books are not accessible.
-     */
-    public List<Book> find(BookFilter filter, User user)
-            throws BookServiceException {
-        Long userId = user.getId();
-        switch (filter) {
-        case RELATED:
-            List<Book> related = new ArrayList<>();
-            List<Book> reserved = bookRepository.findByReservedById(userId);
-            related.addAll(reserved);
-            List<Book> borrowed = bookRepository.findByBorrowedById(userId);
-            related.addAll(borrowed);
-            return related;
-        case AVAILABLE:
-            return bookRepository.findByStatus(BookStatus.AVAILABLE);
-        case ALL:
-        default:
-            return bookRepository.findAll();
-        }
     }
 
     /**
@@ -91,6 +59,39 @@ public class BookService {
         }
 
         return book;
+    }
+
+    /**
+     * Finds books.
+     * 
+     * @param pageNum
+     *            the page number.
+     * @param pageSize
+     *            the size of page.
+     * 
+     * @return the search results.
+     * 
+     * @throws BookServiceException
+     *             if books are not accessible.
+     */
+    public SearchResults<Book> find(int pageNum, int pageSize)
+            throws BookServiceException {
+        if (pageNum < 0) {
+            throw new IllegalArgumentException(
+                    "The page number less than zero.");
+        }
+
+        PageRequest pageRequest = new PageRequest(pageNum, pageSize);
+        Page<Book> page = bookRepository.findAll(pageRequest);
+        return toSearchResults(page);
+    }
+
+    private SearchResults<Book> toSearchResults(Page<Book> page) {
+        SearchResults<Book> results = new SearchResults<>();
+        results.setPageNum(page.getNumber());
+        results.setPagesTotal(page.getTotalPages());
+        results.setContent(page.getContent());
+        return results;
     }
 
     /**

@@ -1,15 +1,13 @@
 package grytsenko.library.controller;
 
-import static java.util.Collections.emptyList;
 import grytsenko.library.model.Book;
-import grytsenko.library.model.BookFilter;
+import grytsenko.library.model.SearchResults;
 import grytsenko.library.model.User;
 import grytsenko.library.service.BookService;
 import grytsenko.library.service.BookServiceException;
 import grytsenko.library.service.UserService;
 
 import java.security.Principal;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,11 +25,16 @@ import org.springframework.web.bind.annotation.SessionAttributes;
  */
 @Controller
 @RequestMapping("/search")
-@SessionAttributes({ "user", "filter" })
+@SessionAttributes({ "user" })
 public class SearchController {
 
     private static final Logger LOGGER = LoggerFactory
             .getLogger(SearchController.class);
+
+    /**
+     * The default page size.
+     */
+    public static final int PAGE_SIZE = 3;
 
     private UserService userService;
     private BookService bookService;
@@ -54,49 +57,26 @@ public class SearchController {
     }
 
     /**
-     * Adds default filter.
-     */
-    @ModelAttribute("filter")
-    public BookFilter addDefaultFilter() {
-        BookFilter filter = BookFilter.getDefault();
-        LOGGER.debug("Current filter is {}.", filter);
-        return filter;
-    }
-
-    /**
      * User views list of books.
      */
     @RequestMapping(method = RequestMethod.GET)
-    public String search(Model model, @ModelAttribute("user") User user,
-            @ModelAttribute("filter") BookFilter filter) {
-        LOGGER.debug("Get {} books.", filter);
+    public String search(
+            @RequestParam(value = "pageNum", required = false) Integer pageNum,
+            @ModelAttribute("user") User user, Model model) {
+        if (pageNum == null || pageNum < 0) {
+            pageNum = 0;
+        }
+
+        LOGGER.debug("Get page {}.", pageNum);
 
         try {
-            List<Book> books = bookService.find(filter, user);
-            LOGGER.debug("Found {} book(s).", books.size());
-            model.addAttribute("books", books);
+            SearchResults<Book> books = bookService.find(pageNum, PAGE_SIZE);
+            model.addAttribute("searchResults", books);
         } catch (BookServiceException exception) {
-            LOGGER.warn("Books are not accessible.");
-            model.addAttribute("books", emptyList());
+            LOGGER.warn("Search failed.");
         }
 
         return "search";
-    }
-
-    /**
-     * User applies filter to list of books.
-     */
-    @RequestMapping(value = "/filter", method = RequestMethod.POST)
-    public String filter(Model model,
-            @RequestParam("selectedFilter") String selectedFilter) {
-        LOGGER.debug("User selects filter {}.", selectedFilter);
-
-        BookFilter filter = BookFilter.fromString(selectedFilter);
-
-        model.addAttribute("filter", filter);
-        LOGGER.debug("Current filter is {}.", filter);
-
-        return "redirect:/search";
     }
 
 }
