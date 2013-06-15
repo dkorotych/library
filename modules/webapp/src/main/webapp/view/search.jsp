@@ -17,7 +17,7 @@
 </head>
 
 <body>
-    <%@include file="navbar.jsp"%>
+    <%@include file="components/navbar.jsp"%>
 
     <div class="container">
         <div class="row-fluid">
@@ -66,7 +66,7 @@
             <ul class="thumbnails">
                 <c:forEach items="${books}" var="book" varStatus="loop">
                     <li class="span4">
-                        <%@include file="book-thumbnail.jsp"%>
+                        <%@include file="components/book-thumbnail.jsp"%>
                     </li>
                 </c:forEach>
             </ul>
