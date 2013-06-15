@@ -24,7 +24,8 @@
             <!-- Information about book. -->
             <div class="media">
                 <div class="pull-left">
-                    <img class="media-object" src="${book.details.imageUrl}" />
+                    <img class="media-object" src="${book.details.imageUrl}"
+                        onerror="$(this).hide();" />
                 </div>
                 <div class="media-body">
                     <h4>${book.details.title}</h4>

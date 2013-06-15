@@ -10,7 +10,7 @@
     <!-- Cover -->
     <div class="text-center">
         <a href="${bookDetailsUrl}">
-            <img src="${book.details.imageUrl}" />
+            <img src="${book.details.imageUrl}" onerror="$(this).hide();" />
         </a>
     </div>
     <div class="caption">
