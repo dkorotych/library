@@ -61,13 +61,9 @@ public class SearchController {
      */
     @RequestMapping(method = RequestMethod.GET)
     public String search(
-            @RequestParam(value = "pageNum", required = false) Integer pageNum,
+            @RequestParam(value = "pageNum", defaultValue = "0") Integer pageNum,
             @ModelAttribute("user") User user, Model model)
             throws BookServiceException {
-        if (pageNum == null || pageNum < 0) {
-            pageNum = 0;
-        }
-
         LOGGER.debug("Get page {}.", pageNum);
 
         SearchResults<Book> books = bookService.find(pageNum, PAGE_SIZE);
