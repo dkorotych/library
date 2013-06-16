@@ -7,7 +7,6 @@ import grytsenko.library.model.User;
 import grytsenko.library.model.UserRole;
 import grytsenko.library.repository.BookRepository;
 
-import java.text.MessageFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -42,19 +41,16 @@ public class BookService {
         Book book = bookRepository.findOne(bookId);
 
         if (book == null) {
-            String errorMessage = MessageFormat.format(
-                    "Book {0} was not found.", bookId);
-            LOGGER.warn(errorMessage);
-            throw new BookServiceException(errorMessage);
+            throw new BookServiceException("Book not found.");
         }
 
         return book;
     }
 
     /**
-     * Finds a subset of books.
+     * Finds all books.
      */
-    public SearchResults<Book> find(int pageNum, int pageSize) {
+    public SearchResults<Book> findAll(int pageNum, int pageSize) {
         if (pageNum < 0) {
             throw new IllegalArgumentException(
                     "The page number less than zero.");
@@ -74,7 +70,7 @@ public class BookService {
     }
 
     /**
-     * Finds all books which are related to user.
+     * Finds books which are related to user.
      */
     public List<Book> findRelatedTo(User user) {
         return bookRepository.findRelatedTo(user);
@@ -82,16 +78,6 @@ public class BookService {
 
     /**
      * Reserves a book for user.
-     * 
-     * @param book
-     *            the book which is reserved by user.
-     * @param user
-     *            the user who reserves a book.
-     * 
-     * @return updated book.
-     * 
-     * @throws BookServiceException
-     *             if book cannot be reserved.
      */
     @Transactional(rollbackFor = { BookServiceException.class })
     public Book reserve(Book book, User user) throws BookServiceException {
@@ -116,16 +102,6 @@ public class BookService {
 
     /**
      * Releases a book.
-     * 
-     * @param book
-     *            the book which is released by user.
-     * @param user
-     *            the user who releases a book.
-     * 
-     * @return updated book.
-     * 
-     * @throws BookServiceException
-     *             if book cannot be released.
      */
     @Transactional(rollbackFor = { BookServiceException.class })
     public Book release(Book book, User user) throws BookServiceException {
@@ -155,16 +131,6 @@ public class BookService {
 
     /**
      * Takes out a book from library.
-     * 
-     * @param book
-     *            the book which is taken out from library.
-     * @param user
-     *            the user who takes out a book from library.
-     * 
-     * @return updated book.
-     * 
-     * @throws BookServiceException
-     *             if book cannot be taken out.
      */
     @Transactional(rollbackFor = { BookServiceException.class })
     public Book takeOut(Book book, User user) throws BookServiceException {
@@ -196,16 +162,6 @@ public class BookService {
 
     /**
      * Takes back a book to library.
-     * 
-     * @param book
-     *            the book which is taken back to library.
-     * @param user
-     *            the user who takes back a book to library.
-     * 
-     * @return updated book.
-     * 
-     * @throws BookServiceException
-     *             if book cannot be taken back.
      */
     @Transactional(rollbackFor = { BookServiceException.class })
     public Book takeBack(Book book, User user) throws BookServiceException {

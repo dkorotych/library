@@ -66,7 +66,7 @@ public class SearchController {
             throws BookServiceException {
         LOGGER.debug("Get page {}.", pageNum);
 
-        SearchResults<Book> books = bookService.find(pageNum, PAGE_SIZE);
+        SearchResults<Book> books = bookService.findAll(pageNum, PAGE_SIZE);
         model.addAttribute("searchResults", books);
 
         return "search";

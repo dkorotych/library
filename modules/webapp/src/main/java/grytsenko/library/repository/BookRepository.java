@@ -14,6 +14,9 @@ import org.springframework.data.repository.query.Param;
  */
 public interface BookRepository extends JpaRepository<Book, Long> {
 
+    /**
+     * Finds all books which are related to user.
+     */
     @Query("FROM books book WHERE book.reservedBy = :user OR book.borrowedBy = :user")
     List<Book> findRelatedTo(@Param("user") User user);
 

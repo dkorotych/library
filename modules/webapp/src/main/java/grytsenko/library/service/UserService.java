@@ -67,7 +67,7 @@ public class UserService {
         DsUser dsUser = dsUserRepository.findByUsername(username);
 
         if (dsUser == null) {
-            LOGGER.debug("User {} was not updated.", username);
+            LOGGER.debug("User {} was not found in DS.", username);
             return;
         }
 
