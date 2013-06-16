@@ -19,8 +19,16 @@
                     </li>
                 </ul>
                 <div class="pull-right">
-                    <i class="icon-user"></i>
-                    <strong>${user.username}</strong>
+                    <ul class="nav">
+                        <li>
+                            <c:url var="userDetailsUrl" value="/user" />
+                            <a href="${userDetailsUrl}">
+                                <i class="icon-user"></i>
+                                <strong>${user.username}</strong>
+                            </a>
+                        </li>
+                    </ul>
+
                     <c:url var="logoutUrl" value="j_spring_security_logout" />
                     <a href="${logoutUrl}" class="btn btn-inverse">
                         <fmt:message key="app.logout" />
