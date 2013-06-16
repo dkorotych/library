@@ -9,6 +9,7 @@ import grytsenko.library.repository.BookRepository;
 
 import java.text.MessageFormat;
 import java.util.Date;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,9 +30,6 @@ public class BookService {
 
     private BookRepository bookRepository;
 
-    /**
-     * Creates and initializes a service.
-     */
     @Autowired
     public BookService(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
@@ -39,14 +37,6 @@ public class BookService {
 
     /**
      * Finds a book by its identifier.
-     * 
-     * @param bookId
-     *            the identifier of book.
-     * 
-     * @return the found book.
-     * 
-     * @throws BookServiceException
-     *             a book was not found in library.
      */
     public Book find(long bookId) throws BookServiceException {
         Book book = bookRepository.findOne(bookId);
@@ -62,20 +52,9 @@ public class BookService {
     }
 
     /**
-     * Finds books.
-     * 
-     * @param pageNum
-     *            the page number.
-     * @param pageSize
-     *            the size of page.
-     * 
-     * @return the search results.
-     * 
-     * @throws BookServiceException
-     *             if books are not accessible.
+     * Finds a subset of books.
      */
-    public SearchResults<Book> find(int pageNum, int pageSize)
-            throws BookServiceException {
+    public SearchResults<Book> find(int pageNum, int pageSize) {
         if (pageNum < 0) {
             throw new IllegalArgumentException(
                     "The page number less than zero.");
@@ -92,6 +71,20 @@ public class BookService {
         results.setPagesTotal(page.getTotalPages());
         results.setContent(page.getContent());
         return results;
+    }
+
+    /**
+     * Finds all books which are reserved by user.
+     */
+    public List<Book> findReservedBy(User user) {
+        return bookRepository.findByReservedBy(user);
+    }
+
+    /**
+     * Finds all books which are borrowed by user.
+     */
+    public List<Book> findBorrowedBy(User user) {
+        return bookRepository.findByBorrowedBy(user);
     }
 
     /**

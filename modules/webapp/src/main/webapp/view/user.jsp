@@ -43,6 +43,50 @@
                 </li>
             </ul>
         </div>
+
+        <c:if test="${not empty reservedBooks}">
+            <hr />
+
+            <!-- Reserved Books. -->
+            <div class="row-fluid">
+                <h4 class="text-info">
+                    <fmt:message key="user.books.reserved" />
+                </h4>
+                <ul class="unstyled">
+                    <c:forEach items="${reservedBooks}" var="book"
+                        varStatus="loop">
+                        <c:url var="bookDetailsUrl" value="/book">
+                            <c:param name="bookId" value="${book.id}" />
+                        </c:url>
+                        <li>
+                            <a href="${bookDetailsUrl}">${book.details.title}</a>
+                        </li>
+                    </c:forEach>
+                </ul>
+            </div>
+        </c:if>
+
+        <c:if test="${not empty borrowedBooks}">
+            <hr />
+
+            <!-- Borrowed Books. -->
+            <div class="row-fluid">
+                <h4 class="text-info">
+                    <fmt:message key="user.books.borrowed" />
+                </h4>
+                <ul class="unstyled">
+                    <c:forEach items="${borrowedBooks}" var="book"
+                        varStatus="loop">
+                        <c:url var="bookDetailsUrl" value="/book">
+                            <c:param name="bookId" value="${book.id}" />
+                        </c:url>
+                        <li>
+                            <a href="${bookDetailsUrl}">${book.details.title}</a>
+                        </li>
+                    </c:forEach>
+                </ul>
+            </div>
+        </c:if>
     </div>
 
     <script src="<c:url value="/assets/js/jquery.js" />"></script>
