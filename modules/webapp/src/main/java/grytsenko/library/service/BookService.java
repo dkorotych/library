@@ -1,5 +1,6 @@
 package grytsenko.library.service;
 
+import static grytsenko.library.util.DateUtils.now;
 import grytsenko.library.model.Book;
 import grytsenko.library.model.BookStatus;
 import grytsenko.library.model.SearchResults;
@@ -200,10 +201,6 @@ public class BookService {
 
             throw new BookServiceException("Can not save the book.");
         }
-    }
-
-    private Date now() {
-        return new Date();
     }
 
 }
