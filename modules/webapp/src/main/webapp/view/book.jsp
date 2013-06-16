@@ -74,10 +74,6 @@
 
         <!-- Status -->
         <div class="row-fluid">
-            <h4 class="text-info">
-                <fmt:message key="book.status" />
-            </h4>
-
             <c:if test="${not empty lastOperationFailed}">
                 <!-- Alert about failed action. -->
                 <div class="alert alert-warning">
