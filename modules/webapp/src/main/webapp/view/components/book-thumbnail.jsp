@@ -7,12 +7,14 @@
     <c:url var="bookDetailsUrl" value="/book">
         <c:param name="bookId" value="${book.id}" />
     </c:url>
+
     <!-- Cover -->
     <div class="text-center">
         <a href="${bookDetailsUrl}">
             <img src="${book.details.imageUrl}" onerror="$(this).hide();" />
         </a>
     </div>
+
     <div class="caption">
         <!-- Status -->
         <div class="pull-right">
