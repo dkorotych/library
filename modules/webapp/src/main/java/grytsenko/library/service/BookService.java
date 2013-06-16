@@ -74,17 +74,10 @@ public class BookService {
     }
 
     /**
-     * Finds all books which are reserved by user.
+     * Finds all books which are related to user.
      */
-    public List<Book> findReservedBy(User user) {
-        return bookRepository.findByReservedBy(user);
-    }
-
-    /**
-     * Finds all books which are borrowed by user.
-     */
-    public List<Book> findBorrowedBy(User user) {
-        return bookRepository.findByBorrowedBy(user);
+    public List<Book> findRelatedTo(User user) {
+        return bookRepository.findRelatedTo(user);
     }
 
     /**

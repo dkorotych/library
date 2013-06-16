@@ -47,16 +47,11 @@ public class UserController {
     public String getUser(@ModelAttribute("user") User user, Model model) {
         LOGGER.debug("Get user details.");
 
-        List<Book> reservedBooks = bookService.findReservedBy(user);
-        LOGGER.debug("User has reserved {} books.", reservedBooks.size());
-        if (!reservedBooks.isEmpty()) {
-            model.addAttribute("reservedBooks", reservedBooks);
-        }
-
-        List<Book> borrowedBook = bookService.findBorrowedBy(user);
-        LOGGER.debug("User has borrowed {} books.", borrowedBook.size());
-        if (!borrowedBook.isEmpty()) {
-            model.addAttribute("borrowedBooks", borrowedBook);
+        List<Book> relatedBooks = bookService.findRelatedTo(user);
+        LOGGER.debug("{} books are related to {}.", relatedBooks.size(),
+                user.getUsername());
+        if (!relatedBooks.isEmpty()) {
+            model.addAttribute("relatedBooks", relatedBooks);
         }
 
         return "user";

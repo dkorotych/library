@@ -24,67 +24,77 @@
             <!-- Details. -->
             <ul class="unstyled">
                 <li>
-                    <strong>
-                        <fmt:message key="user.details.firstname" />
-                    </strong>
-                    ${user.firstname}
+                    <strong> <fmt:message key="user.details.firstname" />
+                    </strong> ${user.firstname}
                 </li>
                 <li>
-                    <strong>
-                        <fmt:message key="user.details.lastname" />
-                    </strong>
-                    ${user.lastname}
+                    <strong> <fmt:message key="user.details.lastname" />
+                    </strong> ${user.lastname}
                 </li>
                 <li>
-                    <strong>
-                        <fmt:message key="user.details.mail" />
-                    </strong>
-                    ${user.mail}
+                    <strong> <fmt:message key="user.details.mail" />
+                    </strong> ${user.mail}
                 </li>
             </ul>
         </div>
 
-        <c:if test="${not empty reservedBooks}">
+        <c:if test="${not empty relatedBooks}">
             <hr />
 
-            <!-- Reserved Books. -->
+            <!-- Related Books. -->
             <div class="row-fluid">
-                <h4 class="text-info">
-                    <fmt:message key="user.books.reserved" />
-                </h4>
-                <ul class="unstyled">
-                    <c:forEach items="${reservedBooks}" var="book"
-                        varStatus="loop">
-                        <c:url var="bookDetailsUrl" value="/book">
-                            <c:param name="bookId" value="${book.id}" />
-                        </c:url>
-                        <li>
-                            <a href="${bookDetailsUrl}">${book.details.title}</a>
-                        </li>
-                    </c:forEach>
-                </ul>
-            </div>
-        </c:if>
-
-        <c:if test="${not empty borrowedBooks}">
-            <hr />
-
-            <!-- Borrowed Books. -->
-            <div class="row-fluid">
-                <h4 class="text-info">
-                    <fmt:message key="user.books.borrowed" />
-                </h4>
-                <ul class="unstyled">
-                    <c:forEach items="${borrowedBooks}" var="book"
-                        varStatus="loop">
-                        <c:url var="bookDetailsUrl" value="/book">
-                            <c:param name="bookId" value="${book.id}" />
-                        </c:url>
-                        <li>
-                            <a href="${bookDetailsUrl}">${book.details.title}</a>
-                        </li>
-                    </c:forEach>
-                </ul>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                <fmt:message key="user.book.title" />
+                            </th>
+                            <th>
+                                <fmt:message key="user.book.status" />
+                            </th>
+                            <th>
+                                <fmt:message key="user.book.since" />
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <c:forEach items="${relatedBooks}" var="book"
+                            varStatus="loop">
+                            <tr>
+                                <c:url var="bookDetailsUrl" value="/book">
+                                    <c:param name="bookId" value="${book.id}" />
+                                </c:url>
+                                <td>
+                                    <a href="${bookDetailsUrl}">${book.details.title}</a>
+                                </td>
+                                <c:choose>
+                                    <c:when test="${book.status eq 'RESERVED'}">
+                                        <td>
+                                            <fmt:message
+                                                key="book.status.reserved" />
+                                        </td>
+                                        <td>
+                                            <fmt:formatDate type="date"
+                                                dateStyle="short"
+                                                value="${book.reservedSince}" />
+                                        </td>
+                                    </c:when>
+                                    <c:when test="${book.status eq 'BORROWED'}">
+                                        <td>
+                                            <fmt:message
+                                                key="book.status.borrowed" />
+                                        </td>
+                                        <td>
+                                            <fmt:formatDate type="date"
+                                                dateStyle="short"
+                                                value="${book.borrowedSince}" />
+                                        </td>
+                                    </c:when>
+                                </c:choose>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
             </div>
         </c:if>
     </div>
