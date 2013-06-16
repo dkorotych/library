@@ -3,7 +3,7 @@ package grytsenko.library.model;
 /**
  * Contains data about a user from LDAP.
  */
-public class LdapUser {
+public class DsUser {
 
     private String username;
 
@@ -12,7 +12,7 @@ public class LdapUser {
 
     private String mail;
 
-    public LdapUser() {
+    public DsUser() {
     }
 
     public String getUsername() {

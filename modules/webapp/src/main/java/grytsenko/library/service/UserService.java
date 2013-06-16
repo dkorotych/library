@@ -1,9 +1,9 @@
 package grytsenko.library.service;
 
-import grytsenko.library.model.LdapUser;
+import grytsenko.library.model.DsUser;
 import grytsenko.library.model.User;
 import grytsenko.library.model.UserRole;
-import grytsenko.library.repository.LdapRepository;
+import grytsenko.library.repository.DsUserRepository;
 import grytsenko.library.repository.UserRepository;
 
 import org.slf4j.Logger;
@@ -21,16 +21,16 @@ public class UserService {
             .getLogger(UserService.class);
 
     private UserRepository userRepository;
-    private LdapRepository ldapRepository;
+    private DsUserRepository dsUserRepository;
 
     /**
      * Creates and initializes a service.
      */
     @Autowired
     public UserService(UserRepository userRepository,
-            LdapRepository ldapRepository) {
+            DsUserRepository dsUserRepository) {
         this.userRepository = userRepository;
-        this.ldapRepository = ldapRepository;
+        this.dsUserRepository = dsUserRepository;
     }
 
     /**
@@ -40,20 +40,19 @@ public class UserService {
     public User get(String username) {
         User user = userRepository.findByUsername(username);
         if (user == null) {
-            LOGGER.debug("User {} was not found.", username);
-
-            user = createUser(username);
+            LOGGER.debug("User {} is created.", username);
+            user = createNewUser(username);
         }
 
-        updateUserFromLdap(user);
+        updateUserFromDs(user);
 
         return userRepository.save(user);
     }
 
     /**
-     * Creates the default user with the given name.
+     * Creates the new user with the given name.
      */
-    private User createUser(String username) {
+    private User createNewUser(String username) {
         User user = new User();
         user.setUsername(username);
         user.setRole(UserRole.USER);
@@ -61,23 +60,22 @@ public class UserService {
     }
 
     /**
-     * Searches for a user in LDAP and then updates it using data from LDAP.
+     * Searches for a user in directory service and then updates it.
      */
-    private void updateUserFromLdap(User user) {
+    private void updateUserFromDs(User user) {
         String username = user.getUsername();
+        DsUser dsUser = dsUserRepository.findByUsername(username);
 
-        LdapUser ldapUser = ldapRepository.findByUsername(username);
-
-        if (ldapUser == null) {
+        if (dsUser == null) {
             LOGGER.debug("User {} was not updated.", username);
             return;
         }
 
-        user.setFirstname(ldapUser.getFirstname());
-        user.setLastname(ldapUser.getLastname());
-        user.setMail(ldapUser.getMail());
+        user.setFirstname(dsUser.getFirstname());
+        user.setLastname(dsUser.getLastname());
+        user.setMail(dsUser.getMail());
 
-        LOGGER.debug("User {} was updated using data from LDAP.", username);
+        LOGGER.debug("User {} was updated using data from DS.", username);
     }
 
 }

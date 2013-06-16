@@ -1,6 +1,6 @@
 package grytsenko.library.repository;
 
-import grytsenko.library.model.LdapUser;
+import grytsenko.library.model.DsUser;
 
 import java.text.MessageFormat;
 import java.util.List;
@@ -19,13 +19,16 @@ import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.stereotype.Repository;
 
 /**
- * Provides access to information from LDAP.
+ * Repository of users in directory service.
+ * 
+ * <p>
+ * We use LDAP to access directory service.
  */
 @Repository
-public class LdapRepository {
+public class DsUserRepository {
 
     private static final Logger LOGGER = LoggerFactory
-            .getLogger(LdapRepository.class);
+            .getLogger(DsUserRepository.class);
 
     public static final String USERS = "ldap.users";
     public static final String USERS_FILTER = "ldap.users.filter";
@@ -42,26 +45,25 @@ public class LdapRepository {
      * Creates and initializes a repository.
      */
     @Autowired
-    public LdapRepository(LdapContextSource ldapContextSource,
+    public DsUserRepository(LdapContextSource ldapContextSource,
             Properties ldapProperties) {
         this.ldapContextSource = ldapContextSource;
         this.ldapProperties = ldapProperties;
     }
 
     /**
-     * Finds a user in LDAP.
+     * Finds a user in directory service.
      * 
      * <p>
-     * If several users will be found for the given name, then the first user
-     * from this set will be returned.
+     * If several users will be found, then the first user will be returned.
      * 
      * @param username
-     *            the name of user.
+     *            the unique name of user.
      * 
      * @return the found user or <code>null</code> if user was not found.
      */
-    public LdapUser findByUsername(String username) {
-        LOGGER.debug("Search for the user {} in LDAP.", username);
+    public DsUser findByUsername(String username) {
+        LOGGER.debug("Search for the user {} in DS.", username);
 
         LdapTemplate ldapTemplate = new LdapTemplate(ldapContextSource);
         String base = ldapProperties.getProperty(USERS);
@@ -70,9 +72,9 @@ public class LdapRepository {
         LOGGER.debug("Used base DN {} and filter {}.", base, filter);
 
         List<?> foundUsers = ldapTemplate.search(base, filter,
-                new LdapUserMapper());
+                new DsUserMapper());
         if (foundUsers.isEmpty()) {
-            LOGGER.error("User {} was not found in LDAP.", username);
+            LOGGER.error("User {} was not found in DS.", username);
             return null;
         }
         if (foundUsers.size() > 0) {
@@ -80,18 +82,18 @@ public class LdapRepository {
                     username);
         }
 
-        LdapUser foundUser = (LdapUser) foundUsers.get(0);
+        DsUser foundUser = (DsUser) foundUsers.get(0);
 
-        LOGGER.debug("User {} was found in LDAP.", foundUser.getUsername());
+        LOGGER.debug("User {} was found in DS.", foundUser.getUsername());
         return foundUser;
     }
 
-    private class LdapUserMapper implements AttributesMapper {
+    private class DsUserMapper implements AttributesMapper {
 
         @Override
-        public LdapUser mapFromAttributes(Attributes attributes)
+        public DsUser mapFromAttributes(Attributes attributes)
                 throws NamingException {
-            LdapUser user = new LdapUser();
+            DsUser user = new DsUser();
 
             String usernameId = ldapProperties.getProperty(USER_USERNAME);
             user.setUsername((String) attributes.get(usernameId).get());

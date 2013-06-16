@@ -1,6 +1,6 @@
 package grytsenko.library.test;
 
-import grytsenko.library.model.LdapUser;
+import grytsenko.library.model.DsUser;
 import grytsenko.library.model.User;
 import grytsenko.library.model.UserRole;
 
@@ -43,10 +43,10 @@ public final class TestUsers {
     }
 
     /**
-     * Creates a LDAP user for guest.
+     * Data about guest from DS.
      */
-    public static LdapUser guestLdap() {
-        LdapUser ldapGuest = new LdapUser();
+    public static DsUser guestFromDs() {
+        DsUser ldapGuest = new DsUser();
         ldapGuest.setUsername(GUEST_NAME);
         ldapGuest.setMail(GUEST_MAIL);
         return ldapGuest;
