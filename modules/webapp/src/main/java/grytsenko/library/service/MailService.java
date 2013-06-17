@@ -42,19 +42,13 @@ public class MailService {
 
     public static final String FEEDBACK_EMAIL = "mail.feedback";
 
-    private MailSender mailSender;
-    private Properties mailProperties;
-
-    private MessageSource messageSource;
+    @Autowired
+    MailSender mailSender;
+    @Autowired
+    Properties mailProperties;
 
     @Autowired
-    public MailService(MailSender mailSender, Properties mailProperties,
-            MessageSource messageSource) {
-        this.mailSender = mailSender;
-        this.mailProperties = mailProperties;
-
-        this.messageSource = messageSource;
-    }
+    MessageSource messageSource;
 
     /**
      * Sends notification that a book was reserved.

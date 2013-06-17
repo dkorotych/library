@@ -23,12 +23,8 @@ public class SearchService {
     private static final Logger LOGGER = LoggerFactory
             .getLogger(SearchService.class);
 
-    private BookRepository bookRepository;
-
     @Autowired
-    public SearchService(BookRepository bookRepository) {
-        this.bookRepository = bookRepository;
-    }
+    BookRepository bookRepository;
 
     /**
      * Finds a book by its identifier.

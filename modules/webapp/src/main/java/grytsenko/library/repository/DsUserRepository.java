@@ -38,18 +38,10 @@ public class DsUserRepository {
     public static final String USER_LASTNAME = "ldap.user.lastname";
     public static final String USER_MAIL = "ldap.user.mail";
 
-    private LdapContextSource ldapContextSource;
-    private Properties ldapProperties;
-
-    /**
-     * Creates and initializes a repository.
-     */
     @Autowired
-    public DsUserRepository(LdapContextSource ldapContextSource,
-            Properties ldapProperties) {
-        this.ldapContextSource = ldapContextSource;
-        this.ldapProperties = ldapProperties;
-    }
+    LdapContextSource ldapContextSource;
+    @Autowired
+    Properties ldapProperties;
 
     /**
      * Finds a user in directory service.

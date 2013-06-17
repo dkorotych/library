@@ -38,7 +38,9 @@ public class UserServiceTests {
         userRepository = mock(UserRepository.class);
         dsUserRepository = mock(DsUserRepository.class);
 
-        userService = new UserService(userRepository, dsUserRepository);
+        userService = new UserService();
+        userService.userRepository = userRepository;
+        userService.dsUserRepository = dsUserRepository;
 
         doReturn(guestFromDs()).when(dsUserRepository).findByUsername(
                 anyString());

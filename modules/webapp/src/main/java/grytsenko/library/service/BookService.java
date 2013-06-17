@@ -20,12 +20,8 @@ public class BookService {
     private static final Logger LOGGER = LoggerFactory
             .getLogger(BookService.class);
 
-    private BookRepository bookRepository;
-
     @Autowired
-    public BookService(BookRepository bookRepository) {
-        this.bookRepository = bookRepository;
-    }
+    BookRepository bookRepository;
 
     /**
      * Reserves a book for user.

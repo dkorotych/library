@@ -29,14 +29,10 @@ public class UserController {
     private static final Logger LOGGER = LoggerFactory
             .getLogger(UserController.class);
 
-    private UserService userService;
-    private SearchService searchService;
-
     @Autowired
-    public UserController(UserService userService, SearchService searchService) {
-        this.userService = userService;
-        this.searchService = searchService;
-    }
+    UserService userService;
+    @Autowired
+    SearchService searchService;
 
     @ModelAttribute("user")
     public User currentUser(Principal principal) {
@@ -44,8 +40,8 @@ public class UserController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public String getUser(@ModelAttribute("user") User user, Model model) {
-        LOGGER.debug("Get user details.");
+    public String getUserDetails(@ModelAttribute("user") User user, Model model) {
+        LOGGER.debug("Get details about user {}.", user.getId());
 
         List<Book> relatedBooks = searchService.findRelatedTo(user);
         LOGGER.debug("{} books are related to {}.", relatedBooks.size(),

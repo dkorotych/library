@@ -35,17 +35,10 @@ public class SearchController {
      */
     public static final int PAGE_SIZE = 3;
 
-    private UserService userService;
-    private SearchService searchService;
-
-    /**
-     * Creates and initializes a controller.
-     */
     @Autowired
-    public SearchController(UserService userService, SearchService searchService) {
-        this.userService = userService;
-        this.searchService = searchService;
-    }
+    UserService userService;
+    @Autowired
+    SearchService searchService;
 
     /**
      * Adds current user.
@@ -59,7 +52,7 @@ public class SearchController {
      * User views list of books.
      */
     @RequestMapping(method = RequestMethod.GET)
-    public String search(
+    public String searchAll(
             @RequestParam(value = "pageNum", defaultValue = "0") Integer pageNum,
             @ModelAttribute("user") User user, Model model) {
         LOGGER.debug("Get page {}.", pageNum);

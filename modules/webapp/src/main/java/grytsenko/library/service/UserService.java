@@ -20,22 +20,16 @@ public class UserService {
     private static final Logger LOGGER = LoggerFactory
             .getLogger(UserService.class);
 
-    private UserRepository userRepository;
-    private DsUserRepository dsUserRepository;
-
-    /**
-     * Creates and initializes a service.
-     */
     @Autowired
-    public UserService(UserRepository userRepository,
-            DsUserRepository dsUserRepository) {
-        this.userRepository = userRepository;
-        this.dsUserRepository = dsUserRepository;
-    }
+    UserRepository userRepository;
+    @Autowired
+    DsUserRepository dsUserRepository;
 
     /**
-     * Finds a user by its name. If user is not found, then new user will be
-     * created.
+     * Finds a user by its name.
+     * 
+     * <p>
+     * If user is not found, then new user will be created.
      */
     public User get(String username) {
         User user = userRepository.findByUsername(username);
