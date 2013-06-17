@@ -3,7 +3,7 @@ package grytsenko.library.service;
 import grytsenko.library.model.Book;
 import grytsenko.library.model.SearchResults;
 import grytsenko.library.model.User;
-import grytsenko.library.repository.BookRepository;
+import grytsenko.library.repository.BooksRepository;
 
 import java.util.List;
 
@@ -18,19 +18,19 @@ import org.springframework.stereotype.Service;
  * Allow to search books in library.
  */
 @Service
-public class SearchService {
+public class SearchBooksService {
 
     private static final Logger LOGGER = LoggerFactory
-            .getLogger(SearchService.class);
+            .getLogger(SearchBooksService.class);
 
     @Autowired
-    BookRepository bookRepository;
+    BooksRepository booksRepository;
 
     /**
-     * Finds a book by its identifier.
+     * Finds a book.
      */
     public Book find(long bookId) {
-        Book book = bookRepository.findOne(bookId);
+        Book book = booksRepository.findOne(bookId);
 
         if (book == null) {
             LOGGER.warn("Book {} was not found.", bookId);
@@ -50,7 +50,7 @@ public class SearchService {
         }
 
         PageRequest pageRequest = new PageRequest(pageNum, pageSize);
-        Page<Book> page = bookRepository.findAll(pageRequest);
+        Page<Book> page = booksRepository.findAll(pageRequest);
         return toSearchResults(page);
     }
 
@@ -66,7 +66,7 @@ public class SearchService {
      * Finds books which are related to user.
      */
     public List<Book> findRelatedTo(User user) {
-        return bookRepository.findRelatedTo(user);
+        return booksRepository.findRelatedTo(user);
     }
 
 }

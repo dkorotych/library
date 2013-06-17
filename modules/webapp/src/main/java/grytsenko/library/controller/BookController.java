@@ -4,11 +4,11 @@ import grytsenko.library.model.Book;
 import grytsenko.library.model.BookStatus;
 import grytsenko.library.model.User;
 import grytsenko.library.service.BookNotUpdatedException;
-import grytsenko.library.service.BookService;
-import grytsenko.library.service.MailNotSentException;
-import grytsenko.library.service.MailService;
-import grytsenko.library.service.SearchService;
-import grytsenko.library.service.UserService;
+import grytsenko.library.service.ManageBooksService;
+import grytsenko.library.service.ManageUsersService;
+import grytsenko.library.service.NotifyUsersService;
+import grytsenko.library.service.SearchBooksService;
+import grytsenko.library.service.UserNotNotifiedException;
 
 import java.security.Principal;
 
@@ -42,22 +42,23 @@ public class BookController {
     private static final String BOOK_ID_PARAM = "bookId";
 
     @Autowired
-    UserService userService;
+    ManageUsersService manageUsersService;
     @Autowired
-    SearchService searchService;
+    NotifyUsersService notifyUsersService;
+
     @Autowired
-    BookService bookService;
+    SearchBooksService searchBooksService;
     @Autowired
-    MailService mailService;
+    ManageBooksService manageBooksService;
 
     @ModelAttribute("user")
     public User currentUser(Principal principal) {
-        return userService.get(principal.getName());
+        return manageUsersService.get(principal.getName());
     }
 
     @RequestMapping(method = RequestMethod.GET)
     public String getBook(@RequestParam(BOOK_ID_PARAM) Long bookId, Model model) {
-        Book book = searchService.find(bookId);
+        Book book = searchBooksService.find(bookId);
         model.addAttribute("book", book);
         return "book";
     }
@@ -68,12 +69,12 @@ public class BookController {
     @RequestMapping(params = "reserve", method = RequestMethod.POST)
     public String reserve(@RequestParam(BOOK_ID_PARAM) Long bookId,
             @ModelAttribute("user") User user) throws BookNotUpdatedException,
-            MailNotSentException {
+            UserNotNotifiedException {
         LOGGER.debug("Reserve the book {}.", bookId);
 
-        Book book = searchService.find(bookId);
-        book = bookService.reserve(book, user);
-        mailService.notifyReserved(book, user);
+        Book book = searchBooksService.find(bookId);
+        book = manageBooksService.reserve(book, user);
+        notifyUsersService.notifyReserved(book, user);
 
         return redirectToBook(bookId);
     }
@@ -84,13 +85,13 @@ public class BookController {
     @RequestMapping(params = "release", method = RequestMethod.POST)
     public String release(@RequestParam(BOOK_ID_PARAM) Long bookId,
             @ModelAttribute("user") User user) throws BookNotUpdatedException,
-            MailNotSentException {
+            UserNotNotifiedException {
         LOGGER.debug("Release the book {}.", bookId);
 
-        Book book = searchService.find(bookId);
+        Book book = searchBooksService.find(bookId);
         User wasReservedBy = book.getReservedBy();
-        book = bookService.release(book, user);
-        mailService.notifyReleased(book, wasReservedBy);
+        book = manageBooksService.release(book, user);
+        notifyUsersService.notifyReleased(book, wasReservedBy);
 
         return redirectToBook(bookId);
     }
@@ -101,12 +102,12 @@ public class BookController {
     @RequestMapping(params = "takeOut", method = RequestMethod.POST)
     public String takeOut(@RequestParam(BOOK_ID_PARAM) Long bookId,
             @ModelAttribute("user") User user) throws BookNotUpdatedException,
-            MailNotSentException {
+            UserNotNotifiedException {
         LOGGER.debug("Take out the book {}.", bookId);
 
-        Book book = searchService.find(bookId);
-        book = bookService.takeOut(book, user);
-        mailService.notifyBorrowed(book, book.getBorrowedBy());
+        Book book = searchBooksService.find(bookId);
+        book = manageBooksService.takeOut(book, user);
+        notifyUsersService.notifyBorrowed(book, book.getBorrowedBy());
 
         return redirectToBook(bookId);
     }
@@ -117,13 +118,13 @@ public class BookController {
     @RequestMapping(params = "takeBack", method = RequestMethod.POST)
     public String takeBack(@RequestParam(BOOK_ID_PARAM) Long bookId,
             @ModelAttribute("user") User user) throws BookNotUpdatedException,
-            MailNotSentException {
+            UserNotNotifiedException {
         LOGGER.debug("Take back the book {}.", bookId);
 
-        Book book = searchService.find(bookId);
+        Book book = searchBooksService.find(bookId);
         User wasBorrowedBy = book.getBorrowedBy();
-        book = bookService.takeBack(book, user);
-        mailService.notifyReturned(book, wasBorrowedBy);
+        book = manageBooksService.takeBack(book, user);
+        notifyUsersService.notifyReturned(book, wasBorrowedBy);
 
         return redirectToBook(bookId);
     }
@@ -133,17 +134,17 @@ public class BookController {
      */
     @RequestMapping(params = "remind", method = RequestMethod.POST)
     public String remind(@RequestParam(BOOK_ID_PARAM) Long bookId,
-            @ModelAttribute("user") User use) throws MailNotSentException {
+            @ModelAttribute("user") User use) throws UserNotNotifiedException {
         LOGGER.debug("Remind about the book {}.", bookId);
 
-        Book book = searchService.find(bookId);
+        Book book = searchBooksService.find(bookId);
 
         BookStatus bookStatus = book.getStatus();
 
         if (bookStatus == BookStatus.RESERVED) {
-            mailService.notifyReserved(book, book.getReservedBy());
+            notifyUsersService.notifyReserved(book, book.getReservedBy());
         } else if (bookStatus == BookStatus.BORROWED) {
-            mailService.notifyBorrowed(book, book.getBorrowedBy());
+            notifyUsersService.notifyBorrowed(book, book.getBorrowedBy());
         }
 
         return redirectToBook(bookId);
@@ -162,8 +163,8 @@ public class BookController {
         return redirectToBook(bookId);
     }
 
-    @ExceptionHandler(MailNotSentException.class)
-    public String whenMailNotSent(MailNotSentException exception,
+    @ExceptionHandler(UserNotNotifiedException.class)
+    public String whenUserNotNotified(UserNotNotifiedException exception,
             HttpServletRequest request) {
         Long bookId = Long.parseLong(request.getParameter(BOOK_ID_PARAM));
         LOGGER.warn("Notification for book {} was not sent, because: '{}'.",

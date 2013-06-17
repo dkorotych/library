@@ -3,7 +3,7 @@ package grytsenko.library.service;
 import static grytsenko.library.util.DateUtils.now;
 import grytsenko.library.model.Book;
 import grytsenko.library.model.User;
-import grytsenko.library.repository.BookRepository;
+import grytsenko.library.repository.BooksRepository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,16 +12,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Manages books in library.
+ * Allows to manage books in library.
  */
 @Service
-public class BookService {
+public class ManageBooksService {
 
     private static final Logger LOGGER = LoggerFactory
-            .getLogger(BookService.class);
+            .getLogger(ManageBooksService.class);
 
     @Autowired
-    BookRepository bookRepository;
+    BooksRepository booksRepository;
 
     /**
      * Reserves a book for user.
@@ -81,7 +81,7 @@ public class BookService {
 
     private Book save(Book book) throws BookNotUpdatedException {
         try {
-            return bookRepository.saveAndFlush(book);
+            return booksRepository.saveAndFlush(book);
         } catch (Exception exception) {
             LOGGER.warn("Can not save the book {}, because: '{}'.",
                     book.getId(), exception.getMessage());

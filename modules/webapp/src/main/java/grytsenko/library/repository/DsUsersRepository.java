@@ -25,10 +25,10 @@ import org.springframework.stereotype.Repository;
  * We use LDAP to access directory service.
  */
 @Repository
-public class DsUserRepository {
+public class DsUsersRepository {
 
     private static final Logger LOGGER = LoggerFactory
-            .getLogger(DsUserRepository.class);
+            .getLogger(DsUsersRepository.class);
 
     public static final String USERS = "ldap.users";
     public static final String USERS_FILTER = "ldap.users.filter";

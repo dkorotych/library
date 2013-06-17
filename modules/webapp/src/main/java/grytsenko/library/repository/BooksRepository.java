@@ -12,7 +12,7 @@ import org.springframework.data.repository.query.Param;
 /**
  * Repository of books.
  */
-public interface BookRepository extends JpaRepository<Book, Long> {
+public interface BooksRepository extends JpaRepository<Book, Long> {
 
     /**
      * Finds all books which are related to user.
