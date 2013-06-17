@@ -158,7 +158,7 @@ public class BookController {
                 exception.getMessage());
 
         FlashMap flashAttrs = RequestContextUtils.getOutputFlashMap(request);
-        flashAttrs.put("lastOperationFailed", true);
+        flashAttrs.put("bookNotUpdated", true);
 
         return redirectToBook(bookId);
     }
@@ -169,6 +169,9 @@ public class BookController {
         Long bookId = Long.parseLong(request.getParameter(BOOK_ID_PARAM));
         LOGGER.warn("Notification for book {} was not sent, because: '{}'.",
                 bookId, exception.getMessage());
+
+        FlashMap flashAttrs = RequestContextUtils.getOutputFlashMap(request);
+        flashAttrs.put("userNotNotified", true);
 
         return redirectToBook(bookId);
     }

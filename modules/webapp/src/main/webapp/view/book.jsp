@@ -74,11 +74,18 @@
 
         <!-- Status -->
         <div class="row-fluid">
-            <c:if test="${not empty lastOperationFailed}">
-                <!-- Alert about failed action. -->
+            <c:if test="${not empty bookNotUpdated}">
+                <!-- Book was not updated. -->
+                <div class="alert alert-error">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <fmt:message key="warning.book.not.updated" />
+                </div>
+            </c:if>
+            <c:if test="${not empty userNotNotified}">
+                <!-- User was not notified. -->
                 <div class="alert alert-warning">
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    <fmt:message key="warning.retry" />
+                    <fmt:message key="warning.user.not.notified" />
                 </div>
             </c:if>
 
