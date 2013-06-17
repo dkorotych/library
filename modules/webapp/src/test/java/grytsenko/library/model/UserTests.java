@@ -12,15 +12,15 @@ public class UserTests {
 
     @Test
     public void testIdentical() {
-        assertTrue(guest().isIdenticalTo(guest()));
+        assertTrue(guest().identicalTo(guest()));
     }
 
     @Test
     public void testNotIdentical() {
-        assertFalse(manager().isIdenticalTo(guest()));
+        assertFalse(manager().identicalTo(guest()));
 
-        assertFalse(manager().isIdenticalTo(new User()));
-        assertFalse(new User().isIdenticalTo(guest()));
+        assertFalse(manager().identicalTo(new User()));
+        assertFalse(new User().identicalTo(guest()));
     }
 
     @Test

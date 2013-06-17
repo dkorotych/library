@@ -20,7 +20,7 @@ import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupDir;
 
 /**
- * Allows to send email notifications to users.
+ * Sends notifications to users.
  */
 @Service
 public class NotifyUsersService {
@@ -55,8 +55,7 @@ public class NotifyUsersService {
      */
     public void notifyReserved(Book book, User user)
             throws UserNotNotifiedException {
-        LOGGER.debug("Sending notification that the book {} was reserved.",
-                book.getId());
+        LOGGER.debug("Notify that the book {} was reserved.", book.getId());
 
         notify(book, user, BOOK_RESERVED_SUBJECT, BOOK_RESERVED_TEMPLATE);
     }
@@ -66,8 +65,7 @@ public class NotifyUsersService {
      */
     public void notifyReleased(Book book, User user)
             throws UserNotNotifiedException {
-        LOGGER.debug("Sending notification that the book {} was released.",
-                book.getId());
+        LOGGER.debug("Notify that the book {} was released.", book.getId());
 
         notify(book, user, BOOK_RELEASED_SUBJECT, BOOK_RELEASED_TEMPLATE);
     }
@@ -77,8 +75,7 @@ public class NotifyUsersService {
      */
     public void notifyBorrowed(Book book, User user)
             throws UserNotNotifiedException {
-        LOGGER.debug("Sending notification that the book {} was borrowed.",
-                book.getId());
+        LOGGER.debug("Notify that the book {} was borrowed.", book.getId());
 
         notify(book, user, BOOK_BORROWED_SUBJECT, BOOK_BORROWED_TEMPLATE);
     }
@@ -88,8 +85,7 @@ public class NotifyUsersService {
      */
     public void notifyReturned(Book book, User user)
             throws UserNotNotifiedException {
-        LOGGER.debug("Sending notification that the book {} was returned.",
-                book.getId());
+        LOGGER.debug("Notify that the book {} was returned.", book.getId());
 
         notify(book, user, BOOK_RETURNED_SUBJECT, BOOK_RETURNED_TEMPLATE);
     }
@@ -151,7 +147,7 @@ public class NotifyUsersService {
     }
 
     /**
-     * Composes simple message from its parts.
+     * Composes message from its parts.
      */
     private SimpleMailMessage compose(String from, String to, String cc,
             String subject, String text) {

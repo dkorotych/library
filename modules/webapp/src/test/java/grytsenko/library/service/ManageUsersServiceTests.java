@@ -23,9 +23,6 @@ import grytsenko.library.repository.UsersRepository;
 import org.junit.Before;
 import org.junit.Test;
 
-/**
- * Tests for {@link ManageUsersService}.
- */
 public class ManageUsersServiceTests {
 
     UsersRepository usersRepository;
@@ -61,6 +58,7 @@ public class ManageUsersServiceTests {
 
         verify(dsUsersRepository).findByUsername(GUEST_NAME);
         verifyNoMoreInteractions(dsUsersRepository);
+
         verify(usersRepository).findByUsername(GUEST_NAME);
         verify(usersRepository).saveAndFlush(user);
         verifyNoMoreInteractions(usersRepository);
@@ -81,6 +79,7 @@ public class ManageUsersServiceTests {
 
         verify(dsUsersRepository).findByUsername(GUEST_NAME);
         verifyNoMoreInteractions(dsUsersRepository);
+
         verify(usersRepository).findByUsername(GUEST_NAME);
         verify(usersRepository).saveAndFlush(any(User.class));
         verifyNoMoreInteractions(usersRepository);
@@ -102,6 +101,7 @@ public class ManageUsersServiceTests {
 
         verify(dsUsersRepository).findByUsername(GUEST_NAME);
         verifyNoMoreInteractions(dsUsersRepository);
+
         verify(usersRepository).findByUsername(GUEST_NAME);
         verify(usersRepository).saveAndFlush(any(User.class));
         verifyNoMoreInteractions(usersRepository);

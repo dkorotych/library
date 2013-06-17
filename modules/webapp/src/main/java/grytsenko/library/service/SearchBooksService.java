@@ -15,7 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 /**
- * Allow to search books in library.
+ * Searches books in library.
  */
 @Service
 public class SearchBooksService {

@@ -13,7 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.Version;
 
 /**
- * Information about user.
+ * A user of library.
  */
 @Entity(name = "users")
 public class User implements Serializable {
@@ -109,7 +109,7 @@ public class User implements Serializable {
      * Determines that this user is identical to other user, i.e. it has the
      * same identifier.
      */
-    public boolean isIdenticalTo(User other) {
+    public boolean identicalTo(User other) {
         if (id == null) {
             return false;
         }

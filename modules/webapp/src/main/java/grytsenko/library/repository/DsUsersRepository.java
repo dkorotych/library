@@ -19,7 +19,7 @@ import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.stereotype.Repository;
 
 /**
- * Repository of users in directory service.
+ * Repository of users in corporate directory service.
  * 
  * <p>
  * We use LDAP to access directory service.

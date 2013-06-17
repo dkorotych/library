@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * Allows to manages users of library.
+ * Manages users of library.
  */
 @Service
 public class ManageUsersService {
@@ -54,7 +54,7 @@ public class ManageUsersService {
     }
 
     /**
-     * Searches for a user in directory service and then updates it.
+     * Searches for a user in DS and then synchronizes it.
      */
     private void syncUserWithDs(User user) {
         String username = user.getUsername();
@@ -67,7 +67,7 @@ public class ManageUsersService {
 
         user.syncWith(dsUser);
 
-        LOGGER.debug("User {} was synced.", username);
+        LOGGER.debug("User {} was synced with DS.", username);
     }
 
 }

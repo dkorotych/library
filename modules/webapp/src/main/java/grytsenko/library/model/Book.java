@@ -17,7 +17,10 @@ import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
 /**
- * Information about a copy of book.
+ * A copy of book.
+ * 
+ * <p>
+ * The copy of book can be managed by users.
  */
 @Entity(name = "books")
 public class Book implements Serializable {
@@ -187,8 +190,8 @@ public class Book implements Serializable {
             return false;
         }
 
-        return releasedBy.isIdenticalTo(reservedBy)
-                || releasedBy.isIdenticalTo(managedBy);
+        return releasedBy.identicalTo(reservedBy)
+                || isManagedBy(releasedBy);
     }
 
     /**
@@ -214,7 +217,7 @@ public class Book implements Serializable {
             return false;
         }
 
-        return manager.isIdenticalTo(managedBy);
+        return isManagedBy(manager);
     }
 
     /**
@@ -243,7 +246,7 @@ public class Book implements Serializable {
             return false;
         }
 
-        return manager.isIdenticalTo(managedBy);
+        return isManagedBy(manager);
     }
 
     /**
@@ -259,6 +262,13 @@ public class Book implements Serializable {
 
         borrowedBy = null;
         borrowedSince = null;
+    }
+
+    /**
+     * Checks that book is managed by user.
+     */
+    public boolean isManagedBy(User user) {
+        return user.identicalTo(managedBy);
     }
 
 }

@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 /**
- * Provides access to user details.
+ * Processes a requests for user details.
  */
 @Controller
 @RequestMapping(value = "/user")

@@ -1,7 +1,7 @@
 package grytsenko.library.model;
 
 /**
- * Contains data about a user from LDAP.
+ * Information about user, which is stored in corporate directory service.
  */
 public class DsUser {
 

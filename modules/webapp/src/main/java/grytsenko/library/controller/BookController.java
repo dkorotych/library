@@ -29,7 +29,7 @@ import org.springframework.web.servlet.FlashMap;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 /**
- * Manages requests for a single book.
+ * Processes requests for managing a book.
  */
 @Controller
 @RequestMapping(value = "/book", params = "bookId")
@@ -39,6 +39,7 @@ public class BookController {
     private static final Logger LOGGER = LoggerFactory
             .getLogger(BookController.class);
 
+    private static final String USER_ATTR = "user";
     private static final String BOOK_ID_PARAM = "bookId";
 
     @Autowired
@@ -51,7 +52,7 @@ public class BookController {
     @Autowired
     ManageBooksService manageBooksService;
 
-    @ModelAttribute("user")
+    @ModelAttribute(USER_ATTR)
     public User currentUser(Principal principal) {
         return manageUsersService.get(principal.getName());
     }
@@ -68,8 +69,8 @@ public class BookController {
      */
     @RequestMapping(params = "reserve", method = RequestMethod.POST)
     public String reserve(@RequestParam(BOOK_ID_PARAM) Long bookId,
-            @ModelAttribute("user") User user) throws BookNotUpdatedException,
-            UserNotNotifiedException {
+            @ModelAttribute(USER_ATTR) User user)
+            throws BookNotUpdatedException, UserNotNotifiedException {
         LOGGER.debug("Reserve the book {}.", bookId);
 
         Book book = searchBooksService.find(bookId);
@@ -84,8 +85,8 @@ public class BookController {
      */
     @RequestMapping(params = "release", method = RequestMethod.POST)
     public String release(@RequestParam(BOOK_ID_PARAM) Long bookId,
-            @ModelAttribute("user") User user) throws BookNotUpdatedException,
-            UserNotNotifiedException {
+            @ModelAttribute(USER_ATTR) User user)
+            throws BookNotUpdatedException, UserNotNotifiedException {
         LOGGER.debug("Release the book {}.", bookId);
 
         Book book = searchBooksService.find(bookId);
@@ -101,8 +102,8 @@ public class BookController {
      */
     @RequestMapping(params = "takeOut", method = RequestMethod.POST)
     public String takeOut(@RequestParam(BOOK_ID_PARAM) Long bookId,
-            @ModelAttribute("user") User user) throws BookNotUpdatedException,
-            UserNotNotifiedException {
+            @ModelAttribute(USER_ATTR) User user)
+            throws BookNotUpdatedException, UserNotNotifiedException {
         LOGGER.debug("Take out the book {}.", bookId);
 
         Book book = searchBooksService.find(bookId);
@@ -117,8 +118,8 @@ public class BookController {
      */
     @RequestMapping(params = "takeBack", method = RequestMethod.POST)
     public String takeBack(@RequestParam(BOOK_ID_PARAM) Long bookId,
-            @ModelAttribute("user") User user) throws BookNotUpdatedException,
-            UserNotNotifiedException {
+            @ModelAttribute(USER_ATTR) User user)
+            throws BookNotUpdatedException, UserNotNotifiedException {
         LOGGER.debug("Take back the book {}.", bookId);
 
         Book book = searchBooksService.find(bookId);
@@ -134,10 +135,16 @@ public class BookController {
      */
     @RequestMapping(params = "remind", method = RequestMethod.POST)
     public String remind(@RequestParam(BOOK_ID_PARAM) Long bookId,
-            @ModelAttribute("user") User use) throws UserNotNotifiedException {
+            @ModelAttribute(USER_ATTR) User user)
+            throws UserNotNotifiedException {
         LOGGER.debug("Remind about the book {}.", bookId);
 
         Book book = searchBooksService.find(bookId);
+        if (!book.isManagedBy(user)) {
+            LOGGER.debug("Book {} is not managed by {}.", bookId,
+                    user.getUsername());
+            return redirectToBook(bookId);
+        }
 
         BookStatus bookStatus = book.getStatus();
 
@@ -166,13 +173,14 @@ public class BookController {
     @ExceptionHandler(UserNotNotifiedException.class)
     public String whenUserNotNotified(UserNotNotifiedException exception,
             HttpServletRequest request) {
-        Long bookId = Long.parseLong(request.getParameter(BOOK_ID_PARAM));
-        LOGGER.warn("Notification for book {} was not sent, because: '{}'.",
-                bookId, exception.getMessage());
+        User user = (User) request.getSession().getAttribute(USER_ATTR);
+        LOGGER.warn("User {} was not notified, because: '{}'.", user.getId(),
+                exception.getMessage());
 
         FlashMap flashAttrs = RequestContextUtils.getOutputFlashMap(request);
         flashAttrs.put("userNotNotified", true);
 
+        Long bookId = Long.parseLong(request.getParameter(BOOK_ID_PARAM));
         return redirectToBook(bookId);
     }
 

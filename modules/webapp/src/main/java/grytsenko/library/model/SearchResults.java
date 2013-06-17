@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * Contains the results of search.
+ * Results of search.
  */
 public class SearchResults<T> implements Serializable {
 
