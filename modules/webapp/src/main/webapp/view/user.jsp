@@ -24,16 +24,22 @@
             <!-- Details. -->
             <ul class="unstyled">
                 <li>
-                    <strong> <fmt:message key="user.details.firstname" />
-                    </strong> ${user.firstname}
+                    <strong>
+                        <fmt:message key="user.details.firstname" />
+                    </strong>
+                    ${user.firstname}
                 </li>
                 <li>
-                    <strong> <fmt:message key="user.details.lastname" />
-                    </strong> ${user.lastname}
+                    <strong>
+                        <fmt:message key="user.details.lastname" />
+                    </strong>
+                    ${user.lastname}
                 </li>
                 <li>
-                    <strong> <fmt:message key="user.details.mail" />
-                    </strong> ${user.mail}
+                    <strong>
+                        <fmt:message key="user.details.mail" />
+                    </strong>
+                    ${user.mail}
                 </li>
             </ul>
         </div>
