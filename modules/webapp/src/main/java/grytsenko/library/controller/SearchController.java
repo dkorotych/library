@@ -4,7 +4,6 @@ import grytsenko.library.model.Book;
 import grytsenko.library.model.SearchResults;
 import grytsenko.library.model.User;
 import grytsenko.library.service.BookService;
-import grytsenko.library.service.BookServiceException;
 import grytsenko.library.service.UserService;
 
 import java.security.Principal;
@@ -62,8 +61,7 @@ public class SearchController {
     @RequestMapping(method = RequestMethod.GET)
     public String search(
             @RequestParam(value = "pageNum", defaultValue = "0") Integer pageNum,
-            @ModelAttribute("user") User user, Model model)
-            throws BookServiceException {
+            @ModelAttribute("user") User user, Model model) {
         LOGGER.debug("Get page {}.", pageNum);
 
         SearchResults<Book> books = bookService.findAll(pageNum, PAGE_SIZE);

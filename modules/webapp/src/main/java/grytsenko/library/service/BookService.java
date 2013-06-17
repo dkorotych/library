@@ -2,13 +2,10 @@ package grytsenko.library.service;
 
 import static grytsenko.library.util.DateUtils.now;
 import grytsenko.library.model.Book;
-import grytsenko.library.model.BookStatus;
 import grytsenko.library.model.SearchResults;
 import grytsenko.library.model.User;
-import grytsenko.library.model.UserRole;
 import grytsenko.library.repository.BookRepository;
 
-import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -38,11 +35,12 @@ public class BookService {
     /**
      * Finds a book by its identifier.
      */
-    public Book find(long bookId) throws BookServiceException {
+    public Book find(long bookId) {
         Book book = bookRepository.findOne(bookId);
 
         if (book == null) {
-            throw new BookServiceException("Book not found.");
+            LOGGER.warn("Book {} was not found.", bookId);
+            throw new BookNotFoundException();
         }
 
         return book;
@@ -80,126 +78,67 @@ public class BookService {
     /**
      * Reserves a book for user.
      */
-    @Transactional(rollbackFor = { BookServiceException.class })
-    public Book reserve(Book book, User user) throws BookServiceException {
-        LOGGER.debug("Checking that the book {} can be reserved.", book.getId());
-
-        if (book.getStatus() != BookStatus.AVAILABLE) {
-            throw new BookServiceException("Book is not available.");
+    @Transactional
+    public Book reserve(Book book, User user) throws BookNotUpdatedException {
+        if (!book.canBeReserved()) {
+            throw new BookNotUpdatedException("Book can not be reserved.");
         }
-
         LOGGER.debug("Book {} can be reserved.", book.getId());
 
-        Date now = now();
-
-        book.setStatus(BookStatus.RESERVED);
-        book.setStatusChanged(now);
-
-        book.setReservedBy(user);
-        book.setReservedSince(now);
-
-        return saveBook(book);
+        book.reserve(user, now());
+        return save(book);
     }
 
     /**
      * Releases a book.
      */
-    @Transactional(rollbackFor = { BookServiceException.class })
-    public Book release(Book book, User user) throws BookServiceException {
-        LOGGER.debug("Checking that the book {} can be released.", book.getId());
-
-        if (book.getStatus() != BookStatus.RESERVED) {
-            throw new BookServiceException("Book is not reserved.");
+    @Transactional
+    public Book release(Book book, User user) throws BookNotUpdatedException {
+        if (!book.canBeReleased(user)) {
+            throw new BookNotUpdatedException("Book can not be released.");
         }
-
-        if (user.getRole() != UserRole.MANAGER
-                && !user.getId().equals(book.getReservedBy().getId())) {
-            throw new BookServiceException("Access denied.");
-        }
-
         LOGGER.debug("Book {} can be released.", book.getId());
 
-        Date now = now();
-
-        book.setStatus(BookStatus.AVAILABLE);
-        book.setStatusChanged(now);
-
-        book.setReservedBy(null);
-        book.setReservedSince(null);
-
-        return saveBook(book);
+        book.release(user, now());
+        return save(book);
     }
 
     /**
      * Takes out a book from library.
      */
-    @Transactional(rollbackFor = { BookServiceException.class })
-    public Book takeOut(Book book, User user) throws BookServiceException {
-        LOGGER.debug("Checking that the book {} can be borrowed.", book.getId());
-
-        if (book.getStatus() != BookStatus.RESERVED) {
-            throw new BookServiceException("Book is not reserved.");
+    @Transactional
+    public Book takeOut(Book book, User user) throws BookNotUpdatedException {
+        if (!book.canBeTakenOut(user)) {
+            throw new BookNotUpdatedException("Book can not be taken out.");
         }
+        LOGGER.debug("Book {} can be taken out.", book.getId());
 
-        if (user.getRole() != UserRole.MANAGER) {
-            throw new BookServiceException("Access denied.");
-        }
-
-        LOGGER.debug("Book {} can be borrowed.", book.getId());
-
-        Date now = now();
-
-        book.setStatus(BookStatus.BORROWED);
-        book.setStatusChanged(now);
-
-        book.setBorrowedBy(book.getReservedBy());
-        book.setBorrowedSince(now);
-
-        book.setReservedBy(null);
-        book.setReservedSince(null);
-
-        return saveBook(book);
+        book.takeOut(user, now());
+        return save(book);
     }
 
     /**
      * Takes back a book to library.
      */
-    @Transactional(rollbackFor = { BookServiceException.class })
-    public Book takeBack(Book book, User user) throws BookServiceException {
-        LOGGER.debug("Checking that the book {} can be returned.", book.getId());
-
-        if (book.getStatus() != BookStatus.BORROWED) {
-            throw new BookServiceException("Book is not borrowed.");
+    @Transactional
+    public Book takeBack(Book book, User user) throws BookNotUpdatedException {
+        if (!book.canBeTakenBack(user)) {
+            throw new BookNotUpdatedException("Book can not be taken back.");
         }
+        LOGGER.debug("Book {} can be taken back.", book.getId());
 
-        if (user.getRole() != UserRole.MANAGER) {
-            throw new BookServiceException("Access denied.");
-        }
-
-        LOGGER.debug("Book {} can be returned.", book.getId());
-
-        Date now = now();
-
-        book.setStatus(BookStatus.AVAILABLE);
-        book.setStatusChanged(now);
-
-        book.setBorrowedBy(null);
-        book.setBorrowedSince(null);
-
-        book.setManagedBy(user);
-        book.setManagedSince(now);
-
-        return saveBook(book);
+        book.takeBack(user, now());
+        return save(book);
     }
 
-    private Book saveBook(Book book) throws BookServiceException {
+    private Book save(Book book) throws BookNotUpdatedException {
         try {
             return bookRepository.saveAndFlush(book);
         } catch (Exception exception) {
             LOGGER.warn("Can not save the book {}, because: '{}'.",
                     book.getId(), exception.getMessage());
 
-            throw new BookServiceException("Can not save the book.");
+            throw new BookNotUpdatedException("Can not save the book.");
         }
     }
 

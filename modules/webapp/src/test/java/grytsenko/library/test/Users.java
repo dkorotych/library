@@ -7,7 +7,7 @@ import grytsenko.library.model.UserRole;
 /**
  * Utilities for work with users in tests.
  */
-public final class TestUsers {
+public final class Users {
 
     /**
      * The identifier for quest.
@@ -63,7 +63,7 @@ public final class TestUsers {
         return manager;
     }
 
-    private TestUsers() {
+    private Users() {
     }
 
 }

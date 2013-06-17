@@ -44,9 +44,9 @@ public class UserService {
             user = createNewUser(username);
         }
 
-        updateUserFromDs(user);
+        syncUserWithDs(user);
 
-        return userRepository.save(user);
+        return userRepository.saveAndFlush(user);
     }
 
     /**
@@ -62,7 +62,7 @@ public class UserService {
     /**
      * Searches for a user in directory service and then updates it.
      */
-    private void updateUserFromDs(User user) {
+    private void syncUserWithDs(User user) {
         String username = user.getUsername();
         DsUser dsUser = dsUserRepository.findByUsername(username);
 
@@ -71,11 +71,9 @@ public class UserService {
             return;
         }
 
-        user.setFirstname(dsUser.getFirstname());
-        user.setLastname(dsUser.getLastname());
-        user.setMail(dsUser.getMail());
+        user.syncWith(dsUser);
 
-        LOGGER.debug("User {} was updated using data from DS.", username);
+        LOGGER.debug("User {} was synced.", username);
     }
 
 }

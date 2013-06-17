@@ -1,5 +1,6 @@
 package grytsenko.library.test;
 
+import static grytsenko.library.test.Users.manager;
 import grytsenko.library.model.Book;
 import grytsenko.library.model.BookStatus;
 import grytsenko.library.model.User;
@@ -7,7 +8,7 @@ import grytsenko.library.model.User;
 /**
  * Utilities for work with books in tests.
  */
-public final class TestBooks {
+public final class Books {
 
     /**
      * The default identifier of book.
@@ -21,6 +22,7 @@ public final class TestBooks {
         Book book = new Book();
         book.setId(BOOK_ID);
         book.setStatus(BookStatus.AVAILABLE);
+        book.setManagedBy(manager());
         return book;
     }
 
@@ -34,6 +36,7 @@ public final class TestBooks {
         Book book = availableBook();
         book.setStatus(BookStatus.RESERVED);
         book.setReservedBy(reservedBy);
+        book.setManagedBy(manager());
         return book;
     }
 
@@ -47,10 +50,11 @@ public final class TestBooks {
         Book book = availableBook();
         book.setStatus(BookStatus.BORROWED);
         book.setBorrowedBy(borrowedBy);
+        book.setManagedBy(manager());
         return book;
     }
 
-    private TestBooks() {
+    private Books() {
     }
 
 }

@@ -154,4 +154,111 @@ public class Book implements Serializable {
         this.version = version;
     }
 
+    /**
+     * Checks that book can be reserved.
+     */
+    public boolean canBeReserved() {
+        return status == BookStatus.AVAILABLE;
+    }
+
+    /**
+     * Reserves a book.
+     */
+    public void reserve(User reservedBy, Date reservedAt) {
+        if (!canBeReserved()) {
+            throw new IllegalStateException("Book can not be reserved.");
+        }
+
+        status = BookStatus.RESERVED;
+        statusChanged = reservedAt;
+
+        this.reservedBy = reservedBy;
+        this.reservedSince = reservedAt;
+    }
+
+    /**
+     * Checks that book can be released.
+     * 
+     * <p>
+     * Only user who reserved a book or user who managed a book can release it.
+     */
+    public boolean canBeReleased(User releasedBy) {
+        if (status != BookStatus.RESERVED) {
+            return false;
+        }
+
+        return releasedBy.isIdenticalTo(reservedBy)
+                || releasedBy.isIdenticalTo(managedBy);
+    }
+
+    /**
+     * Releases a book.
+     */
+    public void release(User releasedBy, Date releasedAt) {
+        if (!canBeReleased(releasedBy)) {
+            throw new IllegalStateException("Book can not be released.");
+        }
+
+        status = BookStatus.AVAILABLE;
+        statusChanged = releasedAt;
+
+        reservedBy = null;
+        reservedSince = null;
+    }
+
+    /**
+     * Checks that book can be taken out from library.
+     */
+    public boolean canBeTakenOut(User manager) {
+        if (status != BookStatus.RESERVED) {
+            return false;
+        }
+
+        return manager.isIdenticalTo(managedBy);
+    }
+
+    /**
+     * Takes out a book.
+     */
+    public void takeOut(User manager, Date borrowedAt) {
+        if (!canBeTakenOut(manager)) {
+            throw new IllegalStateException("Book can not be taken out.");
+        }
+
+        status = BookStatus.BORROWED;
+        statusChanged = borrowedAt;
+
+        borrowedBy = reservedBy;
+        this.borrowedSince = borrowedAt;
+
+        reservedBy = null;
+        reservedSince = null;
+    }
+
+    /**
+     * Checks that book can be taken back to library.
+     */
+    public boolean canBeTakenBack(User manager) {
+        if (status != BookStatus.BORROWED) {
+            return false;
+        }
+
+        return manager.isIdenticalTo(managedBy);
+    }
+
+    /**
+     * Takes back a book to library.
+     */
+    public void takeBack(User manager, Date returnedAt) {
+        if (!canBeTakenBack(manager)) {
+            throw new IllegalStateException("Book can not be taken back.");
+        }
+
+        status = BookStatus.AVAILABLE;
+        statusChanged = returnedAt;
+
+        borrowedBy = null;
+        borrowedSince = null;
+    }
+
 }

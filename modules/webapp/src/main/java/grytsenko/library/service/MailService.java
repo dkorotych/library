@@ -60,7 +60,7 @@ public class MailService {
      * Sends notification that a book was reserved.
      */
     public void notifyReserved(Book book, User user)
-            throws MailServiceException {
+            throws MailNotSentException {
         LOGGER.debug("Sending notification that the book {} was reserved.",
                 book.getId());
 
@@ -71,7 +71,7 @@ public class MailService {
      * Sends notification that book was released.
      */
     public void notifyReleased(Book book, User user)
-            throws MailServiceException {
+            throws MailNotSentException {
         LOGGER.debug("Sending notification that the book {} was released.",
                 book.getId());
 
@@ -82,7 +82,7 @@ public class MailService {
      * Sends notification that book was borrowed.
      */
     public void notifyBorrowed(Book book, User user)
-            throws MailServiceException {
+            throws MailNotSentException {
         LOGGER.debug("Sending notification that the book {} was borrowed.",
                 book.getId());
 
@@ -93,7 +93,7 @@ public class MailService {
      * Sends notification that book was returned.
      */
     public void notifyReturned(Book book, User user)
-            throws MailServiceException {
+            throws MailNotSentException {
         LOGGER.debug("Sending notification that the book {} was returned.",
                 book.getId());
 
@@ -104,7 +104,7 @@ public class MailService {
      * Sends notification.
      */
     private void notify(Book book, User user, String subjectId,
-            String templateId) throws MailServiceException {
+            String templateId) throws MailNotSentException {
         String from = mailProperties.getProperty(FEEDBACK_EMAIL);
         String to = user.getMail();
         String cc = book.getManagedBy().getMail();
@@ -131,7 +131,7 @@ public class MailService {
             LOGGER.warn("Can not send email for book {}, because: '{}'.",
                     book.getId(), exception.getMessage());
 
-            throw new MailServiceException("Can not send email.");
+            throw new MailNotSentException("Can not send email.");
         }
     }
 

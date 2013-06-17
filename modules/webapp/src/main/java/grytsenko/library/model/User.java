@@ -105,4 +105,25 @@ public class User implements Serializable {
         this.version = version;
     }
 
+    /**
+     * Determines that this user is identical to other user, i.e. it has the
+     * same identifier.
+     */
+    public boolean isIdenticalTo(User other) {
+        if (id == null) {
+            return false;
+        }
+
+        return id.equals(other.id);
+    }
+
+    /**
+     * Synchronizes user with the same user from directory service.
+     */
+    public void syncWith(DsUser dsUser) {
+        firstname = dsUser.getFirstname();
+        lastname = dsUser.getLastname();
+        mail = dsUser.getMail();
+    }
+
 }

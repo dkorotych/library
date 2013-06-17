@@ -3,10 +3,10 @@ package grytsenko.library.controller;
 import grytsenko.library.model.Book;
 import grytsenko.library.model.BookStatus;
 import grytsenko.library.model.User;
+import grytsenko.library.service.BookNotUpdatedException;
 import grytsenko.library.service.BookService;
-import grytsenko.library.service.BookServiceException;
 import grytsenko.library.service.MailService;
-import grytsenko.library.service.MailServiceException;
+import grytsenko.library.service.MailNotSentException;
 import grytsenko.library.service.UserService;
 
 import java.security.Principal;
@@ -52,15 +52,9 @@ public class BookController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public String getBook(@RequestParam("bookId") Long bookId, Model model)
-            throws BookServiceException {
-        try {
-            Book book = bookService.find(bookId);
-            model.addAttribute("book", book);
-        } catch (BookServiceException exception) {
-            LOGGER.warn("Book {} was not found.", bookId);
-            throw exception;
-        }
+    public String getBook(@RequestParam("bookId") Long bookId, Model model) {
+        Book book = bookService.find(bookId);
+        model.addAttribute("book", book);
 
         return "book";
     }
@@ -80,7 +74,7 @@ public class BookController {
         try {
             bookService.reserve(book, user);
             LOGGER.debug("The book {} was reserved for {}.", bookId, username);
-        } catch (BookServiceException exception) {
+        } catch (BookNotUpdatedException exception) {
             LOGGER.warn("The book {} wasn't reserved for {}.", bookId, username);
             LOGGER.warn("Reason: '{}'.", exception.getMessage());
 
@@ -92,7 +86,7 @@ public class BookController {
         try {
             mailService.notifyReserved(book, book.getReservedBy());
             LOGGER.debug("Notification was sent to {}.", username);
-        } catch (MailServiceException exception) {
+        } catch (MailNotSentException exception) {
             LOGGER.warn("Notification was not sent to {}.", username);
         }
 
@@ -114,7 +108,7 @@ public class BookController {
         try {
             bookService.release(book, user);
             LOGGER.debug("The book {} was released by {}.", bookId, username);
-        } catch (BookServiceException exception) {
+        } catch (BookNotUpdatedException exception) {
             LOGGER.warn("The book {} wasn't released by {}.", bookId, username);
             LOGGER.warn("Reason: '{}'.", exception.getMessage());
 
@@ -126,7 +120,7 @@ public class BookController {
         try {
             mailService.notifyReleased(book, user);
             LOGGER.debug("Notification was sent to {}.", username);
-        } catch (MailServiceException exception) {
+        } catch (MailNotSentException exception) {
             LOGGER.warn("Notification was not sent to {}.", username);
         }
 
@@ -148,7 +142,7 @@ public class BookController {
         try {
             bookService.takeOut(book, user);
             LOGGER.debug("The book {} was taken out by {}.", bookId, username);
-        } catch (BookServiceException exception) {
+        } catch (BookNotUpdatedException exception) {
             LOGGER.warn("The book {} wasn't taken out by {}.", bookId, username);
             LOGGER.warn("Reason: '{}'.", exception.getMessage());
 
@@ -160,7 +154,7 @@ public class BookController {
         try {
             mailService.notifyBorrowed(book, book.getBorrowedBy());
             LOGGER.debug("Notification was sent to {}.", username);
-        } catch (MailServiceException exception) {
+        } catch (MailNotSentException exception) {
             LOGGER.warn("Notification was not sent to {}.", username);
         }
 
@@ -182,7 +176,7 @@ public class BookController {
         try {
             bookService.takeBack(book, user);
             LOGGER.debug("The book {} was taken back by {}.", bookId, username);
-        } catch (BookServiceException exception) {
+        } catch (BookNotUpdatedException exception) {
             LOGGER.warn("The book {} wasn't taken back by {}.", bookId,
                     username);
             LOGGER.warn("Reason: '{}'.", exception.getMessage());
@@ -195,7 +189,7 @@ public class BookController {
         try {
             mailService.notifyReturned(book, user);
             LOGGER.debug("Notification was sent to {}.", username);
-        } catch (MailServiceException exception) {
+        } catch (MailNotSentException exception) {
             LOGGER.warn("Notification was not sent to {}.", username);
         }
 
@@ -222,7 +216,7 @@ public class BookController {
             } else if (book.getStatus() == BookStatus.BORROWED) {
                 mailService.notifyBorrowed(book, book.getBorrowedBy());
             }
-        } catch (MailServiceException exception) {
+        } catch (MailNotSentException exception) {
             LOGGER.warn("Notification was not sent to {}.", username);
 
             redirectAttributes.addFlashAttribute("lastOperationFailed", true);
