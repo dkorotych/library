@@ -2,7 +2,7 @@ package grytsenko.library.controller;
 
 import grytsenko.library.model.Book;
 import grytsenko.library.model.User;
-import grytsenko.library.service.BookService;
+import grytsenko.library.service.SearchService;
 import grytsenko.library.service.UserService;
 
 import java.security.Principal;
@@ -30,12 +30,12 @@ public class UserController {
             .getLogger(UserController.class);
 
     private UserService userService;
-    private BookService bookService;
+    private SearchService searchService;
 
     @Autowired
-    public UserController(UserService userService, BookService bookService) {
+    public UserController(UserService userService, SearchService searchService) {
         this.userService = userService;
-        this.bookService = bookService;
+        this.searchService = searchService;
     }
 
     @ModelAttribute("user")
@@ -47,7 +47,7 @@ public class UserController {
     public String getUser(@ModelAttribute("user") User user, Model model) {
         LOGGER.debug("Get user details.");
 
-        List<Book> relatedBooks = bookService.findRelatedTo(user);
+        List<Book> relatedBooks = searchService.findRelatedTo(user);
         LOGGER.debug("{} books are related to {}.", relatedBooks.size(),
                 user.getUsername());
         if (!relatedBooks.isEmpty()) {

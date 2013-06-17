@@ -36,7 +36,6 @@ public final class Books {
         Book book = availableBook();
         book.setStatus(BookStatus.RESERVED);
         book.setReservedBy(reservedBy);
-        book.setManagedBy(manager());
         return book;
     }
 
@@ -50,7 +49,6 @@ public final class Books {
         Book book = availableBook();
         book.setStatus(BookStatus.BORROWED);
         book.setBorrowedBy(borrowedBy);
-        book.setManagedBy(manager());
         return book;
     }
 
