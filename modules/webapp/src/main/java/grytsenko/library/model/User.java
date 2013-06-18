@@ -110,6 +110,10 @@ public class User implements Serializable {
      * same identifier.
      */
     public boolean identicalTo(User other) {
+        if (other == null) {
+            return false;
+        }
+
         if (id == null) {
             return false;
         }

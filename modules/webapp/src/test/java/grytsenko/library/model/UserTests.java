@@ -21,6 +21,8 @@ public class UserTests {
 
         assertFalse(manager().identicalTo(new User()));
         assertFalse(new User().identicalTo(guest()));
+
+        assertFalse(manager().identicalTo(null));
     }
 
     @Test
