@@ -42,7 +42,7 @@ public class ManageBooksService {
      */
     @Transactional
     public Book release(Book book, User user) throws BookNotUpdatedException {
-        if (!book.canBeReleased(user)) {
+        if (!book.canBeReleasedBy(user)) {
             throw new BookNotUpdatedException("Book can not be released.");
         }
         LOGGER.debug("Book {} can be released.", book.getId());
@@ -56,7 +56,7 @@ public class ManageBooksService {
      */
     @Transactional
     public Book takeOut(Book book, User user) throws BookNotUpdatedException {
-        if (!book.canBeTakenOut(user)) {
+        if (!book.canBeTakenOutBy(user)) {
             throw new BookNotUpdatedException("Book can not be taken out.");
         }
         LOGGER.debug("Book {} can be taken out.", book.getId());
@@ -70,7 +70,7 @@ public class ManageBooksService {
      */
     @Transactional
     public Book takeBack(Book book, User user) throws BookNotUpdatedException {
-        if (!book.canBeTakenBack(user)) {
+        if (!book.canBeTakenBackBy(user)) {
             throw new BookNotUpdatedException("Book can not be taken back.");
         }
         LOGGER.debug("Book {} can be taken back.", book.getId());

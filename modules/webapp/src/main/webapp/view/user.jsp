@@ -74,7 +74,7 @@
                                     <a href="${bookDetailsUrl}">${book.details.title}</a>
                                 </td>
                                 <c:choose>
-                                    <c:when test="${book.status eq 'RESERVED'}">
+                                    <c:when test="${book.reserved}">
                                         <td>
                                             <fmt:message
                                                 key="book.status.reserved" />
@@ -85,7 +85,7 @@
                                                 value="${book.reservedSince}" />
                                         </td>
                                     </c:when>
-                                    <c:when test="${book.status eq 'BORROWED'}">
+                                    <c:when test="${book.borrowed}">
                                         <td>
                                             <fmt:message
                                                 key="book.status.borrowed" />

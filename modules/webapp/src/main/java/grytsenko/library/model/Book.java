@@ -158,10 +158,17 @@ public class Book implements Serializable {
     }
 
     /**
+     * Checks that book is available.
+     */
+    public boolean isAvailable() {
+        return status == BookStatus.AVAILABLE;
+    }
+
+    /**
      * Checks that book can be reserved.
      */
     public boolean canBeReserved() {
-        return status == BookStatus.AVAILABLE;
+        return isAvailable();
     }
 
     /**
@@ -180,25 +187,35 @@ public class Book implements Serializable {
     }
 
     /**
+     * Checks that book is reserved.
+     */
+    public boolean isReserved() {
+        return status == BookStatus.RESERVED;
+    }
+
+    /**
+     * Checks that book is reserved by a specific user.
+     */
+    public boolean isReservedBy(User user) {
+        return user.identicalTo(reservedBy);
+    }
+
+    /**
      * Checks that book can be released.
      * 
      * <p>
      * Only user who reserved a book or user who managed a book can release it.
      */
-    public boolean canBeReleased(User releasedBy) {
-        if (status != BookStatus.RESERVED) {
-            return false;
-        }
-
-        return releasedBy.identicalTo(reservedBy)
-                || isManagedBy(releasedBy);
+    public boolean canBeReleasedBy(User releasedBy) {
+        return isReserved()
+                && (isReservedBy(releasedBy) || isManagedBy(releasedBy));
     }
 
     /**
      * Releases a book.
      */
     public void release(User releasedBy, Date releasedAt) {
-        if (!canBeReleased(releasedBy)) {
+        if (!canBeReleasedBy(releasedBy)) {
             throw new IllegalStateException("Book can not be released.");
         }
 
@@ -212,19 +229,15 @@ public class Book implements Serializable {
     /**
      * Checks that book can be taken out from library.
      */
-    public boolean canBeTakenOut(User manager) {
-        if (status != BookStatus.RESERVED) {
-            return false;
-        }
-
-        return isManagedBy(manager);
+    public boolean canBeTakenOutBy(User user) {
+        return isReserved() && isManagedBy(user);
     }
 
     /**
      * Takes out a book.
      */
     public void takeOut(User manager, Date borrowedAt) {
-        if (!canBeTakenOut(manager)) {
+        if (!canBeTakenOutBy(manager)) {
             throw new IllegalStateException("Book can not be taken out.");
         }
 
@@ -239,21 +252,24 @@ public class Book implements Serializable {
     }
 
     /**
+     * Checks that book is borrowed.
+     */
+    public boolean isBorrowed() {
+        return status == BookStatus.BORROWED;
+    }
+
+    /**
      * Checks that book can be taken back to library.
      */
-    public boolean canBeTakenBack(User manager) {
-        if (status != BookStatus.BORROWED) {
-            return false;
-        }
-
-        return isManagedBy(manager);
+    public boolean canBeTakenBackBy(User user) {
+        return isBorrowed() && isManagedBy(user);
     }
 
     /**
      * Takes back a book to library.
      */
     public void takeBack(User manager, Date returnedAt) {
-        if (!canBeTakenBack(manager)) {
+        if (!canBeTakenBackBy(manager)) {
             throw new IllegalStateException("Book can not be taken back.");
         }
 
@@ -268,6 +284,10 @@ public class Book implements Serializable {
      * Checks that book is managed by user.
      */
     public boolean isManagedBy(User user) {
+        if (managedBy == null) {
+            throw new IllegalStateException("Book is not managed by anyone.");
+        }
+
         return user.identicalTo(managedBy);
     }
 

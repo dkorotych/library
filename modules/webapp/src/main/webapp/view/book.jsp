@@ -90,23 +90,14 @@
             </c:if>
 
             <form:form method="POST">
-                <c:set var="userIsManager" value="${user.role eq 'MANAGER'}" />
-
-                <c:set var="bookIsAvailable"
-                    value="${book.status eq 'AVAILABLE'}" />
-                <c:set var="bookIsReserved" value="${book.status eq 'RESERVED'}" />
-                <c:set var="bookIsReservedByThisUser"
-                    value="${bookIsReserved and user.id.equals(book.reservedBy.id)}" />
-                <c:set var="bookIsBorrowed" value="${book.status eq 'BORROWED'}" />
-
                 <!-- Status Message -->
                 <c:choose>
-                    <c:when test="${bookIsAvailable}">
+                    <c:when test="${book.available}">
                         <p>
                             <fmt:message key="book.message.available" />
                         </p>
                     </c:when>
-                    <c:when test="${bookIsReserved}">
+                    <c:when test="${book.reserved}">
                         <p>
                             <fmt:message key="book.message.reserved">
                                 <fmt:param value="${book.reservedBy.username}" />
@@ -118,7 +109,7 @@
                             </fmt:message>
                         </p>
                     </c:when>
-                    <c:when test="${bookIsBorrowed}">
+                    <c:when test="${book.borrowed}">
                         <p>
                             <fmt:message key="book.message.borrowed">
                                 <fmt:param value="${book.borrowedBy.username}" />
@@ -134,43 +125,38 @@
 
                 <!-- Actions -->
                 <p>
-                    <c:if test="${userIsManager}">
-                        <c:if test="${bookIsReserved or bookIsBorrowed}">
-                            <button name="remind" type="submit"
-                                class="btn btn-info">
-                                <i class="icon-envelope"></i>
-                                <fmt:message key="book.action.remind" />
-                            </button>
-                        </c:if>
+                    <c:if
+                        test="${book.isManagedBy(user) and (book.reserved or book.borrowed)}">
+                        <button name="remind" type="submit" class="btn btn-info">
+                            <i class="icon-bell"></i>
+                            <fmt:message key="book.action.remind" />
+                        </button>
                     </c:if>
 
-                    <c:if test="${bookIsAvailable}">
+                    <c:if test="${book.canBeReserved()}">
                         <button name="reserve" type="submit"
                             class="btn btn-primary">
                             <fmt:message key="book.action.reserve" />
                         </button>
                     </c:if>
-                    <c:if
-                        test="${bookIsReserved and (bookIsReservedByThisUser or userIsManager)}">
+
+                    <c:if test="${book.canBeReleasedBy(user)}">
                         <button name="release" type="submit"
                             class="btn btn-warning">
                             <fmt:message key="book.action.release" />
                         </button>
                     </c:if>
-
-                    <c:if test="${userIsManager}">
-                        <c:if test="${bookIsReserved}">
-                            <button name="takeOut" type="submit"
-                                class="btn btn-warning">
-                                <fmt:message key="book.action.takeout" />
-                            </button>
-                        </c:if>
-                        <c:if test="${bookIsBorrowed}">
-                            <button name="takeBack" type="submit"
-                                class="btn btn-warning">
-                                <fmt:message key="book.action.takeback" />
-                            </button>
-                        </c:if>
+                    <c:if test="${book.canBeTakenOutBy(user)}">
+                        <button name="takeOut" type="submit"
+                            class="btn btn-warning">
+                            <fmt:message key="book.action.takeout" />
+                        </button>
+                    </c:if>
+                    <c:if test="${book.canBeTakenBackBy(user)}">
+                        <button name="takeBack" type="submit"
+                            class="btn btn-warning">
+                            <fmt:message key="book.action.takeback" />
+                        </button>
                     </c:if>
                 </p>
             </form:form>
