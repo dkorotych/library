@@ -1,6 +1,7 @@
 package grytsenko.library.model;
 
 import static grytsenko.library.test.Users.guest;
+import static grytsenko.library.test.Users.guestFromDs;
 import static grytsenko.library.test.Users.manager;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -27,13 +28,9 @@ public class UserTests {
 
     @Test
     public void testSyncWithDs() {
+        DsUser dsUser = guestFromDs();
+
         User user = new User();
-
-        DsUser dsUser = new DsUser();
-        dsUser.setFirstname("Anton");
-        dsUser.setLastname("Grytsenko");
-        dsUser.setMail("anthony.grytsenko@gmail.com");
-
         user.syncWith(dsUser);
 
         assertEquals(dsUser.getFirstname(), user.getFirstname());

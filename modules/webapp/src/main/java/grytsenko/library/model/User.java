@@ -13,7 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.Version;
 
 /**
- * A user of library.
+ * User of library.
  */
 @Entity(name = "users")
 public class User implements Serializable {

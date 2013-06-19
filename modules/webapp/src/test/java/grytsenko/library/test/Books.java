@@ -10,14 +10,8 @@ import grytsenko.library.model.User;
  */
 public final class Books {
 
-    /**
-     * The default identifier of book.
-     */
     public static final long BOOK_ID = 100L;
 
-    /**
-     * Creates an available book.
-     */
     public static Book availableBook() {
         Book book = new Book();
         book.setId(BOOK_ID);
@@ -26,12 +20,6 @@ public final class Books {
         return book;
     }
 
-    /**
-     * Creates a reserved book.
-     * 
-     * @param reservedBy
-     *            the user, who reserved a book.
-     */
     public static Book reservedBook(User reservedBy) {
         Book book = availableBook();
         book.setStatus(BookStatus.RESERVED);
@@ -39,12 +27,6 @@ public final class Books {
         return book;
     }
 
-    /**
-     * Creates a borrowed book.
-     * 
-     * @param borrowedBy
-     *            the user, who borrowed a book.
-     */
     public static Book borrowedBook(User borrowedBy) {
         Book book = availableBook();
         book.setStatus(BookStatus.BORROWED);

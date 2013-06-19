@@ -18,7 +18,7 @@ public class LoginController {
             .getLogger(LoginController.class);
 
     /**
-     * User tries to login.
+     * User attempts to login.
      */
     @RequestMapping(method = RequestMethod.GET)
     public String login() {
@@ -26,7 +26,7 @@ public class LoginController {
     }
 
     /**
-     * User tries to login after error.
+     * User attempts to login after error.
      */
     @RequestMapping(params = "retry", method = RequestMethod.GET)
     public String loginFailed(Model model) {

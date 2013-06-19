@@ -3,8 +3,8 @@ package grytsenko.library.controller;
 import grytsenko.library.model.Book;
 import grytsenko.library.model.SearchResults;
 import grytsenko.library.model.User;
-import grytsenko.library.service.SearchBooksService;
 import grytsenko.library.service.ManageUsersService;
+import grytsenko.library.service.SearchBooksService;
 
 import java.security.Principal;
 
@@ -30,9 +30,6 @@ public class SearchController {
     private static final Logger LOGGER = LoggerFactory
             .getLogger(SearchController.class);
 
-    /**
-     * The default page size.
-     */
     public static final int PAGE_SIZE = 3;
 
     @Autowired
@@ -40,9 +37,6 @@ public class SearchController {
     @Autowired
     SearchBooksService searchBooksService;
 
-    /**
-     * Adds current user.
-     */
     @ModelAttribute("user")
     public User currentUser(Principal principal) {
         return manageUsersService.get(principal.getName());
@@ -57,7 +51,8 @@ public class SearchController {
             @ModelAttribute("user") User user, Model model) {
         LOGGER.debug("Get page {}.", pageNum);
 
-        SearchResults<Book> books = searchBooksService.findAll(pageNum, PAGE_SIZE);
+        SearchResults<Book> books = searchBooksService.findAll(pageNum,
+                PAGE_SIZE);
         model.addAttribute("searchResults", books);
 
         return "search";

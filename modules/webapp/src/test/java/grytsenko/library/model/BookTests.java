@@ -8,7 +8,6 @@ import static grytsenko.library.test.Users.manager;
 import static grytsenko.library.util.DateUtils.now;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import grytsenko.library.test.Books;
 
 import java.util.Date;
 
@@ -36,7 +35,7 @@ public class BookTests {
 
     @Test(expected = IllegalStateException.class)
     public void testReserveNotAvailable() throws Exception {
-        Book book = Books.reservedBook(manager());
+        Book book = reservedBook(manager());
         book.reserve(guest(), now());
     }
 
@@ -73,7 +72,7 @@ public class BookTests {
 
     @Test(expected = IllegalStateException.class)
     public void testReleaseNotReserved() {
-        Book book = Books.borrowedBook(guest());
+        Book book = availableBook();
 
         book.release(manager(), now());
     }

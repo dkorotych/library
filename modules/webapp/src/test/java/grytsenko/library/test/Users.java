@@ -9,31 +9,15 @@ import grytsenko.library.model.UserRole;
  */
 public final class Users {
 
-    /**
-     * The identifier for quest.
-     */
     public static final Long GUEST_ID = 1L;
-    /**
-     * The user name for guest.
-     */
     public static final String GUEST_NAME = "guest";
-    /**
-     * The mail for guest.
-     */
-    public static final String GUEST_MAIL = "guest@test.com";
+    public static final String GUEST_FIRST_NAME = "John";
+    public static final String GUEST_LAST_NAME = "Doe";
+    public static final String GUEST_MAIL = "john.doe@test.com";
 
-    /**
-     * The identifier for manager.
-     */
     public static final Long MANAGER_ID = 5L;
-    /**
-     * The user name for manager.
-     */
     public static final String MANAGER_NAME = "manager";
 
-    /**
-     * Creates a guest.
-     */
     public static User guest() {
         User guest = new User();
         guest.setId(GUEST_ID);
@@ -42,19 +26,15 @@ public final class Users {
         return guest;
     }
 
-    /**
-     * Data about guest from DS.
-     */
     public static DsUser guestFromDs() {
-        DsUser ldapGuest = new DsUser();
-        ldapGuest.setUsername(GUEST_NAME);
-        ldapGuest.setMail(GUEST_MAIL);
-        return ldapGuest;
+        DsUser guest = new DsUser();
+        guest.setUsername(GUEST_NAME);
+        guest.setFirstname(GUEST_FIRST_NAME);
+        guest.setLastname(GUEST_LAST_NAME);
+        guest.setMail(GUEST_MAIL);
+        return guest;
     }
 
-    /**
-     * Creates a manager.
-     */
     public static User manager() {
         User manager = new User();
         manager.setId(MANAGER_ID);
