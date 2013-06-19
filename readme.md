@@ -1,26 +1,32 @@
 # Summary
 
-This is a simple tool for managing books in small library. It is implemented as a web application.
+This application is a tool for managing shared books in small library.
 
 # Getting Started
 
-## What You Need
+### Frameworks and Libraries
 
-This project is written in Java, so, you'll need [JDK 7](http://www.oracle.com/technetwork/java/javase/overview/index.html) or later.
+This application is developed with [Spring][].
 
-Then you'll need [MySQL](http://www.mysql.com/) to store persistent data.
+Also it uses:
 
-For managing project we've used [Maven](http://maven.apache.org/).
+1. Spring MVC and [Twitter Bootstrap][] - for user interface.
+2. [Hibernate][] and [Spring JPA][] - for data.
+3. [StringTemplate][] - for creating emails.
 
-As a web server we've used [Tomcat](http://tomcat.apache.org/).
+### Tools
 
-As a directory service we've used [OpenDJ](http://opendj.forgerock.org/).
+The following tools are needed:
 
-At last, to get a copy of this project you'll need [Git](http://git-scm.com/).
+1. [Maven][] - to build app.
+2. [Tomcat][] - to run app.
+4. [MySQL][] - to store data.
 
-## How To
+Also [OpenDJ][] is used for data about users.
 
-Get a copy of project using [Git](http://git-scm.com/):
+### How To Start
+
+Get a copy of project using [Git][]:
 ```bash
 git clone https://github.com/grytsenko/library.git
 ```
@@ -31,6 +37,19 @@ cd /modules/webapp
 mvn clean package
 ```
 
-Install and configure persistent storage ([MySQL](http://www.mysql.com/)) and directory service ([OpenDJ](http://opendj.forgerock.org/)).
+Install and configure RDBMS ([MySQL][]) and DS ([OpenDJ][]).
 
 At last deploy application on web server.
+
+[Spring]: http://www.springsource.org/
+[Spring JPA]: http://www.springsource.org/spring-data/jpa
+[Hibernate]: http://www.hibernate.org/
+[Twitter Bootstrap]: http://twitter.github.io/bootstrap/
+[StringTemplate]: http://www.stringtemplate.org/
+
+[Maven]: http://maven.apache.org/
+[Tomcat]: http://tomcat.apache.org/
+[Git]: http://git-scm.com/
+
+[MySQL]: http://www.mysql.com/
+[OpenDJ]: http://opendj.forgerock.org/
