@@ -10,6 +10,8 @@
         class="org.springframework.context.support.ReloadableResourceBundleMessageSource"
         p:basenames="i18n/messages" />
 
+    <bean class="grytsenko.library.context.UpdateUser" />
+
     <context:component-scan base-package="grytsenko.library.service" />
     <context:component-scan base-package="grytsenko.library.repository" />
 

@@ -20,6 +20,18 @@ public class ManageUsersService {
     private static final Logger LOGGER = LoggerFactory
             .getLogger(ManageUsersService.class);
 
+    /**
+     * Creates the new user with the given name.
+     */
+    public static User createNew(String username) {
+        LOGGER.debug("Create new user {}.", username);
+
+        User user = new User();
+        user.setUsername(username);
+        user.setRole(UserRole.USER);
+        return user;
+    }
+
     @Autowired
     UsersRepository usersRepository;
     @Autowired
@@ -31,43 +43,36 @@ public class ManageUsersService {
      * <p>
      * If user is not found, then new user will be created.
      */
-    public User get(String username) {
-        User user = usersRepository.findByUsername(username);
-        if (user == null) {
-            LOGGER.debug("User {} is created.", username);
-            user = createNewUser(username);
-        }
-
-        syncUserWithDs(user);
-
-        return usersRepository.saveAndFlush(user);
+    public User find(String username) {
+        LOGGER.debug("Search user {}.", username);
+        return usersRepository.findByUsername(username);
     }
 
     /**
-     * Creates the new user with the given name.
+     * Updates user.
      */
-    private User createNewUser(String username) {
-        User user = new User();
-        user.setUsername(username);
-        user.setRole(UserRole.USER);
-        return user;
+    public void update(User user) {
+        LOGGER.debug("Update user {}.", user.getUsername());
+        usersRepository.saveAndFlush(user);
     }
 
     /**
      * Searches for a user in DS and then synchronizes it.
      */
-    private void syncUserWithDs(User user) {
+    public void syncWithDs(User user) {
         String username = user.getUsername();
+        LOGGER.debug("Sync user {} with DS.", username);
+
         DsUser dsUser = dsUsersRepository.findByUsername(username);
 
         if (dsUser == null) {
-            LOGGER.debug("User {} was not found in DS.", username);
+            LOGGER.debug("User {} not found in DS.", username);
             return;
         }
 
         user.syncWith(dsUser);
 
-        LOGGER.debug("User {} was synced with DS.", username);
+        LOGGER.debug("User {} synced with DS.", username);
     }
 
 }

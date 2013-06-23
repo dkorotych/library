@@ -55,23 +55,22 @@ public class DsUsersRepository {
      * @return the found user or <code>null</code> if user was not found.
      */
     public DsUser findByUsername(String username) {
-        LOGGER.debug("Search for the user {} in DS.", username);
+        LOGGER.debug("Search user {} in DS.", username);
 
         LdapTemplate ldapTemplate = new LdapTemplate(ldapContextSource);
         String base = ldapProperties.getProperty(USERS);
         String pattern = ldapProperties.getProperty(USERS_FILTER);
         String filter = MessageFormat.format(pattern, username);
-        LOGGER.debug("Used base DN {} and filter {}.", base, filter);
+        LOGGER.debug("Base DN is '{}' and filter is '{}'.", base, filter);
 
         List<?> foundUsers = ldapTemplate.search(base, filter,
                 new DsUserMapper());
         if (foundUsers.isEmpty()) {
-            LOGGER.error("User {} was not found in DS.", username);
+            LOGGER.error("User {} not found in DS.", username);
             return null;
         }
         if (foundUsers.size() > 0) {
-            LOGGER.warn("Several users with identifier {} were found.",
-                    username);
+            LOGGER.warn("Several users were found in DS.", username);
         }
 
         DsUser foundUser = (DsUser) foundUsers.get(0);

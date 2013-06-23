@@ -39,7 +39,7 @@ public class SearchController {
 
     @ModelAttribute("user")
     public User currentUser(Principal principal) {
-        return manageUsersService.get(principal.getName());
+        return manageUsersService.find(principal.getName());
     }
 
     /**

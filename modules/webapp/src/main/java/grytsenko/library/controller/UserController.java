@@ -36,7 +36,7 @@ public class UserController {
 
     @ModelAttribute("user")
     public User currentUser(Principal principal) {
-        return manageUsersService.get(principal.getName());
+        return manageUsersService.find(principal.getName());
     }
 
     @RequestMapping(method = RequestMethod.GET)
