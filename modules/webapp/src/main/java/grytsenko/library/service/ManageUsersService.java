@@ -2,7 +2,6 @@ package grytsenko.library.service;
 
 import grytsenko.library.model.DsUser;
 import grytsenko.library.model.User;
-import grytsenko.library.model.UserRole;
 import grytsenko.library.repository.DsUsersRepository;
 import grytsenko.library.repository.UsersRepository;
 
@@ -19,18 +18,6 @@ public class ManageUsersService {
 
     private static final Logger LOGGER = LoggerFactory
             .getLogger(ManageUsersService.class);
-
-    /**
-     * Creates the new user with the given name.
-     */
-    public static User createNew(String username) {
-        LOGGER.debug("Create new user {}.", username);
-
-        User user = new User();
-        user.setUsername(username);
-        user.setRole(UserRole.USER);
-        return user;
-    }
 
     @Autowired
     UsersRepository usersRepository;

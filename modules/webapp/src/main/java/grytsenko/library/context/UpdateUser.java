@@ -28,7 +28,8 @@ public class UpdateUser implements
         User user = manageUsersService.find(username);
         if (user == null) {
             LOGGER.debug("User {} not found.", username);
-            user = ManageUsersService.createNew(username);
+            LOGGER.debug("Create new user {}.", username);
+            user = User.create(username);
         }
 
         manageUsersService.syncWithDs(user);

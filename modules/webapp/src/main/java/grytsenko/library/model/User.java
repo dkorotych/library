@@ -20,6 +20,16 @@ public class User implements Serializable {
 
     private static final long serialVersionUID = -1054189841782371536L;
 
+    /**
+     * Creates the new user with the given name.
+     */
+    public static User create(String username) {
+        User user = new User();
+        user.setUsername(username);
+        user.setRole(UserRole.USER);
+        return user;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
