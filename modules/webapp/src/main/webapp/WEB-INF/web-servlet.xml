@@ -18,12 +18,6 @@
         class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver"
         p:defaultErrorView="error" />
 
-    <bean id="messageSource"
-        class="org.springframework.context.support.ReloadableResourceBundleMessageSource"
-        p:basenames="i18n/messages" />
-
     <context:component-scan base-package="grytsenko.library.controller" />
-    <context:component-scan base-package="grytsenko.library.service" />
-    <context:component-scan base-package="grytsenko.library.repository" />
 
 </beans>

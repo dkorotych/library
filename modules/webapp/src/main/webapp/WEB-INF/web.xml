@@ -14,6 +14,7 @@
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>
+            /WEB-INF/common.xml,
             /WEB-INF/security.xml,
             /WEB-INF/mail.xml,
             /WEB-INF/storage.xml
