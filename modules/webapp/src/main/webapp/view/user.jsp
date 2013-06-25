@@ -79,24 +79,19 @@
                                             <fmt:message
                                                 key="book.status.reserved" />
                                         </td>
-                                        <td>
-                                            <fmt:formatDate type="date"
-                                                dateStyle="short"
-                                                value="${book.reservedSince}" />
-                                        </td>
                                     </c:when>
                                     <c:when test="${book.borrowed}">
                                         <td>
                                             <fmt:message
                                                 key="book.status.borrowed" />
                                         </td>
-                                        <td>
-                                            <fmt:formatDate type="date"
-                                                dateStyle="short"
-                                                value="${book.borrowedSince}" />
-                                        </td>
                                     </c:when>
                                 </c:choose>
+                                <td>
+                                    <fmt:formatDate type="date"
+                                        dateStyle="short"
+                                        value="${book.usedSince}" />
+                                </td>
                             </tr>
                         </c:forEach>
                     </tbody>

@@ -43,18 +43,11 @@ public class Book implements Serializable {
     private Date statusChanged;
 
     @ManyToOne
-    @JoinColumn(name = "reserved_by")
-    private User reservedBy;
+    @JoinColumn(name = "used_by")
+    private User usedBy;
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "reserved_since")
-    private Date reservedSince;
-
-    @ManyToOne
-    @JoinColumn(name = "borrowed_by")
-    private User borrowedBy;
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "borrowed_since")
-    private Date borrowedSince;
+    @Column(name = "used_since")
+    private Date usedSince;
 
     @ManyToOne
     @JoinColumn(name = "managed_by", nullable = false)
@@ -101,36 +94,20 @@ public class Book implements Serializable {
         this.statusChanged = statusChanged;
     }
 
-    public User getReservedBy() {
-        return reservedBy;
+    public User getUsedBy() {
+        return usedBy;
     }
 
-    public void setReservedBy(User reservedBy) {
-        this.reservedBy = reservedBy;
+    public void setUsedBy(User usedBy) {
+        this.usedBy = usedBy;
     }
 
-    public Date getReservedSince() {
-        return reservedSince;
+    public Date getUsedSince() {
+        return usedSince;
     }
 
-    public void setReservedSince(Date reservedSince) {
-        this.reservedSince = reservedSince;
-    }
-
-    public User getBorrowedBy() {
-        return borrowedBy;
-    }
-
-    public void setBorrowedBy(User borrowedBy) {
-        this.borrowedBy = borrowedBy;
-    }
-
-    public Date getBorrowedSince() {
-        return borrowedSince;
-    }
-
-    public void setBorrowedSince(Date borrowedSince) {
-        this.borrowedSince = borrowedSince;
+    public void setUsedSince(Date usedSince) {
+        this.usedSince = usedSince;
     }
 
     public User getManagedBy() {
@@ -172,6 +149,38 @@ public class Book implements Serializable {
     }
 
     /**
+     * Checks that book is reserved.
+     */
+    public boolean isReserved() {
+        return status == BookStatus.RESERVED;
+    }
+
+    /**
+     * Checks that book is borrowed.
+     */
+    public boolean isBorrowed() {
+        return status == BookStatus.BORROWED;
+    }
+
+    /**
+     * Checks that book is reserved by a specific user.
+     */
+    public boolean isUsedBy(User user) {
+        return user.identicalTo(usedBy);
+    }
+
+    /**
+     * Checks that book is managed by user.
+     */
+    public boolean isManagedBy(User user) {
+        if (managedBy == null) {
+            throw new IllegalStateException("Book is not managed by anyone.");
+        }
+
+        return user.identicalTo(managedBy);
+    }
+
+    /**
      * Reserves a book.
      */
     public void reserve(User reservedBy, Date reservedAt) {
@@ -182,22 +191,8 @@ public class Book implements Serializable {
         status = BookStatus.RESERVED;
         statusChanged = reservedAt;
 
-        this.reservedBy = reservedBy;
-        this.reservedSince = reservedAt;
-    }
-
-    /**
-     * Checks that book is reserved.
-     */
-    public boolean isReserved() {
-        return status == BookStatus.RESERVED;
-    }
-
-    /**
-     * Checks that book is reserved by a specific user.
-     */
-    public boolean isReservedBy(User user) {
-        return user.identicalTo(reservedBy);
+        this.usedBy = reservedBy;
+        this.usedSince = reservedAt;
     }
 
     /**
@@ -208,7 +203,7 @@ public class Book implements Serializable {
      */
     public boolean canBeReleasedBy(User releasedBy) {
         return isReserved()
-                && (isReservedBy(releasedBy) || isManagedBy(releasedBy));
+                && (isUsedBy(releasedBy) || isManagedBy(releasedBy));
     }
 
     /**
@@ -222,8 +217,8 @@ public class Book implements Serializable {
         status = BookStatus.AVAILABLE;
         statusChanged = releasedAt;
 
-        reservedBy = null;
-        reservedSince = null;
+        usedBy = null;
+        usedSince = null;
     }
 
     /**
@@ -244,18 +239,7 @@ public class Book implements Serializable {
         status = BookStatus.BORROWED;
         statusChanged = borrowedAt;
 
-        borrowedBy = reservedBy;
-        this.borrowedSince = borrowedAt;
-
-        reservedBy = null;
-        reservedSince = null;
-    }
-
-    /**
-     * Checks that book is borrowed.
-     */
-    public boolean isBorrowed() {
-        return status == BookStatus.BORROWED;
+        usedSince = borrowedAt;
     }
 
     /**
@@ -276,19 +260,8 @@ public class Book implements Serializable {
         status = BookStatus.AVAILABLE;
         statusChanged = returnedAt;
 
-        borrowedBy = null;
-        borrowedSince = null;
-    }
-
-    /**
-     * Checks that book is managed by user.
-     */
-    public boolean isManagedBy(User user) {
-        if (managedBy == null) {
-            throw new IllegalStateException("Book is not managed by anyone.");
-        }
-
-        return user.identicalTo(managedBy);
+        usedBy = null;
+        usedSince = null;
     }
 
 }

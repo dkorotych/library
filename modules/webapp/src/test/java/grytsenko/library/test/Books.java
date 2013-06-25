@@ -23,14 +23,14 @@ public final class Books {
     public static Book reservedBook(User reservedBy) {
         Book book = availableBook();
         book.setStatus(BookStatus.RESERVED);
-        book.setReservedBy(reservedBy);
+        book.setUsedBy(reservedBy);
         return book;
     }
 
     public static Book borrowedBook(User borrowedBy) {
         Book book = availableBook();
         book.setStatus(BookStatus.BORROWED);
-        book.setBorrowedBy(borrowedBy);
+        book.setUsedBy(borrowedBy);
         return book;
     }
 

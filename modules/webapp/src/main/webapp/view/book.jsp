@@ -100,11 +100,11 @@
                     <c:when test="${book.reserved}">
                         <p>
                             <fmt:message key="book.message.reserved">
-                                <fmt:param value="${book.reservedBy.username}" />
+                                <fmt:param value="${book.usedBy.username}" />
                                 <fmt:param>
                                     <fmt:formatDate type="date"
                                         dateStyle="short"
-                                        value="${book.reservedSince}" />
+                                        value="${book.usedSince}" />
                                 </fmt:param>
                             </fmt:message>
                         </p>
@@ -112,11 +112,11 @@
                     <c:when test="${book.borrowed}">
                         <p>
                             <fmt:message key="book.message.borrowed">
-                                <fmt:param value="${book.borrowedBy.username}" />
+                                <fmt:param value="${book.usedBy.username}" />
                                 <fmt:param>
                                     <fmt:formatDate type="date"
                                         dateStyle="short"
-                                        value="${book.borrowedSince}" />
+                                        value="${book.usedSince}" />
                                 </fmt:param>
                             </fmt:message>
                         </p>

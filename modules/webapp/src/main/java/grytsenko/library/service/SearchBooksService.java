@@ -66,7 +66,7 @@ public class SearchBooksService {
      * Finds books which are related to user.
      */
     public List<Book> findRelatedTo(User user) {
-        return booksRepository.findRelatedTo(user);
+        return booksRepository.findByUsedBy(user);
     }
 
 }

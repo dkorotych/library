@@ -1,7 +1,6 @@
 package grytsenko.library.controller;
 
 import grytsenko.library.model.Book;
-import grytsenko.library.model.BookStatus;
 import grytsenko.library.model.User;
 import grytsenko.library.service.BookNotUpdatedException;
 import grytsenko.library.service.ManageBooksService;
@@ -90,7 +89,7 @@ public class BookController {
         LOGGER.debug("Release the book {}.", bookId);
 
         Book book = searchBooksService.find(bookId);
-        User wasReservedBy = book.getReservedBy();
+        User wasReservedBy = book.getUsedBy();
         book = manageBooksService.release(book, user);
         notifyUsersService.notifyReleased(book, wasReservedBy);
 
@@ -108,7 +107,7 @@ public class BookController {
 
         Book book = searchBooksService.find(bookId);
         book = manageBooksService.takeOut(book, user);
-        notifyUsersService.notifyBorrowed(book, book.getBorrowedBy());
+        notifyUsersService.notifyBorrowed(book, book.getUsedBy());
 
         return redirectToBook(bookId);
     }
@@ -123,7 +122,7 @@ public class BookController {
         LOGGER.debug("Take back the book {}.", bookId);
 
         Book book = searchBooksService.find(bookId);
-        User wasBorrowedBy = book.getBorrowedBy();
+        User wasBorrowedBy = book.getUsedBy();
         book = manageBooksService.takeBack(book, user);
         notifyUsersService.notifyReturned(book, wasBorrowedBy);
 
@@ -146,12 +145,10 @@ public class BookController {
             return redirectToBook(bookId);
         }
 
-        BookStatus bookStatus = book.getStatus();
-
-        if (bookStatus == BookStatus.RESERVED) {
-            notifyUsersService.notifyReserved(book, book.getReservedBy());
-        } else if (bookStatus == BookStatus.BORROWED) {
-            notifyUsersService.notifyBorrowed(book, book.getBorrowedBy());
+        if (book.isReserved()) {
+            notifyUsersService.notifyReserved(book, book.getUsedBy());
+        } else if (book.isBorrowed()) {
+            notifyUsersService.notifyBorrowed(book, book.getUsedBy());
         }
 
         return redirectToBook(bookId);
@@ -174,8 +171,8 @@ public class BookController {
     public String whenUserNotNotified(UserNotNotifiedException exception,
             HttpServletRequest request) {
         User user = (User) request.getSession().getAttribute(USER_ATTR);
-        LOGGER.warn("User {} was not notified, because: '{}'.", user.getId(),
-                exception.getMessage());
+        LOGGER.warn("User {} was not notified, because: '{}'.",
+                user.getUsername(), exception.getMessage());
 
         FlashMap flashAttrs = RequestContextUtils.getOutputFlashMap(request);
         flashAttrs.put("userNotNotified", true);

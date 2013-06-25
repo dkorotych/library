@@ -26,11 +26,8 @@ public class BookTests {
         assertEquals(BookStatus.RESERVED, book.getStatus());
         assertEquals(reservedAt, book.getStatusChanged());
 
-        assertEquals(reservedBy, book.getReservedBy());
-        assertEquals(reservedAt, book.getReservedSince());
-
-        assertNull(book.getBorrowedBy());
-        assertNull(book.getBorrowedSince());
+        assertEquals(reservedBy, book.getUsedBy());
+        assertEquals(reservedAt, book.getUsedSince());
     }
 
     @Test(expected = IllegalStateException.class)
@@ -50,11 +47,8 @@ public class BookTests {
         assertEquals(BookStatus.AVAILABLE, book.getStatus());
         assertEquals(releasedAt, book.getStatusChanged());
 
-        assertNull(book.getReservedBy());
-        assertNull(book.getReservedSince());
-
-        assertNull(book.getBorrowedBy());
-        assertNull(book.getBorrowedSince());
+        assertNull(book.getUsedBy());
+        assertNull(book.getUsedSince());
     }
 
     @Test
@@ -97,11 +91,8 @@ public class BookTests {
         assertEquals(BookStatus.BORROWED, book.getStatus());
         assertEquals(borrowedAt, book.getStatusChanged());
 
-        assertNull(book.getReservedBy());
-        assertNull(book.getReservedSince());
-
-        assertEquals(reservedBy, book.getBorrowedBy());
-        assertEquals(borrowedAt, book.getBorrowedSince());
+        assertEquals(reservedBy, book.getUsedBy());
+        assertEquals(borrowedAt, book.getUsedSince());
     }
 
     @Test(expected = IllegalStateException.class)
@@ -130,11 +121,8 @@ public class BookTests {
         assertEquals(BookStatus.AVAILABLE, book.getStatus());
         assertEquals(returnedAt, book.getStatusChanged());
 
-        assertNull(book.getReservedBy());
-        assertNull(book.getReservedSince());
-
-        assertNull(book.getBorrowedBy());
-        assertNull(book.getBorrowedSince());
+        assertNull(book.getUsedBy());
+        assertNull(book.getUsedSince());
     }
 
     @Test(expected = IllegalStateException.class)
