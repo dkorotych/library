@@ -2,9 +2,9 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
-<!-- Book -->
+<!-- Offered Book -->
 <div class="thumbnail">
-    <c:url var="bookDetailsUrl" value="/book">
+    <c:url var="bookDetailsUrl" value="/offered-book">
         <c:param name="bookId" value="${book.id}" />
     </c:url>
 
@@ -16,23 +16,9 @@
     </div>
 
     <div class="caption">
-        <!-- Status -->
+        <!-- Number of Votes -->
         <div class="pull-right">
-            <c:if test="${book.status eq 'AVAILABLE'}">
-                <span class="label label-success">
-                    <fmt:message key="book.status.available" />
-                </span>
-            </c:if>
-            <c:if test="${book.status eq 'RESERVED'}">
-                <span class="label label-warning">
-                    <fmt:message key="book.status.reserved" />
-                </span>
-            </c:if>
-            <c:if test="${book.status eq 'BORROWED'}">
-                <span class="label label-warning">
-                    <fmt:message key="book.status.borrowed" />
-                </span>
-            </c:if>
+            <span class="badge badge-info">${book.votesNum}</span>
         </div>
 
         <br />

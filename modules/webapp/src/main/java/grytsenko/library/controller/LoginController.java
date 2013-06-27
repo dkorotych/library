@@ -1,5 +1,7 @@
 package grytsenko.library.controller;
 
+import static grytsenko.library.controller.MappingConstants.LOGIN_PATH;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -11,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * Processes a requests for logging.
  */
 @Controller
-@RequestMapping("/login")
+@RequestMapping(LOGIN_PATH)
 public class LoginController {
 
     private static final Logger LOGGER = LoggerFactory
@@ -22,7 +24,7 @@ public class LoginController {
      */
     @RequestMapping(method = RequestMethod.GET)
     public String login() {
-        return "login";
+        return LOGIN_PATH;
     }
 
     /**
@@ -33,8 +35,7 @@ public class LoginController {
         LOGGER.debug("Login failed.");
 
         model.addAttribute("lastLoginFailed", true);
-
-        return "login";
+        return LOGIN_PATH;
     }
 
 }

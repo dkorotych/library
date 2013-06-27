@@ -1,6 +1,6 @@
 package grytsenko.library.service;
 
-import grytsenko.library.model.Book;
+import grytsenko.library.model.SharedBook;
 import grytsenko.library.model.User;
 
 import java.util.Locale;
@@ -53,7 +53,7 @@ public class NotifyUsersService {
     /**
      * Sends notification that a book was reserved.
      */
-    public void notifyReserved(Book book, User user)
+    public void notifyReserved(SharedBook book, User user)
             throws UserNotNotifiedException {
         LOGGER.debug("Notify that the book {} was reserved.", book.getId());
 
@@ -63,7 +63,7 @@ public class NotifyUsersService {
     /**
      * Sends notification that book was released.
      */
-    public void notifyReleased(Book book, User user)
+    public void notifyReleased(SharedBook book, User user)
             throws UserNotNotifiedException {
         LOGGER.debug("Notify that the book {} was released.", book.getId());
 
@@ -73,7 +73,7 @@ public class NotifyUsersService {
     /**
      * Sends notification that book was borrowed.
      */
-    public void notifyBorrowed(Book book, User user)
+    public void notifyBorrowed(SharedBook book, User user)
             throws UserNotNotifiedException {
         LOGGER.debug("Notify that the book {} was borrowed.", book.getId());
 
@@ -83,7 +83,7 @@ public class NotifyUsersService {
     /**
      * Sends notification that book was returned.
      */
-    public void notifyReturned(Book book, User user)
+    public void notifyReturned(SharedBook book, User user)
             throws UserNotNotifiedException {
         LOGGER.debug("Notify that the book {} was returned.", book.getId());
 
@@ -93,7 +93,7 @@ public class NotifyUsersService {
     /**
      * Sends notification.
      */
-    private void notify(Book book, User user, String subjectId,
+    private void notify(SharedBook book, User user, String subjectId,
             String templateId) throws UserNotNotifiedException {
         String from = mailProperties.getProperty(FEEDBACK_EMAIL);
         String to = user.getMail();
@@ -135,7 +135,7 @@ public class NotifyUsersService {
     /**
      * Creates a text for message.
      */
-    private String getText(Book book, User user, String templateId) {
+    private String getText(SharedBook book, User user, String templateId) {
         STGroup templates = new STGroupDir("email", '$', '$');
         ST template = templates.getInstanceOf(templateId);
 

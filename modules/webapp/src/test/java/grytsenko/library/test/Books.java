@@ -1,9 +1,12 @@
 package grytsenko.library.test;
 
 import static grytsenko.library.test.Users.manager;
-import grytsenko.library.model.Book;
-import grytsenko.library.model.BookStatus;
+import grytsenko.library.model.OfferedBook;
+import grytsenko.library.model.SharedBook;
+import grytsenko.library.model.SharedBookStatus;
 import grytsenko.library.model.User;
+
+import java.util.ArrayList;
 
 /**
  * Utilities for work with books in tests.
@@ -12,25 +15,32 @@ public final class Books {
 
     public static final long BOOK_ID = 100L;
 
-    public static Book availableBook() {
-        Book book = new Book();
+    public static SharedBook availableBook() {
+        SharedBook book = new SharedBook();
         book.setId(BOOK_ID);
-        book.setStatus(BookStatus.AVAILABLE);
+        book.setStatus(SharedBookStatus.AVAILABLE);
         book.setManagedBy(manager());
         return book;
     }
 
-    public static Book reservedBook(User reservedBy) {
-        Book book = availableBook();
-        book.setStatus(BookStatus.RESERVED);
+    public static SharedBook reservedBook(User reservedBy) {
+        SharedBook book = availableBook();
+        book.setStatus(SharedBookStatus.RESERVED);
         book.setUsedBy(reservedBy);
         return book;
     }
 
-    public static Book borrowedBook(User borrowedBy) {
-        Book book = availableBook();
-        book.setStatus(BookStatus.BORROWED);
+    public static SharedBook borrowedBook(User borrowedBy) {
+        SharedBook book = availableBook();
+        book.setStatus(SharedBookStatus.BORROWED);
         book.setUsedBy(borrowedBy);
+        return book;
+    }
+
+    public static OfferedBook offeredBook() {
+        OfferedBook book = new OfferedBook();
+        book.setId(BOOK_ID);
+        book.setVotedUsers(new ArrayList<User>());
         return book;
     }
 

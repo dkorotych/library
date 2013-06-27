@@ -17,6 +17,13 @@
                             <fmt:message key="app.page.search" />
                         </a>
                     </li>
+                    <c:url var="voteUrl" value="/vote" />
+                    <li>
+                        <a href="${voteUrl}">
+                            <i class="icon-thumbs-up"></i>
+                            <fmt:message key="app.page.vote" />
+                        </a>
+                    </li>
                 </ul>
                 <div class="pull-right">
                     <ul class="nav">

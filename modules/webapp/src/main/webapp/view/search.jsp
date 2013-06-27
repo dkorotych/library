@@ -20,31 +20,10 @@
     <%@include file="components/navbar.jsp"%>
 
     <div class="container">
+        <c:set var="pagePath" value="/search" />
+        <%@include file="components/pages.jsp"%>
+
         <c:set var="books" value="${searchResults.content}" />
-
-        <c:if test="${searchResults.pagesTotal gt 1}">
-            <div class="pagination pagination-centered">
-                <ul>
-                    <c:forEach var="i" begin="1"
-                        end="${searchResults.pagesTotal}">
-                        <c:set var="pageNum" value="${i - 1}" />
-                        <c:url var="pageUrl" value="/search">
-                            <c:param name="pageNum" value="${pageNum}" />
-                        </c:url>
-
-                        <c:set var="pageIsActive" value="" />
-                        <c:if test="${pageNum eq searchResults.pageNum}">
-                            <c:set var="pageIsActive" value="active" />
-                        </c:if>
-
-                        <li class="${pageIsActive}">
-                            <a href="${pageUrl}">${i}</a>
-                        </li>
-                    </c:forEach>
-                </ul>
-            </div>
-        </c:if>
-
         <div class="row-fluid">
             <c:if test="${books.isEmpty()}">
                 <!-- Message about empty list of books. -->
@@ -56,7 +35,7 @@
             <ul class="thumbnails">
                 <c:forEach items="${books}" var="book" varStatus="loop">
                     <li class="span4">
-                        <%@include file="components/book-thumbnail.jsp"%>
+                        <%@include file="components/shared-book-thumbnail.jsp"%>
                     </li>
                 </c:forEach>
             </ul>

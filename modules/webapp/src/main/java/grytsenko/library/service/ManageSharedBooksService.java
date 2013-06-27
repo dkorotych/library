@@ -1,9 +1,9 @@
 package grytsenko.library.service;
 
 import static grytsenko.library.util.DateUtils.now;
-import grytsenko.library.model.Book;
+import grytsenko.library.model.SharedBook;
 import grytsenko.library.model.User;
-import grytsenko.library.repository.BooksRepository;
+import grytsenko.library.repository.SharedBooksRepository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,76 +12,80 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Manages books in library.
+ * Manages shared books.
  */
 @Service
-public class ManageBooksService {
+public class ManageSharedBooksService {
 
     private static final Logger LOGGER = LoggerFactory
-            .getLogger(ManageBooksService.class);
+            .getLogger(ManageSharedBooksService.class);
 
     @Autowired
-    BooksRepository booksRepository;
+    SharedBooksRepository sharedBooksRepository;
 
     /**
      * Reserves a book for user.
      */
     @Transactional
-    public Book reserve(Book book, User user) throws BookNotUpdatedException {
+    public SharedBook reserve(SharedBook book, User user)
+            throws BookNotUpdatedException {
         if (!book.canBeReserved()) {
             throw new BookNotUpdatedException("Book can not be reserved.");
         }
-        LOGGER.debug("Book {} can be reserved.", book.getId());
+        LOGGER.debug("Reserved book {}.", book.getId());
 
         book.reserve(user, now());
-        return save(book);
+        return update(book);
     }
 
     /**
      * Releases a book.
      */
     @Transactional
-    public Book release(Book book, User user) throws BookNotUpdatedException {
+    public SharedBook release(SharedBook book, User user)
+            throws BookNotUpdatedException {
         if (!book.canBeReleasedBy(user)) {
             throw new BookNotUpdatedException("Book can not be released.");
         }
-        LOGGER.debug("Book {} can be released.", book.getId());
+        LOGGER.debug("Release book {}.", book.getId());
 
         book.release(user, now());
-        return save(book);
+        return update(book);
     }
 
     /**
      * Takes out a book from library.
      */
     @Transactional
-    public Book takeOut(Book book, User user) throws BookNotUpdatedException {
+    public SharedBook takeOut(SharedBook book, User user)
+            throws BookNotUpdatedException {
         if (!book.canBeTakenOutBy(user)) {
             throw new BookNotUpdatedException("Book can not be taken out.");
         }
-        LOGGER.debug("Book {} can be taken out.", book.getId());
+        LOGGER.debug("Take out book {}.", book.getId());
 
         book.takeOut(user, now());
-        return save(book);
+        return update(book);
     }
 
     /**
      * Takes back a book to library.
      */
     @Transactional
-    public Book takeBack(Book book, User user) throws BookNotUpdatedException {
+    public SharedBook takeBack(SharedBook book, User user)
+            throws BookNotUpdatedException {
         if (!book.canBeTakenBackBy(user)) {
             throw new BookNotUpdatedException("Book can not be taken back.");
         }
-        LOGGER.debug("Book {} can be taken back.", book.getId());
+        LOGGER.debug("Take back book {}.", book.getId());
 
         book.takeBack(user, now());
-        return save(book);
+        return update(book);
     }
 
-    private Book save(Book book) throws BookNotUpdatedException {
+    private SharedBook update(SharedBook book) throws BookNotUpdatedException {
         try {
-            return booksRepository.saveAndFlush(book);
+            return sharedBooksRepository.saveAndFlush(book);
         } catch (Exception exception) {
             LOGGER.warn("Can not save the book {}, because: '{}'.",
                     book.getId(), exception.getMessage());

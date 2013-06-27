@@ -1,9 +1,10 @@
 package grytsenko.library.controller;
 
-import grytsenko.library.model.Book;
+import static grytsenko.library.controller.MappingConstants.USER_PATH;
+import grytsenko.library.model.SharedBook;
 import grytsenko.library.model.User;
-import grytsenko.library.service.SearchBooksService;
 import grytsenko.library.service.ManageUsersService;
+import grytsenko.library.service.SearchSharedBooksService;
 
 import java.security.Principal;
 import java.util.List;
@@ -22,7 +23,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
  * Processes a requests for user details.
  */
 @Controller
-@RequestMapping(value = "/user")
+@RequestMapping(USER_PATH)
 @SessionAttributes({ "user" })
 public class UserController {
 
@@ -32,7 +33,7 @@ public class UserController {
     @Autowired
     ManageUsersService manageUsersService;
     @Autowired
-    SearchBooksService searchBooksService;
+    SearchSharedBooksService searchSharedBooksService;
 
     @ModelAttribute("user")
     public User currentUser(Principal principal) {
@@ -43,14 +44,11 @@ public class UserController {
     public String getUserDetails(@ModelAttribute("user") User user, Model model) {
         LOGGER.debug("Get details about user {}.", user.getId());
 
-        List<Book> relatedBooks = searchBooksService.findRelatedTo(user);
-        LOGGER.debug("{} books are related to {}.", relatedBooks.size(),
-                user.getUsername());
-        if (!relatedBooks.isEmpty()) {
-            model.addAttribute("relatedBooks", relatedBooks);
-        }
+        List<SharedBook> usedBooks = searchSharedBooksService.findUsedBy(user);
+        LOGGER.debug("{} uses {} books.", user.getUsername(), usedBooks.size());
+        model.addAttribute("usedBooks", usedBooks);
 
-        return "user";
+        return USER_PATH;
     }
 
 }
