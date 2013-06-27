@@ -1,9 +1,9 @@
 package grytsenko.library.service;
 
-import grytsenko.library.model.Book;
 import grytsenko.library.model.SearchResults;
+import grytsenko.library.model.SharedBook;
 import grytsenko.library.model.User;
-import grytsenko.library.repository.BooksRepository;
+import grytsenko.library.repository.SharedBooksRepository;
 
 import java.util.List;
 
@@ -15,22 +15,22 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 /**
- * Searches books in library.
+ * Searches shared books.
  */
 @Service
-public class SearchBooksService {
+public class SearchSharedBooksService {
 
     private static final Logger LOGGER = LoggerFactory
-            .getLogger(SearchBooksService.class);
+            .getLogger(SearchSharedBooksService.class);
 
     @Autowired
-    BooksRepository booksRepository;
+    SharedBooksRepository sharedBooksRepository;
 
     /**
      * Finds a book.
      */
-    public Book find(long bookId) {
-        Book book = booksRepository.findOne(bookId);
+    public SharedBook find(long bookId) {
+        SharedBook book = sharedBooksRepository.findOne(bookId);
 
         if (book == null) {
             LOGGER.warn("Book {} was not found.", bookId);
@@ -43,30 +43,22 @@ public class SearchBooksService {
     /**
      * Finds all books.
      */
-    public SearchResults<Book> findAll(int pageNum, int pageSize) {
+    public SearchResults<SharedBook> findAll(int pageNum, int pageSize) {
         if (pageNum < 0) {
             throw new IllegalArgumentException(
                     "The page number less than zero.");
         }
 
         PageRequest pageRequest = new PageRequest(pageNum, pageSize);
-        Page<Book> page = booksRepository.findAll(pageRequest);
-        return toSearchResults(page);
-    }
-
-    private SearchResults<Book> toSearchResults(Page<Book> page) {
-        SearchResults<Book> results = new SearchResults<>();
-        results.setPageNum(page.getNumber());
-        results.setPagesTotal(page.getTotalPages());
-        results.setContent(page.getContent());
-        return results;
+        Page<SharedBook> page = sharedBooksRepository.findAll(pageRequest);
+        return SearchResults.create(page);
     }
 
     /**
-     * Finds books which are related to user.
+     * Finds books which are used by user.
      */
-    public List<Book> findRelatedTo(User user) {
-        return booksRepository.findByUsedBy(user);
+    public List<SharedBook> findUsedBy(User user) {
+        return sharedBooksRepository.findByUsedBy(user);
     }
 
 }

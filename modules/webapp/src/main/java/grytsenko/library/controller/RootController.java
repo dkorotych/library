@@ -1,5 +1,9 @@
 package grytsenko.library.controller;
 
+import static grytsenko.library.controller.MappingConstants.SEARCH_PATH;
+
+import java.text.MessageFormat;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,7 +20,7 @@ public class RootController {
      */
     @RequestMapping(method = RequestMethod.GET)
     public String root() {
-        return "redirect:/search";
+        return MessageFormat.format("redirect:{0}", SEARCH_PATH);
     }
 
 }

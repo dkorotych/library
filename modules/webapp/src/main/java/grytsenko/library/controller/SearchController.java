@@ -1,10 +1,11 @@
 package grytsenko.library.controller;
 
-import grytsenko.library.model.Book;
+import static grytsenko.library.controller.MappingConstants.SEARCH_PATH;
 import grytsenko.library.model.SearchResults;
+import grytsenko.library.model.SharedBook;
 import grytsenko.library.model.User;
 import grytsenko.library.service.ManageUsersService;
-import grytsenko.library.service.SearchBooksService;
+import grytsenko.library.service.SearchSharedBooksService;
 
 import java.security.Principal;
 
@@ -21,9 +22,12 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 /**
  * Processes a search requests.
+ * 
+ * <p>
+ * Search is performed over shared books.
  */
 @Controller
-@RequestMapping("/search")
+@RequestMapping(SEARCH_PATH)
 @SessionAttributes({ "user" })
 public class SearchController {
 
@@ -35,7 +39,7 @@ public class SearchController {
     @Autowired
     ManageUsersService manageUsersService;
     @Autowired
-    SearchBooksService searchBooksService;
+    SearchSharedBooksService searchSharedBooksService;
 
     @ModelAttribute("user")
     public User currentUser(Principal principal) {
@@ -49,13 +53,14 @@ public class SearchController {
     public String searchAll(
             @RequestParam(value = "pageNum", defaultValue = "0") Integer pageNum,
             @ModelAttribute("user") User user, Model model) {
-        LOGGER.debug("Get page {}.", pageNum);
+        LOGGER.debug("Find all shared books.");
+        LOGGER.debug("Take page {}.", pageNum);
 
-        SearchResults<Book> books = searchBooksService.findAll(pageNum,
-                PAGE_SIZE);
+        SearchResults<SharedBook> books = searchSharedBooksService.findAll(
+                pageNum, PAGE_SIZE);
         model.addAttribute("searchResults", books);
 
-        return "search";
+        return SEARCH_PATH;
     }
 
 }

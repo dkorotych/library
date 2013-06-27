@@ -1,9 +1,9 @@
 package grytsenko.library.model;
 
 /**
- * Possible statuses of the book.
+ * Status of the shared book.
  */
-public enum BookStatus {
+public enum SharedBookStatus {
 
     /**
      * Book is available.

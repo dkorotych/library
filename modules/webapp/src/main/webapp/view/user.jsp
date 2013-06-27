@@ -44,10 +44,10 @@
             </ul>
         </div>
 
-        <c:if test="${not empty relatedBooks}">
+        <c:if test="${not usedBooks.isEmpty()}">
             <hr />
 
-            <!-- Related Books. -->
+            <!-- Used Books. -->
             <div class="row-fluid">
                 <table class="table">
                     <thead>
@@ -64,10 +64,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <c:forEach items="${relatedBooks}" var="book"
+                        <c:forEach items="${usedBooks}" var="book"
                             varStatus="loop">
                             <tr>
-                                <c:url var="bookDetailsUrl" value="/book">
+                                <c:url var="bookDetailsUrl" value="/shared-book">
                                     <c:param name="bookId" value="${book.id}" />
                                 </c:url>
                                 <td>

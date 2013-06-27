@@ -17,13 +17,10 @@ import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
 /**
- * A copy of book.
- * 
- * <p>
- * The copy of book can be managed by users.
+ * A copy of book that is shared.
  */
-@Entity(name = "books")
-public class Book implements Serializable {
+@Entity(name = "shared_books")
+public class SharedBook implements Serializable {
 
     private static final long serialVersionUID = 6759600794860542365L;
 
@@ -37,7 +34,7 @@ public class Book implements Serializable {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", length = 10)
-    private BookStatus status;
+    private SharedBookStatus status;
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "status_changed")
     private Date statusChanged;
@@ -59,7 +56,7 @@ public class Book implements Serializable {
     @Version
     private Integer version;
 
-    public Book() {
+    public SharedBook() {
     }
 
     public Long getId() {
@@ -78,11 +75,11 @@ public class Book implements Serializable {
         this.details = details;
     }
 
-    public BookStatus getStatus() {
+    public SharedBookStatus getStatus() {
         return status;
     }
 
-    public void setStatus(BookStatus status) {
+    public void setStatus(SharedBookStatus status) {
         this.status = status;
     }
 
@@ -138,7 +135,7 @@ public class Book implements Serializable {
      * Checks that book is available.
      */
     public boolean isAvailable() {
-        return status == BookStatus.AVAILABLE;
+        return status == SharedBookStatus.AVAILABLE;
     }
 
     /**
@@ -152,14 +149,14 @@ public class Book implements Serializable {
      * Checks that book is reserved.
      */
     public boolean isReserved() {
-        return status == BookStatus.RESERVED;
+        return status == SharedBookStatus.RESERVED;
     }
 
     /**
      * Checks that book is borrowed.
      */
     public boolean isBorrowed() {
-        return status == BookStatus.BORROWED;
+        return status == SharedBookStatus.BORROWED;
     }
 
     /**
@@ -188,7 +185,7 @@ public class Book implements Serializable {
             throw new IllegalStateException("Book can not be reserved.");
         }
 
-        status = BookStatus.RESERVED;
+        status = SharedBookStatus.RESERVED;
         statusChanged = reservedAt;
 
         this.usedBy = reservedBy;
@@ -214,7 +211,7 @@ public class Book implements Serializable {
             throw new IllegalStateException("Book can not be released.");
         }
 
-        status = BookStatus.AVAILABLE;
+        status = SharedBookStatus.AVAILABLE;
         statusChanged = releasedAt;
 
         usedBy = null;
@@ -236,7 +233,7 @@ public class Book implements Serializable {
             throw new IllegalStateException("Book can not be taken out.");
         }
 
-        status = BookStatus.BORROWED;
+        status = SharedBookStatus.BORROWED;
         statusChanged = borrowedAt;
 
         usedSince = borrowedAt;
@@ -257,7 +254,7 @@ public class Book implements Serializable {
             throw new IllegalStateException("Book can not be taken back.");
         }
 
-        status = BookStatus.AVAILABLE;
+        status = SharedBookStatus.AVAILABLE;
         statusChanged = returnedAt;
 
         usedBy = null;
