@@ -47,7 +47,8 @@ public class SearchOfferedBooksService {
         }
 
         PageRequest pageRequest = new PageRequest(pageNum, pageSize);
-        Page<OfferedBook> page = offeredBooksRepository.findAll(pageRequest);
+        Page<OfferedBook> page = offeredBooksRepository
+                .findAllInOrderOfVotesNumber(pageRequest);
         return SearchResults.create(page);
     }
 
