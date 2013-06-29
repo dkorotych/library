@@ -3,7 +3,7 @@ package grytsenko.library.util;
 import java.util.Date;
 
 /**
- * Utilities for working with dates.
+ * Utilities for dates.
  */
 public final class DateUtils {
 

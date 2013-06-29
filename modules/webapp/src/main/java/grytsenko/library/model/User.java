@@ -1,6 +1,9 @@
 package grytsenko.library.model;
 
+import static grytsenko.library.util.StringUtils.isNullOrEmpty;
+
 import java.io.Serializable;
+import java.text.MessageFormat;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -138,6 +141,24 @@ public class User implements Serializable {
         firstname = dsUser.getFirstname();
         lastname = dsUser.getLastname();
         mail = dsUser.getMail();
+    }
+
+    /**
+     * Returns the readable name of user.
+     * 
+     * <p>
+     * If first name and last name are defined, then returns the full name. For
+     * example, 'John Doe'.
+     * 
+     * <p>
+     * In other case returns username.
+     */
+    public String getReadableName() {
+        if (isNullOrEmpty(firstname) || isNullOrEmpty(lastname)) {
+            return username;
+        }
+
+        return MessageFormat.format("{0} {1}", firstname, lastname);
     }
 
 }

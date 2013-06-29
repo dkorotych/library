@@ -71,7 +71,7 @@
                             <c:set var="badgeStyle" value="badge badge-info" />
                         </c:otherwise>
                     </c:choose>
-                    <span class="${badgeStyle}">${votedUser.username}</span>
+                    <span class="${badgeStyle}">${votedUser.readableName}</span>
                 </c:forEach>
             </div>
         </c:if>

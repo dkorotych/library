@@ -56,7 +56,7 @@
                 <c:when test="${book.reserved}">
                     <p class="text-info">
                         <fmt:message key="book.message.reserved">
-                            <fmt:param value="${book.usedBy.username}" />
+                            <fmt:param value="${book.usedBy.readableName}" />
                             <fmt:param>
                                 <fmt:formatDate type="date" dateStyle="short"
                                     value="${book.usedSince}" />
@@ -67,7 +67,7 @@
                 <c:when test="${book.borrowed}">
                     <p class="text-info">
                         <fmt:message key="book.message.borrowed">
-                            <fmt:param value="${book.usedBy.username}" />
+                            <fmt:param value="${book.usedBy.readableName}" />
                             <fmt:param>
                                 <fmt:formatDate type="date" dateStyle="short"
                                     value="${book.usedSince}" />

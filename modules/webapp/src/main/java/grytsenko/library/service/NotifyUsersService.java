@@ -1,5 +1,6 @@
 package grytsenko.library.service;
 
+import static grytsenko.library.util.StringUtils.isNullOrEmpty;
 import grytsenko.library.model.SharedBook;
 import grytsenko.library.model.User;
 
@@ -14,7 +15,6 @@ import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupDir;
@@ -101,11 +101,11 @@ public class NotifyUsersService {
         String subject = getSubject(subjectId);
         String text = getText(book, user, templateId);
 
-        if (!StringUtils.hasLength(to)) {
+        if (!isNullOrEmpty(to)) {
             LOGGER.warn("Email of user {} is unknown.", user.getUsername());
             to = from;
         }
-        if (!StringUtils.hasLength(cc)) {
+        if (!isNullOrEmpty(cc)) {
             LOGGER.warn("Email of manager {} is unknown.", user.getUsername());
             cc = from;
         }
