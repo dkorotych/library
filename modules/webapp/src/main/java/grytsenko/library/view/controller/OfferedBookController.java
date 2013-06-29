@@ -1,8 +1,8 @@
-package grytsenko.library.controller;
+package grytsenko.library.view.controller;
 
-import static grytsenko.library.controller.MappingConstants.BOOK_ID_PARAM;
-import static grytsenko.library.controller.MappingConstants.OFFERED_BOOK_PATH;
-import static grytsenko.library.controller.MappingConstants.USER_ATTR;
+import static grytsenko.library.view.MappingConstants.BOOK_ID_PARAM;
+import static grytsenko.library.view.MappingConstants.OFFERED_BOOK_PATH;
+import static grytsenko.library.view.MappingConstants.USER_ATTR;
 import grytsenko.library.model.OfferedBook;
 import grytsenko.library.model.User;
 import grytsenko.library.service.BookNotUpdatedException;

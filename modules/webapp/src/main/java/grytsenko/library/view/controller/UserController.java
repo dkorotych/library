@@ -1,6 +1,6 @@
-package grytsenko.library.controller;
+package grytsenko.library.view.controller;
 
-import static grytsenko.library.controller.MappingConstants.USER_PATH;
+import static grytsenko.library.view.MappingConstants.USER_PATH;
 import grytsenko.library.model.SharedBook;
 import grytsenko.library.model.User;
 import grytsenko.library.service.ManageUsersService;

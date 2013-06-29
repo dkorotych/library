@@ -1,7 +1,7 @@
-package grytsenko.library.controller;
+package grytsenko.library.view;
 
 /**
- * Set of constants that are used for requests mapping.
+ * Constants for requests mapping.
  */
 public interface MappingConstants {
 

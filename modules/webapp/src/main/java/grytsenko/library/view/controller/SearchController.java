@@ -1,6 +1,7 @@
-package grytsenko.library.controller;
+package grytsenko.library.view.controller;
 
-import static grytsenko.library.controller.MappingConstants.SEARCH_PATH;
+import static grytsenko.library.view.MappingConstants.SEARCH_PATH;
+import static grytsenko.library.view.ViewConstants.THUMBNAILS_PER_PAGE;
 import grytsenko.library.model.SearchResults;
 import grytsenko.library.model.SharedBook;
 import grytsenko.library.model.User;
@@ -34,8 +35,6 @@ public class SearchController {
     private static final Logger LOGGER = LoggerFactory
             .getLogger(SearchController.class);
 
-    public static final int PAGE_SIZE = 3;
-
     @Autowired
     ManageUsersService manageUsersService;
     @Autowired
@@ -57,7 +56,7 @@ public class SearchController {
         LOGGER.debug("Take page {}.", pageNum);
 
         SearchResults<SharedBook> books = searchSharedBooksService.findAll(
-                pageNum, PAGE_SIZE);
+                pageNum, THUMBNAILS_PER_PAGE);
         model.addAttribute("searchResults", books);
 
         return SEARCH_PATH;

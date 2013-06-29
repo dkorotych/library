@@ -1,6 +1,6 @@
-package grytsenko.library.controller;
+package grytsenko.library.view.controller;
 
-import static grytsenko.library.controller.MappingConstants.LOGIN_PATH;
+import static grytsenko.library.view.MappingConstants.LOGIN_PATH;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

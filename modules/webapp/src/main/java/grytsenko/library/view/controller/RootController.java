@@ -1,6 +1,6 @@
-package grytsenko.library.controller;
+package grytsenko.library.view.controller;
 
-import static grytsenko.library.controller.MappingConstants.SEARCH_PATH;
+import static grytsenko.library.view.MappingConstants.SEARCH_PATH;
 
 import java.text.MessageFormat;
 

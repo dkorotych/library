@@ -1,6 +1,7 @@
-package grytsenko.library.controller;
+package grytsenko.library.view.controller;
 
-import static grytsenko.library.controller.MappingConstants.VOTE_PATH;
+import static grytsenko.library.view.MappingConstants.VOTE_PATH;
+import static grytsenko.library.view.ViewConstants.THUMBNAILS_PER_PAGE;
 import grytsenko.library.model.OfferedBook;
 import grytsenko.library.model.SearchResults;
 import grytsenko.library.model.User;
@@ -31,8 +32,6 @@ public class VoteController {
     private static final Logger LOGGER = LoggerFactory
             .getLogger(VoteController.class);
 
-    public static final int PAGE_SIZE = 3;
-
     @Autowired
     ManageUsersService manageUsersService;
     @Autowired
@@ -54,7 +53,7 @@ public class VoteController {
         LOGGER.debug("Take page {}.", pageNum);
 
         SearchResults<OfferedBook> books = searchOfferedBooksService.findAll(
-                pageNum, PAGE_SIZE);
+                pageNum, THUMBNAILS_PER_PAGE);
         model.addAttribute("searchResults", books);
 
         return VOTE_PATH;
