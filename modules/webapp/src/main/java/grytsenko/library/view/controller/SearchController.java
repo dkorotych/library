@@ -1,6 +1,6 @@
 package grytsenko.library.view.controller;
 
-import static grytsenko.library.view.MappingConstants.SEARCH_PATH;
+import static grytsenko.library.view.Navigation.SEARCH_PATH;
 import static grytsenko.library.view.ViewConstants.THUMBNAILS_PER_PAGE;
 import grytsenko.library.model.SearchResults;
 import grytsenko.library.model.SharedBook;

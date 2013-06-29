@@ -1,8 +1,15 @@
 package grytsenko.library.service;
 
+import static grytsenko.library.repository.BooksRepositoryUtils.save;
+import static grytsenko.library.util.DateUtils.now;
+import grytsenko.library.model.BookDetails;
 import grytsenko.library.model.OfferedBook;
+import grytsenko.library.model.SharedBook;
 import grytsenko.library.model.User;
 import grytsenko.library.repository.OfferedBooksRepository;
+import grytsenko.library.repository.SharedBooksRepository;
+
+import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,34 +28,66 @@ public class ManageOfferedBooksService {
 
     @Autowired
     OfferedBooksRepository offeredBooksRepository;
+    @Autowired
+    SharedBooksRepository sharedBooksRepository;
 
     /**
      * Reserves a book for user.
-     * 
-     * @throws BookNotUpdatedException
      */
     @Transactional
-    public OfferedBook addVote(OfferedBook book, User user)
+    public OfferedBook vote(OfferedBook book, User user)
             throws BookNotUpdatedException {
+        LOGGER.debug("Add vote from {} for book {}.", user.getUsername(),
+                book.getId());
         if (book.hasVoteFrom(user)) {
             throw new BookNotUpdatedException("User can vote once.");
         }
-        LOGGER.debug("Add vote from {} for book {}.", user.getUsername(),
-                book.getId());
-        book.addVote(user);
 
-        return update(book);
+        book.addVote(user);
+        return save(book, offeredBooksRepository);
     }
 
-    private OfferedBook update(OfferedBook book) throws BookNotUpdatedException {
-        try {
-            return offeredBooksRepository.saveAndFlush(book);
-        } catch (Exception exception) {
-            LOGGER.warn("Can not save the book {}, because: '{}'.",
-                    book.getId(), exception.getMessage());
-
-            throw new BookNotUpdatedException("Can not save the book.");
+    /**
+     * Adds a shared book that corresponds to offered book.
+     */
+    @Transactional
+    public SharedBook share(OfferedBook book, User manager)
+            throws BookNotUpdatedException {
+        LOGGER.debug("Share book {}.", book.getId());
+        if (!manager.isManager()) {
+            throw new BookNotUpdatedException("User has no permissions.");
         }
+
+        Date now = now();
+        try {
+            LOGGER.debug("Accept offered book {}.", book.getId());
+            book.delete(now);
+            save(book, offeredBooksRepository);
+
+            BookDetails details = book.getDetails();
+            SharedBook addedBook = SharedBook.create(details, manager, now);
+            LOGGER.debug("Add shared book.");
+            return save(addedBook, sharedBooksRepository);
+        } catch (Exception exception) {
+            LOGGER.warn("Can not share book {}, because: '{}'.", book.getId(),
+                    exception.getMessage());
+
+            throw new BookNotUpdatedException("Can not share book.");
+        }
+    }
+
+    /**
+     * Removes book from list of shared books.
+     */
+    public void remove(OfferedBook book, User manager)
+            throws BookNotUpdatedException {
+        LOGGER.debug("Remove book {}.", book.getId());
+        if (!manager.isManager()) {
+            throw new BookNotUpdatedException("User has no permissions.");
+        }
+
+        book.delete(now());
+        save(book, offeredBooksRepository);
     }
 
 }

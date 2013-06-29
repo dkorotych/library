@@ -26,12 +26,16 @@ public class SearchOfferedBooksService {
     /**
      * Finds a book.
      */
-    public OfferedBook find(long bookId) {
+    public OfferedBook findVoted(long bookId) {
         OfferedBook book = offeredBooksRepository.findOne(bookId);
 
         if (book == null) {
             LOGGER.warn("Book {} was not found.", bookId);
             throw new BookNotFoundException();
+        }
+        if (book.isDeleted()) {
+            LOGGER.warn("Book {} is deleted.", bookId);
+            throw new BookNotFoundException("Book is deleted.");
         }
 
         return book;
@@ -48,7 +52,7 @@ public class SearchOfferedBooksService {
 
         PageRequest pageRequest = new PageRequest(pageNum, pageSize);
         Page<OfferedBook> page = offeredBooksRepository
-                .findAllInOrderOfVotesNumber(pageRequest);
+                .findAllVoted(pageRequest);
         return SearchResults.create(page);
     }
 

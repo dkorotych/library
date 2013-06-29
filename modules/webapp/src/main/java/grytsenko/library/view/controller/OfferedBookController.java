@@ -1,9 +1,13 @@
 package grytsenko.library.view.controller;
 
-import static grytsenko.library.view.MappingConstants.BOOK_ID_PARAM;
-import static grytsenko.library.view.MappingConstants.OFFERED_BOOK_PATH;
-import static grytsenko.library.view.MappingConstants.USER_ATTR;
+import static grytsenko.library.view.Navigation.BOOK_ID_PARAM;
+import static grytsenko.library.view.Navigation.OFFERED_BOOK_PATH;
+import static grytsenko.library.view.Navigation.USER_ATTR;
+import static grytsenko.library.view.Navigation.redirectToOfferedBook;
+import static grytsenko.library.view.Navigation.redirectToSharedBook;
+import static grytsenko.library.view.Navigation.redirectToVote;
 import grytsenko.library.model.OfferedBook;
+import grytsenko.library.model.SharedBook;
 import grytsenko.library.model.User;
 import grytsenko.library.service.BookNotUpdatedException;
 import grytsenko.library.service.ManageOfferedBooksService;
@@ -11,7 +15,6 @@ import grytsenko.library.service.ManageUsersService;
 import grytsenko.library.service.SearchOfferedBooksService;
 
 import java.security.Principal;
-import java.text.MessageFormat;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -57,10 +60,11 @@ public class OfferedBookController {
      * User views details about book.
      */
     @RequestMapping(method = RequestMethod.GET)
-    public String getBook(@RequestParam(BOOK_ID_PARAM) Long bookId, Model model) {
+    public String getVotedBook(@RequestParam(BOOK_ID_PARAM) Long bookId,
+            Model model) {
         LOGGER.debug("Find book {}.", bookId);
 
-        OfferedBook book = searchOfferedBooksService.find(bookId);
+        OfferedBook book = searchOfferedBooksService.findVoted(bookId);
         model.addAttribute("book", book);
 
         LOGGER.debug("Book has {} votes.", book.getVotesNum());
@@ -70,16 +74,46 @@ public class OfferedBookController {
     /**
      * User votes for book.
      */
-    @RequestMapping(params = "addVote", method = RequestMethod.POST)
-    public String addVote(@RequestParam(BOOK_ID_PARAM) Long bookId,
+    @RequestMapping(params = "vote", method = RequestMethod.POST)
+    public String vote(@RequestParam(BOOK_ID_PARAM) Long bookId,
             @ModelAttribute(USER_ATTR) User user)
             throws BookNotUpdatedException {
         LOGGER.debug("{} votes for book {}.", user.getUsername(), bookId);
 
-        OfferedBook book = searchOfferedBooksService.find(bookId);
-        manageOfferedBooksService.addVote(book, user);
+        OfferedBook book = searchOfferedBooksService.findVoted(bookId);
+        manageOfferedBooksService.vote(book, user);
 
-        return redirectToBook(bookId);
+        return redirectToOfferedBook(bookId);
+    }
+
+    /**
+     * Manager adds a book to library.
+     */
+    @RequestMapping(params = "share", method = RequestMethod.POST)
+    public String share(@RequestParam(BOOK_ID_PARAM) Long bookId,
+            @ModelAttribute(USER_ATTR) User user)
+            throws BookNotUpdatedException {
+        LOGGER.debug("{} shares book {}.", user.getUsername(), bookId);
+
+        OfferedBook book = searchOfferedBooksService.findVoted(bookId);
+        SharedBook addedBook = manageOfferedBooksService.share(book, user);
+
+        return redirectToSharedBook(addedBook.getId());
+    }
+
+    /**
+     * Manager removes a book from list of offered books.
+     */
+    @RequestMapping(params = "remove", method = RequestMethod.POST)
+    public String remove(@RequestParam(BOOK_ID_PARAM) Long bookId,
+            @ModelAttribute(USER_ATTR) User user)
+            throws BookNotUpdatedException {
+        LOGGER.debug("{} removes book {}.", user.getUsername(), bookId);
+
+        OfferedBook book = searchOfferedBooksService.findVoted(bookId);
+        manageOfferedBooksService.remove(book, user);
+
+        return redirectToVote();
     }
 
     /**
@@ -95,12 +129,7 @@ public class OfferedBookController {
         FlashMap attrs = RequestContextUtils.getOutputFlashMap(request);
         attrs.put("bookNotUpdated", true);
 
-        return redirectToBook(bookId);
-    }
-
-    private static String redirectToBook(Long bookId) {
-        return MessageFormat.format("redirect:{0}?bookId={1}",
-                OFFERED_BOOK_PATH, bookId);
+        return redirectToOfferedBook(bookId);
     }
 
 }

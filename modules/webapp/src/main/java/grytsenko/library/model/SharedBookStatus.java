@@ -1,7 +1,7 @@
 package grytsenko.library.model;
 
 /**
- * Status of the shared book.
+ * Status of shared book.
  */
 public enum SharedBookStatus {
 

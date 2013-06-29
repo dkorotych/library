@@ -1,8 +1,9 @@
 package grytsenko.library.view.controller;
 
-import static grytsenko.library.view.MappingConstants.BOOK_ID_PARAM;
-import static grytsenko.library.view.MappingConstants.SHARED_BOOK_PATH;
-import static grytsenko.library.view.MappingConstants.USER_ATTR;
+import static grytsenko.library.view.Navigation.BOOK_ID_PARAM;
+import static grytsenko.library.view.Navigation.SHARED_BOOK_PATH;
+import static grytsenko.library.view.Navigation.USER_ATTR;
+import static grytsenko.library.view.Navigation.redirectToSharedBook;
 import grytsenko.library.model.SharedBook;
 import grytsenko.library.model.User;
 import grytsenko.library.service.BookNotUpdatedException;
@@ -13,7 +14,6 @@ import grytsenko.library.service.SearchSharedBooksService;
 import grytsenko.library.service.UserNotNotifiedException;
 
 import java.security.Principal;
-import java.text.MessageFormat;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -82,7 +82,7 @@ public class SharedBookController {
         book = manageSharedBooksService.reserve(book, user);
         notifyUsersService.notifyReserved(book, user);
 
-        return redirectToBook(bookId);
+        return redirectToSharedBook(bookId);
     }
 
     /**
@@ -99,7 +99,7 @@ public class SharedBookController {
         book = manageSharedBooksService.release(book, user);
         notifyUsersService.notifyReleased(book, wasReservedBy);
 
-        return redirectToBook(bookId);
+        return redirectToSharedBook(bookId);
     }
 
     /**
@@ -115,7 +115,7 @@ public class SharedBookController {
         book = manageSharedBooksService.takeOut(book, user);
         notifyUsersService.notifyBorrowed(book, book.getUsedBy());
 
-        return redirectToBook(bookId);
+        return redirectToSharedBook(bookId);
     }
 
     /**
@@ -132,7 +132,7 @@ public class SharedBookController {
         book = manageSharedBooksService.takeBack(book, user);
         notifyUsersService.notifyReturned(book, wasBorrowedBy);
 
-        return redirectToBook(bookId);
+        return redirectToSharedBook(bookId);
     }
 
     /**
@@ -148,7 +148,7 @@ public class SharedBookController {
         if (!book.isManagedBy(user)) {
             LOGGER.debug("Book {} is not managed by {}.", bookId,
                     user.getUsername());
-            return redirectToBook(bookId);
+            return redirectToSharedBook(bookId);
         }
 
         if (book.isReserved()) {
@@ -157,7 +157,7 @@ public class SharedBookController {
             notifyUsersService.notifyBorrowed(book, book.getUsedBy());
         }
 
-        return redirectToBook(bookId);
+        return redirectToSharedBook(bookId);
     }
 
     /**
@@ -173,7 +173,7 @@ public class SharedBookController {
         FlashMap attrs = RequestContextUtils.getOutputFlashMap(request);
         attrs.put("bookNotUpdated", true);
 
-        return redirectToBook(bookId);
+        return redirectToSharedBook(bookId);
     }
 
     /**
@@ -190,12 +190,7 @@ public class SharedBookController {
         attrs.put("userNotNotified", true);
 
         Long bookId = Long.parseLong(request.getParameter(BOOK_ID_PARAM));
-        return redirectToBook(bookId);
-    }
-
-    private static String redirectToBook(Long bookId) {
-        return MessageFormat.format("redirect:{0}?bookId={1}",
-                SHARED_BOOK_PATH, bookId);
+        return redirectToSharedBook(bookId);
     }
 
 }

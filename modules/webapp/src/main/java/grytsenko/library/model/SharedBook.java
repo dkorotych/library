@@ -24,6 +24,23 @@ public class SharedBook implements Serializable {
 
     private static final long serialVersionUID = 6759600794860542365L;
 
+    /**
+     * Creates a shared book.
+     */
+    public static SharedBook create(BookDetails details, User managedBy,
+            Date managedSince) {
+        SharedBook book = new SharedBook();
+        book.details = details;
+
+        book.setStatus(SharedBookStatus.AVAILABLE);
+        book.setStatusChanged(managedSince);
+
+        book.setManagedBy(managedBy);
+        book.setManagedSince(managedSince);
+
+        return book;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

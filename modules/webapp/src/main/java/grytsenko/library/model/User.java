@@ -135,6 +135,13 @@ public class User implements Serializable {
     }
 
     /**
+     * Determines that user is manager.
+     */
+    public boolean isManager() {
+        return role == UserRole.MANAGER;
+    }
+
+    /**
      * Synchronizes user with the same user from directory service.
      */
     public void syncWith(DsUser dsUser) {

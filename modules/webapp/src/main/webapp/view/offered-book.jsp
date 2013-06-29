@@ -25,57 +25,76 @@
             <%@include file="components/book-details.jsp"%>
         </div>
 
-        <c:if test="${not book.hasVoteFrom(user)}">
-            <hr />
+        <hr />
 
-            <!-- Notifications -->
-            <div class="row-fluid">
-                <c:if test="${not empty bookNotUpdated}">
+        <c:if test="${not book.hasVoteFrom(user) or user.manager}">
+            <c:if test="${not empty bookNotUpdated}">
+                <!-- Notifications -->
+                <div class="row-fluid">
                     <!-- Book was not updated. -->
                     <div class="alert alert-error">
                         <button type="button" class="close" data-dismiss="alert">&times;</button>
                         <fmt:message key="warning.book.not.updated" />
                     </div>
-                </c:if>
-            </div>
-
-            <!-- Status -->
-            <p class="text-info">
-                <fmt:message key="book.message.vote" />
-            </p>
+                </div>
+            </c:if>
 
             <!-- Actions -->
             <div class="row-fluid">
                 <form:form method="POST">
-                    <p>
-                        <button name="addVote" type="submit"
-                            class="btn btn-success">
-                            <fmt:message key="book.action.vote" />
-                        </button>
-                    </p>
+                    <!-- Manage -->
+                    <c:if test="${user.manager}">
+                        <div class="pull-right">
+                            <p>
+                                <button name="share" type="submit"
+                                    class="btn btn-primary">
+                                    <fmt:message key="book.action.share" />
+                                </button>
+                                <button name="remove" type="submit"
+                                    class="btn btn-danger">
+                                    <fmt:message key="book.action.remove" />
+                                </button>
+                            </p>
+                        </div>
+                    </c:if>
+
+                    <!-- Vote -->
+                    <c:if test="${not book.hasVoteFrom(user)}">
+                        <p>
+                            <button name="vote" type="submit"
+                                class="btn btn-success">
+                                <fmt:message key="book.action.vote" />
+                            </button>
+                        </p>
+                    </c:if>
                 </form:form>
             </div>
         </c:if>
 
         <c:if test="${book.votesNum > 0}">
-            <hr />
-
             <div class="row-fluid">
-                <c:forEach items="${book.votedUsers}" var="votedUser"
-                    varStatus="loop">
-                    <c:choose>
-                        <c:when test="${user.identicalTo(votedUser)}">
-                            <c:set var="badgeStyle" value="badge badge-success" />
-                        </c:when>
-                        <c:otherwise>
-                            <c:set var="badgeStyle" value="badge badge-info" />
-                        </c:otherwise>
-                    </c:choose>
-                    <span class="${badgeStyle}">${votedUser.readableName}</span>
-                </c:forEach>
+                <p>
+                    <span class="text-info">
+                        <strong>
+                            <fmt:message key="book.message.voters" />
+                        </strong>
+                    </span>
+                    <c:forEach items="${book.votedUsers}" var="votedUser"
+                        varStatus="loop">
+                        <c:choose>
+                            <c:when test="${user.identicalTo(votedUser)}">
+                                <c:set var="badgeStyle"
+                                    value="badge badge-success" />
+                            </c:when>
+                            <c:otherwise>
+                                <c:set var="badgeStyle" value="badge badge-info" />
+                            </c:otherwise>
+                        </c:choose>
+                        <span class="${badgeStyle}">${votedUser.readableName}</span>
+                    </c:forEach>
+                </p>
             </div>
         </c:if>
-
     </div>
 
     <script src="<c:url value="/assets/js/jquery.js" />"></script>

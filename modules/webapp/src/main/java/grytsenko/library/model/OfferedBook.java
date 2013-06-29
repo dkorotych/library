@@ -1,8 +1,11 @@
 package grytsenko.library.model;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Basic;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -12,6 +15,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
 /**
@@ -33,6 +38,13 @@ public class OfferedBook implements Serializable {
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "offered_books_votes", joinColumns = @JoinColumn(name = "book_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<User> votedUsers;
+
+    @Basic
+    @Column(name = "deleted")
+    private boolean deleted;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "deleted_at")
+    private Date deletedAt;
 
     @Version
     private Integer version;
@@ -62,6 +74,22 @@ public class OfferedBook implements Serializable {
 
     public void setVotedUsers(List<User> votedUsers) {
         this.votedUsers = votedUsers;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public Date getDeletedAt() {
+        return deletedAt;
+    }
+
+    public void setDeletedAt(Date deletedAt) {
+        this.deletedAt = deletedAt;
     }
 
     public Integer getVersion() {
@@ -99,6 +127,18 @@ public class OfferedBook implements Serializable {
             throw new IllegalStateException("User can vote once.");
         }
         votedUsers.add(user);
+    }
+
+    /**
+     * Performs a soft delete of book.
+     */
+    public void delete(Date deletedAt) {
+        if (deleted) {
+            throw new IllegalArgumentException("Book is already deleted.");
+        }
+
+        deleted = true;
+        this.deletedAt = deletedAt;
     }
 
 }
