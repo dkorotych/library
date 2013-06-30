@@ -30,4 +30,19 @@ public class BooksRepositoryUtils {
         }
     }
 
+    /**
+     * Deletes book from repository.
+     */
+    public static <T, R extends JpaRepository<T, Long>> void delete(T book,
+            R repository) throws BookNotUpdatedException {
+        try {
+            repository.delete(book);
+        } catch (Exception exception) {
+            LOGGER.warn("Can not delete book, because: '{}'.",
+                    exception.getMessage());
+
+            throw new BookNotUpdatedException("Can not delete book.");
+        }
+    }
+
 }

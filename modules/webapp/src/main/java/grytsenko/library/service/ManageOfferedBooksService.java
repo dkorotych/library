@@ -1,5 +1,6 @@
 package grytsenko.library.service;
 
+import static grytsenko.library.repository.BooksRepositoryUtils.delete;
 import static grytsenko.library.repository.BooksRepositoryUtils.save;
 import static grytsenko.library.util.DateUtils.now;
 import grytsenko.library.model.BookDetails;
@@ -8,8 +9,6 @@ import grytsenko.library.model.SharedBook;
 import grytsenko.library.model.User;
 import grytsenko.library.repository.OfferedBooksRepository;
 import grytsenko.library.repository.SharedBooksRepository;
-
-import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,22 +57,14 @@ public class ManageOfferedBooksService {
             throw new BookNotUpdatedException("User has no permissions.");
         }
 
-        Date now = now();
-        try {
-            LOGGER.debug("Accept offered book {}.", book.getId());
-            book.delete(now);
-            save(book, offeredBooksRepository);
+        LOGGER.debug("Delete offered book {}.", book.getId());
+        delete(book, offeredBooksRepository);
 
-            BookDetails details = book.getDetails();
-            SharedBook addedBook = SharedBook.create(details, manager, now);
-            LOGGER.debug("Add shared book.");
-            return save(addedBook, sharedBooksRepository);
-        } catch (Exception exception) {
-            LOGGER.warn("Can not share book {}, because: '{}'.", book.getId(),
-                    exception.getMessage());
+        BookDetails details = book.getDetails();
+        SharedBook addedBook = SharedBook.create(details, manager, now());
 
-            throw new BookNotUpdatedException("Can not share book.");
-        }
+        LOGGER.debug("Add shared book.");
+        return save(addedBook, sharedBooksRepository);
     }
 
     /**
@@ -86,8 +77,7 @@ public class ManageOfferedBooksService {
             throw new BookNotUpdatedException("User has no permissions.");
         }
 
-        book.delete(now());
-        save(book, offeredBooksRepository);
+        delete(book, offeredBooksRepository);
     }
 
 }

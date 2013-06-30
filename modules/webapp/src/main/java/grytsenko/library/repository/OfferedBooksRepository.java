@@ -16,7 +16,7 @@ public interface OfferedBooksRepository extends
     /**
      * Finds all voted books and orders them by number of votes.
      */
-    @Query(value = "SELECT book FROM offered_books book LEFT JOIN book.votedUsers AS user WHERE book.deleted = false GROUP BY book.id ORDER BY COUNT(user.id) DESC")
+    @Query(value = "SELECT book FROM offered_books book LEFT JOIN book.votedUsers AS user GROUP BY book.id ORDER BY COUNT(user.id) DESC")
     Page<OfferedBook> findAllVoted(Pageable pageable);
 
 }

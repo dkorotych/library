@@ -49,7 +49,7 @@
                         <div class="pull-right">
                             <p>
                                 <button name="share" type="submit"
-                                    class="btn btn-primary">
+                                    class="btn btn-success">
                                     <fmt:message key="book.action.share" />
                                 </button>
                                 <button name="remove" type="submit"
@@ -77,19 +77,16 @@
             <div class="row-fluid">
                 <p>
                     <span class="text-info">
-                        <strong>
-                            <fmt:message key="book.message.voters" />
-                        </strong>
+                        <fmt:message key="book.message.voters" />
                     </span>
                     <c:forEach items="${book.votedUsers}" var="votedUser"
                         varStatus="loop">
                         <c:choose>
                             <c:when test="${user.identicalTo(votedUser)}">
-                                <c:set var="badgeStyle"
-                                    value="badge badge-success" />
+                                <c:set var="badgeStyle" value="badge badge-info" />
                             </c:when>
                             <c:otherwise>
-                                <c:set var="badgeStyle" value="badge badge-info" />
+                                <c:set var="badgeStyle" value="badge" />
                             </c:otherwise>
                         </c:choose>
                         <span class="${badgeStyle}">${votedUser.readableName}</span>

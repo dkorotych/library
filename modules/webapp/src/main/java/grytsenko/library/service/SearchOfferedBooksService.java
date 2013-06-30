@@ -33,10 +33,6 @@ public class SearchOfferedBooksService {
             LOGGER.warn("Book {} was not found.", bookId);
             throw new BookNotFoundException();
         }
-        if (book.isDeleted()) {
-            LOGGER.warn("Book {} is deleted.", bookId);
-            throw new BookNotFoundException("Book is deleted.");
-        }
 
         return book;
     }
