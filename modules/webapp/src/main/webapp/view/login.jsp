@@ -11,10 +11,10 @@
 
 <title>Library</title>
 
-<link href="<c:url value="/assets/css/bootstrap.css" />" rel="stylesheet"
-    media="screen" />
-<link href="<c:url value="/assets/css/library-common.css" />" rel="stylesheet" />
-<link href="<c:url value="/assets/css/library-login.css" />" rel="stylesheet" />
+<link href="<c:url value="/libs/bootstrap/css/bootstrap.css" />"
+    rel="stylesheet" media="screen" />
+<link href="<c:url value="/libs/library/css/common.css" />" rel="stylesheet" />
+<link href="<c:url value="/libs/library/css/login.css" />" rel="stylesheet" />
 </head>
 
 <body>
@@ -44,8 +44,8 @@
         </form>
     </div>
 
-    <script src="<c:url value="/assets/js/jquery.js" />"></script>
-    <script src="<c:url value="/assets/js/bootstrap.js" />"></script>
+    <script src="<c:url value="/libs/jquery/jquery.js" />"></script>
+    <script src="<c:url value="/libs/bootstrap/js/bootstrap.js" />"></script>
 </body>
 
 </html>

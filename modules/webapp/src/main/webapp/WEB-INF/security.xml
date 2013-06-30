@@ -14,7 +14,7 @@
         p:properties-ref="ldapProperties" p:placeholderPrefix="ldap-${" />
 
     <security:http pattern="/login" security="none" />
-    <security:http pattern="/assets/**" security="none" />
+    <security:http pattern="/libs/**" security="none" />
 
     <security:http auto-config="true" use-expressions="true">
         <security:intercept-url pattern="/favicon.ico"
