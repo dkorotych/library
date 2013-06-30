@@ -18,7 +18,7 @@
     <div class="caption">
         <!-- Number of Votes -->
         <div class="pull-right">
-            <span class="badge badge-info">${book.votesNum}</span>
+            <span class="badge badge-info">${book.votersNum}</span>
         </div>
 
         <br />

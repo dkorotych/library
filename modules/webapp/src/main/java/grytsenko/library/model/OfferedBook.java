@@ -32,7 +32,7 @@ public class OfferedBook implements Serializable {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "offered_books_votes", joinColumns = @JoinColumn(name = "book_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private List<User> votedUsers;
+    private List<User> voters;
 
     @Version
     private Integer version;
@@ -56,12 +56,12 @@ public class OfferedBook implements Serializable {
         this.details = details;
     }
 
-    public List<User> getVotedUsers() {
-        return votedUsers;
+    public List<User> getVoters() {
+        return voters;
     }
 
-    public void setVotedUsers(List<User> votedUsers) {
-        this.votedUsers = votedUsers;
+    public void setVoters(List<User> voters) {
+        this.voters = voters;
     }
 
     public Integer getVersion() {
@@ -75,30 +75,26 @@ public class OfferedBook implements Serializable {
     /**
      * Returns total number of votes.
      */
-    public int getVotesNum() {
-        return votedUsers.size();
+    public int getVotersNum() {
+        return voters.size();
     }
 
     /**
      * Checks that book has vote from user.
      */
-    public boolean hasVoteFrom(User user) {
-        for (User votedUser : votedUsers) {
-            if (votedUser.identicalTo(user)) {
-                return true;
-            }
-        }
-        return false;
+    public boolean hasVoter(User user) {
+        return voters.contains(user);
     }
 
     /**
-     * Adds vote from user.
+     * Adds a voter.
      */
-    public void addVote(User user) {
-        if (hasVoteFrom(user)) {
-            throw new IllegalStateException("User can vote once.");
+    public void addVoter(User user) {
+        if (hasVoter(user)) {
+            return;
         }
-        votedUsers.add(user);
+
+        voters.add(user);
     }
 
 }

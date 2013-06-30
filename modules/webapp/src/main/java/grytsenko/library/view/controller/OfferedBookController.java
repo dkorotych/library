@@ -67,7 +67,7 @@ public class OfferedBookController {
         OfferedBook book = searchOfferedBooksService.findVoted(bookId);
         model.addAttribute("book", book);
 
-        LOGGER.debug("Book has {} votes.", book.getVotesNum());
+        LOGGER.debug("Book has {} voters.", book.getVotersNum());
         return OFFERED_BOOK_PATH;
     }
 

@@ -40,7 +40,7 @@ public final class Books {
     public static OfferedBook offeredBook() {
         OfferedBook book = new OfferedBook();
         book.setId(BOOK_ID);
-        book.setVotedUsers(new ArrayList<User>());
+        book.setVoters(new ArrayList<User>());
         return book;
     }
 

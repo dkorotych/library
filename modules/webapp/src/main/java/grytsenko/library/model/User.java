@@ -122,8 +122,9 @@ public class User implements Serializable {
      * Determines that this user is identical to other user, i.e. it has the
      * same identifier.
      */
-    public boolean identicalTo(User other) {
-        if (other == null) {
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
             return false;
         }
 
@@ -131,7 +132,17 @@ public class User implements Serializable {
             return false;
         }
 
+        if (!(obj instanceof User)) {
+            return false;
+        }
+        User other = (User) obj;
+
         return id.equals(other.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id == null ? 0 : id.hashCode();
     }
 
     /**

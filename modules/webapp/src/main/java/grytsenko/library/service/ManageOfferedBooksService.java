@@ -38,11 +38,11 @@ public class ManageOfferedBooksService {
             throws BookNotUpdatedException {
         LOGGER.debug("Add vote from {} for book {}.", user.getUsername(),
                 book.getId());
-        if (book.hasVoteFrom(user)) {
+        if (book.hasVoter(user)) {
             throw new BookNotUpdatedException("User can vote once.");
         }
 
-        book.addVote(user);
+        book.addVoter(user);
         return save(book, offeredBooksRepository);
     }
 

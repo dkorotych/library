@@ -180,7 +180,7 @@ public class SharedBook implements Serializable {
      * Checks that book is reserved by a specific user.
      */
     public boolean isUsedBy(User user) {
-        return user.identicalTo(usedBy);
+        return user.equals(usedBy);
     }
 
     /**
@@ -191,7 +191,7 @@ public class SharedBook implements Serializable {
             throw new IllegalStateException("Book is not managed by anyone.");
         }
 
-        return user.identicalTo(managedBy);
+        return user.equals(managedBy);
     }
 
     /**

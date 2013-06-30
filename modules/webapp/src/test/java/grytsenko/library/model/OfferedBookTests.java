@@ -14,20 +14,10 @@ public class OfferedBookTests {
         OfferedBook book = offeredBook();
         User votedUser = guest();
 
-        book.addVote(votedUser);
+        book.addVoter(votedUser);
 
-        assertEquals(1, book.getVotesNum());
-        assertTrue(book.hasVoteFrom(votedUser));
-    }
-
-    @Test(expected = IllegalStateException.class)
-    public void testAlreadyVoted() {
-        OfferedBook book = offeredBook();
-        User votedUser = guest();
-
-        book.addVote(votedUser);
-
-        book.addVote(votedUser);
+        assertEquals(1, book.getVotersNum());
+        assertTrue(book.hasVoter(votedUser));
     }
 
 }

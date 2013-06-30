@@ -12,18 +12,18 @@ import org.junit.Test;
 public class UserTests {
 
     @Test
-    public void testIdentical() {
-        assertTrue(guest().identicalTo(guest()));
+    public void testEquals() {
+        assertTrue(guest().equals(guest()));
     }
 
     @Test
-    public void testNotIdentical() {
-        assertFalse(manager().identicalTo(guest()));
+    public void testNotEquals() {
+        assertFalse(manager().equals(guest()));
 
-        assertFalse(manager().identicalTo(new User()));
-        assertFalse(new User().identicalTo(guest()));
+        assertFalse(manager().equals(new User()));
+        assertFalse(new User().equals(guest()));
 
-        assertFalse(manager().identicalTo(null));
+        assertFalse(manager().equals(null));
     }
 
     @Test
