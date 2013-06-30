@@ -48,6 +48,9 @@ public class BookDetails implements Serializable {
     private String isbn;
 
     @Basic
+    @Column(name = "thumbnail_url", length = 200)
+    private String thumbnailUrl;
+    @Basic
     @Column(name = "image_url", length = 200)
     private String imageUrl;
 
@@ -119,6 +122,14 @@ public class BookDetails implements Serializable {
 
     public void setIsbn(String isbn) {
         this.isbn = isbn;
+    }
+
+    public String getThumbnailUrl() {
+        return thumbnailUrl;
+    }
+
+    public void setThumbnailUrl(String thumbnailUrl) {
+        this.thumbnailUrl = thumbnailUrl;
     }
 
     public String getImageUrl() {

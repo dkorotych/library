@@ -11,7 +11,7 @@
     <!-- Cover -->
     <div class="text-center">
         <a href="${bookDetailsUrl}">
-            <img src="${book.details.imageUrl}" onerror="$(this).hide();" />
+            <img src="${book.details.thumbnailUrl}" onerror="$(this).hide();" />
         </a>
     </div>
 

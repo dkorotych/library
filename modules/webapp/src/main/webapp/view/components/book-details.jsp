@@ -5,8 +5,10 @@
 <!-- Details. -->
 <div class="media">
     <div class="pull-left">
-        <img class="media-object" src="${bookDetails.imageUrl}"
-            onerror="$(this).hide();" />
+        <a class="fancybox" href="${bookDetails.imageUrl}">
+            <img class="media-object" src="${bookDetails.thumbnailUrl}"
+                onerror="$(this).hide();" />
+        </a>
     </div>
     <div class="media-body">
         <h4>${bookDetails.title}</h4>

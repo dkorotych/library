@@ -11,8 +11,10 @@
 
 <title><fmt:message key="app.title" /></title>
 
-<link href="<c:url value="/libs/bootstrap/css/bootstrap.css" />" rel="stylesheet"
-    media="screen" />
+<link href="<c:url value="/libs/bootstrap/css/bootstrap.css" />"
+    rel="stylesheet" media="screen" />
+<link href="<c:url value="/libs/fancybox/css/jquery.fancybox.css" />"
+    rel="stylesheet" media="screen" />
 <link href="<c:url value="/libs/library/css/common.css" />" rel="stylesheet" />
 </head>
 
@@ -124,6 +126,8 @@
 
     <script src="<c:url value="/libs/jquery/jquery.js" />"></script>
     <script src="<c:url value="/libs/bootstrap/js/bootstrap.js" />"></script>
+    <script src="<c:url value="/libs/fancybox/js/jquery.fancybox.js" />"></script>
+    <script src="<c:url value="/libs/library/js/fancybox.init.js" />"></script>
 </body>
 
 </html>
