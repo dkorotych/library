@@ -101,11 +101,11 @@ public class NotifyUsersService {
         String subject = getSubject(subjectId);
         String text = getText(book, user, templateId);
 
-        if (!isNullOrEmpty(to)) {
+        if (isNullOrEmpty(to)) {
             LOGGER.warn("Email of user {} is unknown.", user.getUsername());
             to = from;
         }
-        if (!isNullOrEmpty(cc)) {
+        if (isNullOrEmpty(cc)) {
             LOGGER.warn("Email of manager {} is unknown.", user.getUsername());
             cc = from;
         }
