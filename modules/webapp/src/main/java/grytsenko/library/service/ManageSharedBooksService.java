@@ -90,4 +90,30 @@ public class ManageSharedBooksService {
         return save(book, sharedBooksRepository);
     }
 
+    /**
+     * Creates subscription to book.
+     */
+    @Transactional
+    public SharedBook subscribe(SharedBook book, User user)
+            throws BookNotUpdatedException {
+        LOGGER.debug("Add subscriber {} to the book {}.", user.getUsername(),
+                book.getId());
+
+        book.addSubscriber(user);
+        return save(book, sharedBooksRepository);
+    }
+
+    /**
+     * Removes subscription to book.
+     */
+    @Transactional
+    public SharedBook unsubscribe(SharedBook book, User user)
+            throws BookNotUpdatedException {
+        LOGGER.debug("Remove subscriber {} of the book {}.",
+                user.getUsername(), book.getId());
+
+        book.removeSubscriber(user);
+        return save(book, sharedBooksRepository);
+    }
+
 }

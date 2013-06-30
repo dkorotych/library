@@ -161,6 +161,38 @@ public class SharedBookController {
     }
 
     /**
+     * User creates subscription to the book.
+     */
+    @RequestMapping(params = "subscribe", method = RequestMethod.POST)
+    public String subscribe(@RequestParam(BOOK_ID_PARAM) Long bookId,
+            @ModelAttribute(USER_ATTR) User user)
+            throws BookNotUpdatedException, UserNotNotifiedException {
+        LOGGER.debug("Subscribe {} to emails about book {}.",
+                user.getUsername(), bookId);
+
+        SharedBook book = searchSharedBooksService.find(bookId);
+        book = manageSharedBooksService.subscribe(book, user);
+
+        return redirectToSharedBook(bookId);
+    }
+
+    /**
+     * User cancels subscription to the book.
+     */
+    @RequestMapping(params = "unsubscribe", method = RequestMethod.POST)
+    public String unsubscribe(@RequestParam(BOOK_ID_PARAM) Long bookId,
+            @ModelAttribute(USER_ATTR) User user)
+            throws BookNotUpdatedException, UserNotNotifiedException {
+        LOGGER.debug("Unsubscribe {} from emails about book {}.",
+                user.getUsername(), bookId);
+
+        SharedBook book = searchSharedBooksService.find(bookId);
+        book = manageSharedBooksService.unsubscribe(book, user);
+
+        return redirectToSharedBook(bookId);
+    }
+
+    /**
      * If book was not updated, then notification should be shown.
      */
     @ExceptionHandler(BookNotUpdatedException.class)

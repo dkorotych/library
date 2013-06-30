@@ -60,8 +60,12 @@ public class ManageOfferedBooksService {
         LOGGER.debug("Delete offered book {}.", book.getId());
         delete(book, offeredBooksRepository);
 
+        LOGGER.debug("Create shared book.", book.getId());
         BookDetails details = book.getDetails();
         SharedBook addedBook = SharedBook.create(details, manager, now());
+
+        LOGGER.debug("Add voters as subscribers to shared book.");
+        addedBook.setSubscribers(book.getVoters());
 
         LOGGER.debug("Add shared book.");
         return save(addedBook, sharedBooksRepository);

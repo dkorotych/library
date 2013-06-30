@@ -2,15 +2,19 @@ package grytsenko.library.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -69,6 +73,10 @@ public class SharedBook implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "managed_since")
     private Date managedSince;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "shared_books_subscribers", joinColumns = @JoinColumn(name = "book_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private List<User> subscribers;
 
     @Version
     private Integer version;
@@ -138,6 +146,14 @@ public class SharedBook implements Serializable {
 
     public void setManagedSince(Date managedSince) {
         this.managedSince = managedSince;
+    }
+
+    public List<User> getSubscribers() {
+        return subscribers;
+    }
+
+    public void setSubscribers(List<User> subscribers) {
+        this.subscribers = subscribers;
     }
 
     public Integer getVersion() {
@@ -276,6 +292,29 @@ public class SharedBook implements Serializable {
 
         usedBy = null;
         usedSince = null;
+    }
+
+    /**
+     * Checks that book has a subscriber.
+     */
+    public boolean hasSubscriber(User subscriber) {
+        return subscribers.contains(subscriber);
+    }
+
+    /**
+     * Adds new subscriber.
+     */
+    public void addSubscriber(User subscriber) {
+        if (!hasSubscriber(subscriber)) {
+            subscribers.add(subscriber);
+        }
+    }
+
+    /**
+     * Removes a subscriber.
+     */
+    public void removeSubscriber(User subscriber) {
+        subscribers.remove(subscriber);
     }
 
 }

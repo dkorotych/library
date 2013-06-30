@@ -85,6 +85,26 @@
         <!-- Actions -->
         <div class="row-fluid">
             <form:form method="POST">
+                <div class="pull-right">
+                    <p>
+                        <c:choose>
+                            <c:when test="${book.hasSubscriber(user)}">
+                                <button name="unsubscribe" type="submit"
+                                    class="btn btn-info">
+                                    <i class="icon-envelope"></i>
+                                    <fmt:message key="book.action.unsubscribe" />
+                                </button>
+                            </c:when>
+                            <c:otherwise>
+                                <button name="subscribe" type="submit"
+                                    class="btn btn-info">
+                                    <i class="icon-envelope"></i>
+                                    <fmt:message key="book.action.subscribe" />
+                                </button>
+                            </c:otherwise>
+                        </c:choose>
+                    </p>
+                </div>
                 <p>
                     <c:if
                         test="${book.isManagedBy(user) and (book.reserved or book.borrowed)}">

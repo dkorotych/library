@@ -55,10 +55,17 @@ public class SearchSharedBooksService {
     }
 
     /**
-     * Finds books which are used by user.
+     * Finds all books which are used by user.
      */
     public List<SharedBook> findUsedBy(User user) {
         return sharedBooksRepository.findByUsedBy(user);
+    }
+
+    /**
+     * Finds all books which are expected by user.
+     */
+    public List<SharedBook> findExpectedBy(User subscriber) {
+        return sharedBooksRepository.findBySubscriber(subscriber);
     }
 
 }

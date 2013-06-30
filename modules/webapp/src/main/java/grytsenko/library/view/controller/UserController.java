@@ -48,6 +48,12 @@ public class UserController {
         LOGGER.debug("{} uses {} books.", user.getUsername(), usedBooks.size());
         model.addAttribute("usedBooks", usedBooks);
 
+        List<SharedBook> expectedBooks = searchSharedBooksService
+                .findExpectedBy(user);
+        LOGGER.debug("{} expects for {} books.", user.getUsername(),
+                expectedBooks.size());
+        model.addAttribute("expectedBooks", expectedBooks);
+
         return USER_PATH;
     }
 

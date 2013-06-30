@@ -47,19 +47,19 @@
         <c:if test="${not usedBooks.isEmpty()}">
             <hr />
 
-            <!-- Used Books. -->
+            <!-- Used Books -->
+            <h4>
+                <fmt:message key="book.message.used" />
+            </h4>
             <div class="row-fluid">
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>
+                            <th class="book-title">
                                 <fmt:message key="user.book.title" />
                             </th>
                             <th>
                                 <fmt:message key="user.book.status" />
-                            </th>
-                            <th>
-                                <fmt:message key="user.book.since" />
                             </th>
                         </tr>
                     </thead>
@@ -73,24 +73,47 @@
                                 <td>
                                     <a href="${bookDetailsUrl}">${book.details.title}</a>
                                 </td>
-                                <c:choose>
-                                    <c:when test="${book.reserved}">
-                                        <td>
-                                            <fmt:message
-                                                key="book.status.reserved" />
-                                        </td>
-                                    </c:when>
-                                    <c:when test="${book.borrowed}">
-                                        <td>
-                                            <fmt:message
-                                                key="book.status.borrowed" />
-                                        </td>
-                                    </c:when>
-                                </c:choose>
                                 <td>
-                                    <fmt:formatDate type="date"
-                                        dateStyle="short"
-                                        value="${book.usedSince}" />
+                                    <%@include file="components/book-status.jsp"%>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
+            </div>
+        </c:if>
+
+        <c:if test="${not expectedBooks.isEmpty()}">
+            <hr />
+
+            <!-- Expected Books -->
+            <h4>
+                <fmt:message key="book.message.expected" />
+            </h4>
+            <div class="row-fluid">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="book-title">
+                                <fmt:message key="user.book.title" />
+                            </th>
+                            <th>
+                                <fmt:message key="user.book.status" />
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <c:forEach items="${expectedBooks}" var="book"
+                            varStatus="loop">
+                            <tr>
+                                <c:url var="bookDetailsUrl" value="/shared-book">
+                                    <c:param name="bookId" value="${book.id}" />
+                                </c:url>
+                                <td>
+                                    <a href="${bookDetailsUrl}">${book.details.title}</a>
+                                </td>
+                                <td>
+                                    <%@include file="components/book-status.jsp"%>
                                 </td>
                             </tr>
                         </c:forEach>

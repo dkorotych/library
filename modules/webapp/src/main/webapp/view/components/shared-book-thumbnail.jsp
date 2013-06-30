@@ -18,21 +18,7 @@
     <div class="caption">
         <!-- Status -->
         <div class="pull-right">
-            <c:if test="${book.available}">
-                <span class="label label-success">
-                    <fmt:message key="book.status.available" />
-                </span>
-            </c:if>
-            <c:if test="${book.reserved}">
-                <span class="label label-warning">
-                    <fmt:message key="book.status.reserved" />
-                </span>
-            </c:if>
-            <c:if test="${book.borrowed}">
-                <span class="label label-warning">
-                    <fmt:message key="book.status.borrowed" />
-                </span>
-            </c:if>
+            <%@include file="book-status.jsp"%>
         </div>
 
         <br />
