@@ -3,8 +3,8 @@ package grytsenko.library.view.controller;
 import static grytsenko.library.view.Navigation.USER_PATH;
 import grytsenko.library.model.SharedBook;
 import grytsenko.library.model.User;
-import grytsenko.library.service.ManageUsersService;
-import grytsenko.library.service.SearchSharedBooksService;
+import grytsenko.library.service.book.SearchSharedBooksService;
+import grytsenko.library.service.user.ManageUsersService;
 
 import java.security.Principal;
 import java.util.List;

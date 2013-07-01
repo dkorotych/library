@@ -5,8 +5,8 @@ import static grytsenko.library.view.ViewConstants.THUMBNAILS_PER_PAGE;
 import grytsenko.library.model.SearchResults;
 import grytsenko.library.model.SharedBook;
 import grytsenko.library.model.User;
-import grytsenko.library.service.ManageUsersService;
-import grytsenko.library.service.SearchSharedBooksService;
+import grytsenko.library.service.book.SearchSharedBooksService;
+import grytsenko.library.service.user.ManageUsersService;
 
 import java.security.Principal;
 

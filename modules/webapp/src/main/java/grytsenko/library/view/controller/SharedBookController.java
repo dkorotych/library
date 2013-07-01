@@ -6,11 +6,11 @@ import static grytsenko.library.view.Navigation.USER_ATTR;
 import static grytsenko.library.view.Navigation.redirectToSharedBook;
 import grytsenko.library.model.SharedBook;
 import grytsenko.library.model.User;
-import grytsenko.library.service.BookNotUpdatedException;
-import grytsenko.library.service.ManageSharedBooksService;
-import grytsenko.library.service.ManageUsersService;
-import grytsenko.library.service.NotifyUsersService;
-import grytsenko.library.service.SearchSharedBooksService;
+import grytsenko.library.service.book.BookNotUpdatedException;
+import grytsenko.library.service.book.ManageSharedBooksService;
+import grytsenko.library.service.book.SearchSharedBooksService;
+import grytsenko.library.service.user.ManageUsersService;
+import grytsenko.library.service.user.NotifyUsersService;
 
 import java.security.Principal;
 

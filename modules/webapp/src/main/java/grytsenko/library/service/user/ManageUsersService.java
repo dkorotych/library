@@ -1,4 +1,4 @@
-package grytsenko.library.service;
+package grytsenko.library.service.user;
 
 import grytsenko.library.model.DsUser;
 import grytsenko.library.model.User;

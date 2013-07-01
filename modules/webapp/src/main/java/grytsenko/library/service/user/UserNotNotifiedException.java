@@ -1,4 +1,4 @@
-package grytsenko.library.service;
+package grytsenko.library.service.user;
 
 /**
  * Thrown if user was not notified.

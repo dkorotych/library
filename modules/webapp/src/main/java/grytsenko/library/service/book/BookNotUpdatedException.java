@@ -1,4 +1,4 @@
-package grytsenko.library.service;
+package grytsenko.library.service.book;
 
 /**
  * Thrown if book was not updated.

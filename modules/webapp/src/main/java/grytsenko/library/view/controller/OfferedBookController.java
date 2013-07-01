@@ -9,10 +9,10 @@ import static grytsenko.library.view.Navigation.redirectToVote;
 import grytsenko.library.model.OfferedBook;
 import grytsenko.library.model.SharedBook;
 import grytsenko.library.model.User;
-import grytsenko.library.service.BookNotUpdatedException;
-import grytsenko.library.service.ManageOfferedBooksService;
-import grytsenko.library.service.ManageUsersService;
-import grytsenko.library.service.SearchOfferedBooksService;
+import grytsenko.library.service.book.BookNotUpdatedException;
+import grytsenko.library.service.book.ManageOfferedBooksService;
+import grytsenko.library.service.book.SearchOfferedBooksService;
+import grytsenko.library.service.user.ManageUsersService;
 
 import java.security.Principal;
 

@@ -1,4 +1,4 @@
-package grytsenko.library.service;
+package grytsenko.library.service.book;
 
 import static grytsenko.library.repository.BooksRepositoryUtils.delete;
 import static grytsenko.library.repository.BooksRepositoryUtils.save;

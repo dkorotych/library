@@ -1,4 +1,4 @@
-package grytsenko.library.service;
+package grytsenko.library.service.book;
 
 import grytsenko.library.model.OfferedBook;
 import grytsenko.library.model.SearchResults;

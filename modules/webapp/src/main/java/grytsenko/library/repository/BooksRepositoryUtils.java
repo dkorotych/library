@@ -1,7 +1,7 @@
 package grytsenko.library.repository;
 
-import grytsenko.library.service.BookNotUpdatedException;
-import grytsenko.library.service.ManageOfferedBooksService;
+import grytsenko.library.service.book.BookNotUpdatedException;
+import grytsenko.library.service.book.ManageOfferedBooksService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

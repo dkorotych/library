@@ -1,4 +1,4 @@
-package grytsenko.library.service;
+package grytsenko.library.service.user;
 
 import static grytsenko.library.util.StringUtils.isNullOrEmpty;
 import grytsenko.library.model.SharedBook;
