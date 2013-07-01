@@ -81,7 +81,7 @@
                 <div class="pull-right">
                     <p>
                         <c:choose>
-                            <c:when test="${book.hasSubscriber(user)}">
+                            <c:when test="${book.hasSubscriber(currentUser)}">
                                 <button name="unsubscribe" type="submit"
                                     class="btn btn-info">
                                     <i class="icon-envelope"></i>
@@ -100,7 +100,7 @@
                 </div>
                 <p>
                     <c:if
-                        test="${book.isManagedBy(user) and (book.reserved or book.borrowed)}">
+                        test="${book.isManagedBy(currentUser) and (book.reserved or book.borrowed)}">
                         <button name="remind" type="submit" class="btn btn-info">
                             <i class="icon-bell"></i>
                             <fmt:message key="book.action.remind" />
@@ -114,19 +114,19 @@
                         </button>
                     </c:if>
 
-                    <c:if test="${book.canBeReleasedBy(user)}">
+                    <c:if test="${book.canBeReleasedBy(currentUser)}">
                         <button name="release" type="submit"
                             class="btn btn-warning">
                             <fmt:message key="book.action.release" />
                         </button>
                     </c:if>
-                    <c:if test="${book.canBeTakenOutBy(user)}">
+                    <c:if test="${book.canBeTakenOutBy(currentUser)}">
                         <button name="takeOut" type="submit"
                             class="btn btn-warning">
                             <fmt:message key="book.action.takeout" />
                         </button>
                     </c:if>
-                    <c:if test="${book.canBeTakenBackBy(user)}">
+                    <c:if test="${book.canBeTakenBackBy(currentUser)}">
                         <button name="takeBack" type="submit"
                             class="btn btn-warning">
                             <fmt:message key="book.action.takeback" />

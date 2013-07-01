@@ -31,7 +31,7 @@
                             <c:url var="userDetailsUrl" value="/user" />
                             <a href="${userDetailsUrl}">
                                 <i class="icon-user"></i>
-                                <strong>${user.username}</strong>
+                                <strong>${currentUser.username}</strong>
                             </a>
                         </li>
                     </ul>

@@ -1,5 +1,6 @@
 package grytsenko.library.view.controller;
 
+import static grytsenko.library.view.Navigation.CURRENT_USER_ATTR;
 import static grytsenko.library.view.Navigation.USER_PATH;
 import grytsenko.library.model.SharedBook;
 import grytsenko.library.model.User;
@@ -24,7 +25,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
  */
 @Controller
 @RequestMapping(USER_PATH)
-@SessionAttributes({ "user" })
+@SessionAttributes(CURRENT_USER_ATTR)
 public class UserController {
 
     private static final Logger LOGGER = LoggerFactory
@@ -35,13 +36,14 @@ public class UserController {
     @Autowired
     SearchSharedBooksService searchSharedBooksService;
 
-    @ModelAttribute("user")
+    @ModelAttribute(CURRENT_USER_ATTR)
     public User currentUser(Principal principal) {
         return manageUsersService.find(principal.getName());
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public String getUserDetails(@ModelAttribute("user") User user, Model model) {
+    public String getUserDetails(@ModelAttribute(CURRENT_USER_ATTR) User user,
+            Model model) {
         LOGGER.debug("Get details about user {}.", user.getId());
 
         List<SharedBook> usedBooks = searchSharedBooksService.findUsedBy(user);

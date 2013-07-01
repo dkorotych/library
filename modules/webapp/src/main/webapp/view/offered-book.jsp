@@ -44,7 +44,7 @@
         <div class="row-fluid">
             <form:form method="POST">
                 <!-- Manage -->
-                <c:if test="${user.manager}">
+                <c:if test="${currentUser.manager}">
                     <div class="pull-right">
                         <p>
                             <button name="share" type="submit"
@@ -60,7 +60,7 @@
                 </c:if>
 
                 <!-- Vote -->
-                <c:if test="${not book.hasVoter(user)}">
+                <c:if test="${not book.hasVoter(currentUser)}">
                     <p>
                         <button name="vote" type="submit"
                             class="btn btn-success">
@@ -80,7 +80,7 @@
                     <c:forEach items="${book.voters}" var="voter"
                         varStatus="loop">
                         <c:choose>
-                            <c:when test="${user.equals(voter)}">
+                            <c:when test="${currentUser.equals(voter)}">
                                 <c:set var="badgeStyle" value="badge badge-info" />
                             </c:when>
                             <c:otherwise>

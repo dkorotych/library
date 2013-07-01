@@ -1,5 +1,7 @@
 package grytsenko.library.view.controller;
 
+import static grytsenko.library.view.Navigation.CURRENT_USER_ATTR;
+import static grytsenko.library.view.Navigation.PAGE_NUM_PARAM;
 import static grytsenko.library.view.Navigation.VOTE_PATH;
 import static grytsenko.library.view.ViewConstants.THUMBNAILS_PER_PAGE;
 import grytsenko.library.model.OfferedBook;
@@ -26,7 +28,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
  */
 @Controller
 @RequestMapping(VOTE_PATH)
-@SessionAttributes({ "user" })
+@SessionAttributes(CURRENT_USER_ATTR)
 public class VoteController {
 
     private static final Logger LOGGER = LoggerFactory
@@ -37,7 +39,7 @@ public class VoteController {
     @Autowired
     SearchOfferedBooksService searchOfferedBooksService;
 
-    @ModelAttribute("user")
+    @ModelAttribute(CURRENT_USER_ATTR)
     public User currentUser(Principal principal) {
         return manageUsersService.find(principal.getName());
     }
@@ -47,8 +49,8 @@ public class VoteController {
      */
     @RequestMapping(method = RequestMethod.GET)
     public String searchAll(
-            @RequestParam(value = "pageNum", defaultValue = "0") Integer pageNum,
-            @ModelAttribute("user") User user, Model model) {
+            @RequestParam(value = PAGE_NUM_PARAM, defaultValue = "0") Integer pageNum,
+            @ModelAttribute(CURRENT_USER_ATTR) User user, Model model) {
         LOGGER.debug("Find all offered books.");
         LOGGER.debug("Take page {}.", pageNum);
 

@@ -27,19 +27,19 @@
                     <strong>
                         <fmt:message key="user.details.firstname" />
                     </strong>
-                    ${user.firstname}
+                    ${currentUser.firstname}
                 </li>
                 <li>
                     <strong>
                         <fmt:message key="user.details.lastname" />
                     </strong>
-                    ${user.lastname}
+                    ${currentUser.lastname}
                 </li>
                 <li>
                     <strong>
                         <fmt:message key="user.details.mail" />
                     </strong>
-                    ${user.mail}
+                    ${currentUser.mail}
                 </li>
             </ul>
         </div>

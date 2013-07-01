@@ -2,7 +2,7 @@ package grytsenko.library.view.controller;
 
 import static grytsenko.library.view.Navigation.BOOK_ID_PARAM;
 import static grytsenko.library.view.Navigation.SHARED_BOOK_PATH;
-import static grytsenko.library.view.Navigation.USER_ATTR;
+import static grytsenko.library.view.Navigation.CURRENT_USER_ATTR;
 import static grytsenko.library.view.Navigation.getBookIdFromRequest;
 import static grytsenko.library.view.Navigation.redirectToSearch;
 import static grytsenko.library.view.Navigation.redirectToSharedBook;
@@ -38,7 +38,7 @@ import org.springframework.web.servlet.support.RequestContextUtils;
  */
 @Controller
 @RequestMapping(value = SHARED_BOOK_PATH, params = BOOK_ID_PARAM)
-@SessionAttributes({ "user" })
+@SessionAttributes(CURRENT_USER_ATTR)
 public class SharedBookController {
 
     private static final Logger LOGGER = LoggerFactory
@@ -54,7 +54,7 @@ public class SharedBookController {
     @Autowired
     ManageSharedBooksService manageSharedBooksService;
 
-    @ModelAttribute(USER_ATTR)
+    @ModelAttribute(CURRENT_USER_ATTR)
     public User currentUser(Principal principal) {
         return manageUsersService.find(principal.getName());
     }
@@ -76,7 +76,7 @@ public class SharedBookController {
      */
     @RequestMapping(params = "reserve", method = RequestMethod.POST)
     public String reserve(@RequestParam(BOOK_ID_PARAM) Long bookId,
-            @ModelAttribute(USER_ATTR) User user)
+            @ModelAttribute(CURRENT_USER_ATTR) User user)
             throws BookNotUpdatedException {
         LOGGER.debug("Reserve book {}.", bookId);
 
@@ -92,7 +92,7 @@ public class SharedBookController {
      */
     @RequestMapping(params = "release", method = RequestMethod.POST)
     public String release(@RequestParam(BOOK_ID_PARAM) Long bookId,
-            @ModelAttribute(USER_ATTR) User user)
+            @ModelAttribute(CURRENT_USER_ATTR) User user)
             throws BookNotUpdatedException {
         LOGGER.debug("Release book {}.", bookId);
 
@@ -110,7 +110,7 @@ public class SharedBookController {
      */
     @RequestMapping(params = "takeOut", method = RequestMethod.POST)
     public String takeOut(@RequestParam(BOOK_ID_PARAM) Long bookId,
-            @ModelAttribute(USER_ATTR) User user)
+            @ModelAttribute(CURRENT_USER_ATTR) User user)
             throws BookNotUpdatedException {
         LOGGER.debug("Take out book {}.", bookId);
 
@@ -126,7 +126,7 @@ public class SharedBookController {
      */
     @RequestMapping(params = "takeBack", method = RequestMethod.POST)
     public String takeBack(@RequestParam(BOOK_ID_PARAM) Long bookId,
-            @ModelAttribute(USER_ATTR) User user)
+            @ModelAttribute(CURRENT_USER_ATTR) User user)
             throws BookNotUpdatedException {
         LOGGER.debug("Take back book {}.", bookId);
 
@@ -144,7 +144,7 @@ public class SharedBookController {
      */
     @RequestMapping(params = "remind", method = RequestMethod.POST)
     public String remind(@RequestParam(BOOK_ID_PARAM) Long bookId,
-            @ModelAttribute(USER_ATTR) User user) {
+            @ModelAttribute(CURRENT_USER_ATTR) User user) {
         LOGGER.debug("Remind about book {}.", bookId);
 
         SharedBook book = searchSharedBooksService.find(bookId);
@@ -168,7 +168,7 @@ public class SharedBookController {
      */
     @RequestMapping(params = "subscribe", method = RequestMethod.POST)
     public String subscribe(@RequestParam(BOOK_ID_PARAM) Long bookId,
-            @ModelAttribute(USER_ATTR) User user)
+            @ModelAttribute(CURRENT_USER_ATTR) User user)
             throws BookNotUpdatedException {
         LOGGER.debug("Subscribe {} to emails about book {}.",
                 user.getUsername(), bookId);
@@ -184,7 +184,7 @@ public class SharedBookController {
      */
     @RequestMapping(params = "unsubscribe", method = RequestMethod.POST)
     public String unsubscribe(@RequestParam(BOOK_ID_PARAM) Long bookId,
-            @ModelAttribute(USER_ATTR) User user)
+            @ModelAttribute(CURRENT_USER_ATTR) User user)
             throws BookNotUpdatedException {
         LOGGER.debug("Unsubscribe {} from emails about book {}.",
                 user.getUsername(), bookId);

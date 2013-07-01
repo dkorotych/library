@@ -2,7 +2,7 @@ package grytsenko.library.view.controller;
 
 import static grytsenko.library.view.Navigation.BOOK_ID_PARAM;
 import static grytsenko.library.view.Navigation.OFFERED_BOOK_PATH;
-import static grytsenko.library.view.Navigation.USER_ATTR;
+import static grytsenko.library.view.Navigation.CURRENT_USER_ATTR;
 import static grytsenko.library.view.Navigation.getBookIdFromRequest;
 import static grytsenko.library.view.Navigation.redirectToOfferedBook;
 import static grytsenko.library.view.Navigation.redirectToSharedBook;
@@ -39,7 +39,7 @@ import org.springframework.web.servlet.support.RequestContextUtils;
  */
 @Controller
 @RequestMapping(value = OFFERED_BOOK_PATH, params = BOOK_ID_PARAM)
-@SessionAttributes({ "user" })
+@SessionAttributes(CURRENT_USER_ATTR)
 public class OfferedBookController {
 
     private static final Logger LOGGER = LoggerFactory
@@ -53,7 +53,7 @@ public class OfferedBookController {
     @Autowired
     ManageOfferedBooksService manageOfferedBooksService;
 
-    @ModelAttribute(USER_ATTR)
+    @ModelAttribute(CURRENT_USER_ATTR)
     public User currentUser(Principal principal) {
         return manageUsersService.find(principal.getName());
     }
@@ -78,7 +78,7 @@ public class OfferedBookController {
      */
     @RequestMapping(params = "vote", method = RequestMethod.POST)
     public String vote(@RequestParam(BOOK_ID_PARAM) Long bookId,
-            @ModelAttribute(USER_ATTR) User user)
+            @ModelAttribute(CURRENT_USER_ATTR) User user)
             throws BookNotUpdatedException {
         LOGGER.debug("{} votes for book {}.", user.getUsername(), bookId);
 
@@ -93,7 +93,7 @@ public class OfferedBookController {
      */
     @RequestMapping(params = "share", method = RequestMethod.POST)
     public String share(@RequestParam(BOOK_ID_PARAM) Long bookId,
-            @ModelAttribute(USER_ATTR) User user)
+            @ModelAttribute(CURRENT_USER_ATTR) User user)
             throws BookNotUpdatedException {
         LOGGER.debug("{} shares book {}.", user.getUsername(), bookId);
 
@@ -108,7 +108,7 @@ public class OfferedBookController {
      */
     @RequestMapping(params = "remove", method = RequestMethod.POST)
     public String remove(@RequestParam(BOOK_ID_PARAM) Long bookId,
-            @ModelAttribute(USER_ATTR) User user)
+            @ModelAttribute(CURRENT_USER_ATTR) User user)
             throws BookNotUpdatedException {
         LOGGER.debug("{} removes book {}.", user.getUsername(), bookId);
 

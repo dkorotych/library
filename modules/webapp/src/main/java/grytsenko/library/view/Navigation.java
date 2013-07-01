@@ -1,7 +1,5 @@
 package grytsenko.library.view;
 
-import static grytsenko.library.view.Navigation.BOOK_ID_PARAM;
-
 import java.text.MessageFormat;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,8 +17,9 @@ public class Navigation {
     public static final String OFFERED_BOOK_PATH = "/offered-book";
 
     public static final String BOOK_ID_PARAM = "bookId";
+    public static final String PAGE_NUM_PARAM = "pageNum";
 
-    public static final String USER_ATTR = "user";
+    public static final String CURRENT_USER_ATTR = "currentUser";
 
     public static String redirectToSearch() {
         return "redirect:" + SEARCH_PATH;
