@@ -14,6 +14,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
@@ -53,41 +54,65 @@ public class NotifyUsersService {
     /**
      * Sends notification that a book was reserved.
      */
-    public void notifyReserved(SharedBook book, User user)
-            throws UserNotNotifiedException {
-        LOGGER.debug("Notify that the book {} was reserved.", book.getId());
+    @Async
+    public void notifyReserved(SharedBook book, User user) {
+        LOGGER.debug("Notify {} that the book {} was reserved.",
+                user.getUsername(), book.getId());
 
-        notify(book, user, BOOK_RESERVED_SUBJECT, BOOK_RESERVED_TEMPLATE);
+        try {
+            notify(book, user, BOOK_RESERVED_SUBJECT, BOOK_RESERVED_TEMPLATE);
+        } catch (UserNotNotifiedException exception) {
+            LOGGER.warn("User {} was not notified, because: '{}'.",
+                    user.getUsername(), exception.getMessage());
+        }
     }
 
     /**
      * Sends notification that book was released.
      */
-    public void notifyReleased(SharedBook book, User user)
-            throws UserNotNotifiedException {
-        LOGGER.debug("Notify that the book {} was released.", book.getId());
+    @Async
+    public void notifyReleased(SharedBook book, User user) {
+        LOGGER.debug("Notify {} that the book {} was released.",
+                user.getUsername(), book.getId());
 
-        notify(book, user, BOOK_RELEASED_SUBJECT, BOOK_RELEASED_TEMPLATE);
+        try {
+            notify(book, user, BOOK_RELEASED_SUBJECT, BOOK_RELEASED_TEMPLATE);
+        } catch (UserNotNotifiedException exception) {
+            LOGGER.warn("User {} was not notified, because: '{}'.",
+                    user.getUsername(), exception.getMessage());
+        }
     }
 
     /**
      * Sends notification that book was borrowed.
      */
-    public void notifyBorrowed(SharedBook book, User user)
-            throws UserNotNotifiedException {
-        LOGGER.debug("Notify that the book {} was borrowed.", book.getId());
+    @Async
+    public void notifyBorrowed(SharedBook book, User user) {
+        LOGGER.debug("Notify {} that the book {} was borrowed.",
+                user.getUsername(), book.getId());
 
-        notify(book, user, BOOK_BORROWED_SUBJECT, BOOK_BORROWED_TEMPLATE);
+        try {
+            notify(book, user, BOOK_BORROWED_SUBJECT, BOOK_BORROWED_TEMPLATE);
+        } catch (UserNotNotifiedException exception) {
+            LOGGER.warn("User {} was not notified, because: '{}'.",
+                    user.getUsername(), exception.getMessage());
+        }
     }
 
     /**
      * Sends notification that book was returned.
      */
-    public void notifyReturned(SharedBook book, User user)
-            throws UserNotNotifiedException {
-        LOGGER.debug("Notify that the book {} was returned.", book.getId());
+    @Async
+    public void notifyReturned(SharedBook book, User user) {
+        LOGGER.debug("Notify {} that the book {} was returned.",
+                user.getUsername(), book.getId());
 
-        notify(book, user, BOOK_RETURNED_SUBJECT, BOOK_RETURNED_TEMPLATE);
+        try {
+            notify(book, user, BOOK_RETURNED_SUBJECT, BOOK_RETURNED_TEMPLATE);
+        } catch (UserNotNotifiedException exception) {
+            LOGGER.warn("User {} was not notified, because: '{}'.",
+                    user.getUsername(), exception.getMessage());
+        }
     }
 
     /**
@@ -102,12 +127,11 @@ public class NotifyUsersService {
         String text = getText(book, user, templateId);
 
         if (isNullOrEmpty(to)) {
-            LOGGER.warn("Email of user {} is unknown.", user.getUsername());
-            to = from;
+            throw new UserNotNotifiedException("Email of user is not defined.");
         }
         if (isNullOrEmpty(cc)) {
-            LOGGER.warn("Email of manager {} is unknown.", user.getUsername());
-            cc = from;
+            throw new UserNotNotifiedException(
+                    "Email of manager is not defined.");
         }
 
         SimpleMailMessage message = compose(from, to, cc, subject, text);

@@ -11,7 +11,6 @@ import grytsenko.library.service.ManageSharedBooksService;
 import grytsenko.library.service.ManageUsersService;
 import grytsenko.library.service.NotifyUsersService;
 import grytsenko.library.service.SearchSharedBooksService;
-import grytsenko.library.service.UserNotNotifiedException;
 
 import java.security.Principal;
 
@@ -75,7 +74,7 @@ public class SharedBookController {
     @RequestMapping(params = "reserve", method = RequestMethod.POST)
     public String reserve(@RequestParam(BOOK_ID_PARAM) Long bookId,
             @ModelAttribute(USER_ATTR) User user)
-            throws BookNotUpdatedException, UserNotNotifiedException {
+            throws BookNotUpdatedException {
         LOGGER.debug("Reserve book {}.", bookId);
 
         SharedBook book = searchSharedBooksService.find(bookId);
@@ -91,7 +90,7 @@ public class SharedBookController {
     @RequestMapping(params = "release", method = RequestMethod.POST)
     public String release(@RequestParam(BOOK_ID_PARAM) Long bookId,
             @ModelAttribute(USER_ATTR) User user)
-            throws BookNotUpdatedException, UserNotNotifiedException {
+            throws BookNotUpdatedException {
         LOGGER.debug("Release book {}.", bookId);
 
         SharedBook book = searchSharedBooksService.find(bookId);
@@ -108,7 +107,7 @@ public class SharedBookController {
     @RequestMapping(params = "takeOut", method = RequestMethod.POST)
     public String takeOut(@RequestParam(BOOK_ID_PARAM) Long bookId,
             @ModelAttribute(USER_ATTR) User user)
-            throws BookNotUpdatedException, UserNotNotifiedException {
+            throws BookNotUpdatedException {
         LOGGER.debug("Take out book {}.", bookId);
 
         SharedBook book = searchSharedBooksService.find(bookId);
@@ -124,7 +123,7 @@ public class SharedBookController {
     @RequestMapping(params = "takeBack", method = RequestMethod.POST)
     public String takeBack(@RequestParam(BOOK_ID_PARAM) Long bookId,
             @ModelAttribute(USER_ATTR) User user)
-            throws BookNotUpdatedException, UserNotNotifiedException {
+            throws BookNotUpdatedException {
         LOGGER.debug("Take back book {}.", bookId);
 
         SharedBook book = searchSharedBooksService.find(bookId);
@@ -140,8 +139,7 @@ public class SharedBookController {
      */
     @RequestMapping(params = "remind", method = RequestMethod.POST)
     public String remind(@RequestParam(BOOK_ID_PARAM) Long bookId,
-            @ModelAttribute(USER_ATTR) User user)
-            throws UserNotNotifiedException {
+            @ModelAttribute(USER_ATTR) User user) {
         LOGGER.debug("Remind about book {}.", bookId);
 
         SharedBook book = searchSharedBooksService.find(bookId);
@@ -161,12 +159,12 @@ public class SharedBookController {
     }
 
     /**
-     * User creates subscription to the book.
+     * Creates subscription to the book.
      */
     @RequestMapping(params = "subscribe", method = RequestMethod.POST)
     public String subscribe(@RequestParam(BOOK_ID_PARAM) Long bookId,
             @ModelAttribute(USER_ATTR) User user)
-            throws BookNotUpdatedException, UserNotNotifiedException {
+            throws BookNotUpdatedException {
         LOGGER.debug("Subscribe {} to emails about book {}.",
                 user.getUsername(), bookId);
 
@@ -177,12 +175,12 @@ public class SharedBookController {
     }
 
     /**
-     * User cancels subscription to the book.
+     * Cancels subscription to the book.
      */
     @RequestMapping(params = "unsubscribe", method = RequestMethod.POST)
     public String unsubscribe(@RequestParam(BOOK_ID_PARAM) Long bookId,
             @ModelAttribute(USER_ATTR) User user)
-            throws BookNotUpdatedException, UserNotNotifiedException {
+            throws BookNotUpdatedException {
         LOGGER.debug("Unsubscribe {} from emails about book {}.",
                 user.getUsername(), bookId);
 
@@ -205,23 +203,6 @@ public class SharedBookController {
         FlashMap attrs = RequestContextUtils.getOutputFlashMap(request);
         attrs.put("bookNotUpdated", true);
 
-        return redirectToSharedBook(bookId);
-    }
-
-    /**
-     * If user was not notified, then notification should be shown.
-     */
-    @ExceptionHandler(UserNotNotifiedException.class)
-    public String whenUserNotNotified(UserNotNotifiedException exception,
-            HttpServletRequest request) {
-        User user = (User) request.getSession().getAttribute(USER_ATTR);
-        LOGGER.warn("User {} was not notified, because: '{}'.",
-                user.getUsername(), exception.getMessage());
-
-        FlashMap attrs = RequestContextUtils.getOutputFlashMap(request);
-        attrs.put("userNotNotified", true);
-
-        Long bookId = Long.parseLong(request.getParameter(BOOK_ID_PARAM));
         return redirectToSharedBook(bookId);
     }
 
