@@ -3,9 +3,12 @@ package grytsenko.library.view.controller;
 import static grytsenko.library.view.Navigation.BOOK_ID_PARAM;
 import static grytsenko.library.view.Navigation.SHARED_BOOK_PATH;
 import static grytsenko.library.view.Navigation.USER_ATTR;
+import static grytsenko.library.view.Navigation.getBookIdFromRequest;
+import static grytsenko.library.view.Navigation.redirectToSearch;
 import static grytsenko.library.view.Navigation.redirectToSharedBook;
 import grytsenko.library.model.SharedBook;
 import grytsenko.library.model.User;
+import grytsenko.library.service.book.BookNotFoundException;
 import grytsenko.library.service.book.BookNotUpdatedException;
 import grytsenko.library.service.book.ManageSharedBooksService;
 import grytsenko.library.service.book.SearchSharedBooksService;
@@ -198,7 +201,7 @@ public class SharedBookController {
     @ExceptionHandler(BookNotUpdatedException.class)
     public String whenBookNotUpdated(BookNotUpdatedException exception,
             HttpServletRequest request) {
-        Long bookId = Long.parseLong(request.getParameter(BOOK_ID_PARAM));
+        Long bookId = getBookIdFromRequest(request);
         LOGGER.warn("Book {} was not updated, because: '{}'.", bookId,
                 exception.getMessage());
 
@@ -206,6 +209,16 @@ public class SharedBookController {
         attrs.put("bookNotUpdated", true);
 
         return redirectToSharedBook(bookId);
+    }
+
+    /**
+     * If book was not found, then we redirect user to list of books.
+     */
+    @ExceptionHandler(BookNotFoundException.class)
+    public String whenBookNotFound(HttpServletRequest request) {
+        Long bookId = getBookIdFromRequest(request);
+        LOGGER.warn("Book {} was not found.", bookId);
+        return redirectToSearch();
     }
 
 }

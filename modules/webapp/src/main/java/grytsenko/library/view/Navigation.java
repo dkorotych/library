@@ -1,6 +1,10 @@
 package grytsenko.library.view;
 
+import static grytsenko.library.view.Navigation.BOOK_ID_PARAM;
+
 import java.text.MessageFormat;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Constants for requests mapping.
@@ -34,6 +38,11 @@ public class Navigation {
     public static String redirectToOfferedBook(Long bookId) {
         return MessageFormat.format("redirect:{0}?{1}={2}", OFFERED_BOOK_PATH,
                 BOOK_ID_PARAM, bookId);
+    }
+
+    public static Long getBookIdFromRequest(HttpServletRequest request) {
+        Long bookId = Long.parseLong(request.getParameter(BOOK_ID_PARAM));
+        return bookId;
     }
 
     private Navigation() {
