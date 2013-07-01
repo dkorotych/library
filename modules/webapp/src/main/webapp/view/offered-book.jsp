@@ -71,24 +71,15 @@
             </form:form>
         </div>
 
-        <c:if test="${book.votersNum > 0}">
+        <c:if test="${not book.voters.isEmpty()}">
+            <!-- Voters -->
             <div class="row-fluid">
                 <p>
                     <span class="text-info">
                         <fmt:message key="book.message.voters" />
                     </span>
-                    <c:forEach items="${book.voters}" var="voter"
-                        varStatus="loop">
-                        <c:choose>
-                            <c:when test="${currentUser.equals(voter)}">
-                                <c:set var="badgeStyle" value="badge badge-info" />
-                            </c:when>
-                            <c:otherwise>
-                                <c:set var="badgeStyle" value="badge" />
-                            </c:otherwise>
-                        </c:choose>
-                        <span class="${badgeStyle}">${voter.readableName}</span>
-                    </c:forEach>
+                    <c:set var="users" value="${book.voters}" />
+                    <%@include file="components/users-list.jsp"%>
                 </p>
             </div>
         </c:if>

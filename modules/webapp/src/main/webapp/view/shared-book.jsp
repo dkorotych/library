@@ -135,6 +135,19 @@
                 </p>
             </form:form>
         </div>
+
+        <c:if test="${not book.subscribers.isEmpty()}">
+            <!-- Voters -->
+            <div class="row-fluid">
+                <p>
+                    <span class="text-info">
+                        <fmt:message key="book.message.subscribers" />
+                    </span>
+                    <c:set var="users" value="${book.subscribers}" />
+                    <%@include file="components/users-list.jsp"%>
+                </p>
+            </div>
+        </c:if>
     </div>
 
     <script src="<c:url value="/libs/jquery/jquery.js" />"></script>
