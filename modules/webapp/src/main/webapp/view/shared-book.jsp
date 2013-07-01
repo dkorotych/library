@@ -38,13 +38,6 @@
                     <fmt:message key="warning.book.not.updated" />
                 </div>
             </c:if>
-            <c:if test="${not empty userNotNotified}">
-                <!-- User was not notified. -->
-                <div class="alert alert-warning">
-                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    <fmt:message key="warning.user.not.notified" />
-                </div>
-            </c:if>
         </div>
 
         <!-- Status -->
