@@ -4,6 +4,7 @@ import static grytsenko.library.util.StringUtils.isNullOrEmpty;
 import grytsenko.library.model.SharedBook;
 import grytsenko.library.model.User;
 
+import java.util.Collection;
 import java.util.Locale;
 import java.util.Properties;
 
@@ -29,6 +30,9 @@ public class NotifyUsersService {
     private static final Logger LOGGER = LoggerFactory
             .getLogger(NotifyUsersService.class);
 
+    public static final String BOOK_AVAILABLE_SUBJECT = "mail.subject.available";
+    public static final String BOOK_AVAILABLE_TEMPLATE = "notifyAvailable";
+
     public static final String BOOK_RESERVED_SUBJECT = "mail.subject.reserved";
     public static final String BOOK_RESERVED_TEMPLATE = "notifyReserved";
 
@@ -52,7 +56,33 @@ public class NotifyUsersService {
     MessageSource messageSource;
 
     /**
-     * Sends notification that a book was reserved.
+     * Notifies users that book is available.
+     */
+    @Async
+    public void notifyAvailable(SharedBook book, Collection<User> users) {
+        for (User user : users) {
+            notifyAvailable(book, user);
+        }
+    }
+
+    /**
+     * Notifies user that book is available.
+     */
+    @Async
+    public void notifyAvailable(SharedBook book, User user) {
+        LOGGER.debug("Notify {} that the book {} is available.",
+                user.getUsername(), book.getId());
+
+        try {
+            notify(book, user, BOOK_AVAILABLE_SUBJECT, BOOK_AVAILABLE_TEMPLATE);
+        } catch (UserNotNotifiedException exception) {
+            LOGGER.warn("User {} was not notified, because: '{}'.",
+                    user.getUsername(), exception.getMessage());
+        }
+    }
+
+    /**
+     * Notifies user that book was reserved.
      */
     @Async
     public void notifyReserved(SharedBook book, User user) {
@@ -68,7 +98,7 @@ public class NotifyUsersService {
     }
 
     /**
-     * Sends notification that book was released.
+     * Notifies user that book was released.
      */
     @Async
     public void notifyReleased(SharedBook book, User user) {
@@ -84,7 +114,7 @@ public class NotifyUsersService {
     }
 
     /**
-     * Sends notification that book was borrowed.
+     * Notifies user that book was borrowed.
      */
     @Async
     public void notifyBorrowed(SharedBook book, User user) {
@@ -100,7 +130,7 @@ public class NotifyUsersService {
     }
 
     /**
-     * Sends notification that book was returned.
+     * Notifies user that book was returned.
      */
     @Async
     public void notifyReturned(SharedBook book, User user) {

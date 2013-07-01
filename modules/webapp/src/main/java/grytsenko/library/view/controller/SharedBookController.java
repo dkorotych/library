@@ -97,6 +97,7 @@ public class SharedBookController {
         User wasReservedBy = book.getUsedBy();
         book = manageSharedBooksService.release(book, user);
         notifyUsersService.notifyReleased(book, wasReservedBy);
+        notifyUsersService.notifyAvailable(book, book.getSubscribers());
 
         return redirectToSharedBook(bookId);
     }
@@ -130,6 +131,7 @@ public class SharedBookController {
         User wasBorrowedBy = book.getUsedBy();
         book = manageSharedBooksService.takeBack(book, user);
         notifyUsersService.notifyReturned(book, wasBorrowedBy);
+        notifyUsersService.notifyAvailable(book, book.getSubscribers());
 
         return redirectToSharedBook(bookId);
     }
