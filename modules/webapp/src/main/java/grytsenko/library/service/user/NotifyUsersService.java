@@ -30,20 +30,20 @@ public class NotifyUsersService {
     private static final Logger LOGGER = LoggerFactory
             .getLogger(NotifyUsersService.class);
 
-    public static final String BOOK_AVAILABLE_SUBJECT = "mail.subject.available";
-    public static final String BOOK_AVAILABLE_TEMPLATE = "notifyAvailable";
+    public static final String AVAILABLE_SUBJECT = "mail.subject.available";
+    public static final String AVAILABLE_TEMPLATE = "notifyAvailable";
 
-    public static final String BOOK_RESERVED_SUBJECT = "mail.subject.reserved";
-    public static final String BOOK_RESERVED_TEMPLATE = "notifyReserved";
+    public static final String RESERVED_SUBJECT = "mail.subject.reserved";
+    public static final String RESERVED_TEMPLATE = "notifyReserved";
 
-    public static final String BOOK_RELEASED_SUBJECT = "mail.subject.released";
-    public static final String BOOK_RELEASED_TEMPLATE = "notifyReleased";
+    public static final String RELEASED_SUBJECT = "mail.subject.released";
+    public static final String RELEASED_TEMPLATE = "notifyReleased";
 
-    public static final String BOOK_BORROWED_SUBJECT = "mail.subject.borrowed";
-    public static final String BOOK_BORROWED_TEMPLATE = "notifyBorrowed";
+    public static final String BORROWED_SUBJECT = "mail.subject.borrowed";
+    public static final String BORROWED_TEMPLATE = "notifyBorrowed";
 
-    public static final String BOOK_RETURNED_SUBJECT = "mail.subject.returned";
-    public static final String BOOK_RETURNED_TEMPLATE = "notifyReturned";
+    public static final String RETURNED_SUBJECT = "mail.subject.returned";
+    public static final String RETURNED_TEMPLATE = "notifyReturned";
 
     public static final String FEEDBACK_EMAIL = "mail.feedback";
 
@@ -74,7 +74,7 @@ public class NotifyUsersService {
                 user.getUsername(), book.getId());
 
         try {
-            notify(book, user, BOOK_AVAILABLE_SUBJECT, BOOK_AVAILABLE_TEMPLATE);
+            notify(book, user, AVAILABLE_SUBJECT, AVAILABLE_TEMPLATE, false);
         } catch (UserNotNotifiedException exception) {
             LOGGER.warn("User {} was not notified, because: '{}'.",
                     user.getUsername(), exception.getMessage());
@@ -90,7 +90,7 @@ public class NotifyUsersService {
                 user.getUsername(), book.getId());
 
         try {
-            notify(book, user, BOOK_RESERVED_SUBJECT, BOOK_RESERVED_TEMPLATE);
+            notify(book, user, RESERVED_SUBJECT, RESERVED_TEMPLATE, true);
         } catch (UserNotNotifiedException exception) {
             LOGGER.warn("User {} was not notified, because: '{}'.",
                     user.getUsername(), exception.getMessage());
@@ -106,7 +106,7 @@ public class NotifyUsersService {
                 user.getUsername(), book.getId());
 
         try {
-            notify(book, user, BOOK_RELEASED_SUBJECT, BOOK_RELEASED_TEMPLATE);
+            notify(book, user, RELEASED_SUBJECT, RELEASED_TEMPLATE, true);
         } catch (UserNotNotifiedException exception) {
             LOGGER.warn("User {} was not notified, because: '{}'.",
                     user.getUsername(), exception.getMessage());
@@ -122,7 +122,7 @@ public class NotifyUsersService {
                 user.getUsername(), book.getId());
 
         try {
-            notify(book, user, BOOK_BORROWED_SUBJECT, BOOK_BORROWED_TEMPLATE);
+            notify(book, user, BORROWED_SUBJECT, BORROWED_TEMPLATE, true);
         } catch (UserNotNotifiedException exception) {
             LOGGER.warn("User {} was not notified, because: '{}'.",
                     user.getUsername(), exception.getMessage());
@@ -138,7 +138,7 @@ public class NotifyUsersService {
                 user.getUsername(), book.getId());
 
         try {
-            notify(book, user, BOOK_RETURNED_SUBJECT, BOOK_RETURNED_TEMPLATE);
+            notify(book, user, RETURNED_SUBJECT, RETURNED_TEMPLATE, true);
         } catch (UserNotNotifiedException exception) {
             LOGGER.warn("User {} was not notified, because: '{}'.",
                     user.getUsername(), exception.getMessage());
@@ -149,25 +149,30 @@ public class NotifyUsersService {
      * Sends notification.
      */
     private void notify(SharedBook book, User user, String subjectId,
-            String templateId) throws UserNotNotifiedException {
+            String templateId, boolean important)
+            throws UserNotNotifiedException {
         String from = mailProperties.getProperty(FEEDBACK_EMAIL);
-        String to = user.getMail();
-        String cc = book.getManagedBy().getMail();
-        String subject = getSubject(subjectId);
-        String text = getText(book, user, templateId);
 
+        String to = user.getMail();
         if (isNullOrEmpty(to)) {
             throw new UserNotNotifiedException("Email of user is not defined.");
         }
-        if (isNullOrEmpty(cc)) {
-            throw new UserNotNotifiedException(
-                    "Email of manager is not defined.");
+        LOGGER.debug("Email will be sent to {}.", to);
+
+        String cc = null;
+        if (important) {
+            cc = book.getManagedBy().getMail();
+            if (isNullOrEmpty(cc)) {
+                throw new UserNotNotifiedException(
+                        "Email of manager is not defined.");
+            }
+            LOGGER.debug("Copy of email will be sent to {}.", cc);
         }
 
-        SimpleMailMessage message = compose(from, to, cc, subject, text);
+        String subject = getSubject(subjectId);
+        String text = getText(book, user, templateId);
 
-        LOGGER.debug("Email will be sent to {}.", to);
-        LOGGER.debug("Copy of email will be sent to {}.", cc);
+        SimpleMailMessage message = compose(from, to, cc, subject, text);
 
         try {
             mailSender.send(message);
@@ -209,7 +214,9 @@ public class NotifyUsersService {
 
         message.setFrom(from);
         message.setTo(to);
-        message.setCc(cc);
+        if (cc != null) {
+            message.setCc(cc);
+        }
 
         message.setSubject(subject);
         message.setText(text);
