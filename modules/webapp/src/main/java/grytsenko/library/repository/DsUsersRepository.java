@@ -4,7 +4,6 @@ import grytsenko.library.model.user.DsUser;
 
 import java.text.MessageFormat;
 import java.util.List;
-import java.util.Properties;
 
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
@@ -13,6 +12,7 @@ import javax.naming.directory.Attributes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
@@ -30,18 +30,22 @@ public class DsUsersRepository {
     private static final Logger LOGGER = LoggerFactory
             .getLogger(DsUsersRepository.class);
 
-    public static final String USERS = "ldap.users";
-    public static final String USERS_FILTER = "ldap.users.filter";
-
-    public static final String USER_USERNAME = "ldap.user.username";
-    public static final String USER_FIRSTNAME = "ldap.user.firstname";
-    public static final String USER_LASTNAME = "ldap.user.lastname";
-    public static final String USER_MAIL = "ldap.user.mail";
-
     @Autowired
     LdapContextSource ldapContextSource;
-    @Autowired
-    Properties ldapProperties;
+
+    @Value("#{ldapProperties['ldap.users']}")
+    String base;
+    @Value("#{ldapProperties['ldap.users.filter']}")
+    String filterTemplate;
+
+    @Value("#{ldapProperties['ldap.user.username']}")
+    String usernameAttr;
+    @Value("#{ldapProperties['ldap.user.firstname']}")
+    String firstnameAttr;
+    @Value("#{ldapProperties['ldap.user.lastname']}")
+    String lastnameAttr;
+    @Value("#{ldapProperties['ldap.user.mail']}")
+    String mailAttr;
 
     /**
      * Finds a user in directory service.
@@ -58,9 +62,7 @@ public class DsUsersRepository {
         LOGGER.debug("Search user {} in DS.", username);
 
         LdapTemplate ldapTemplate = new LdapTemplate(ldapContextSource);
-        String base = ldapProperties.getProperty(USERS);
-        String pattern = ldapProperties.getProperty(USERS_FILTER);
-        String filter = MessageFormat.format(pattern, username);
+        String filter = MessageFormat.format(filterTemplate, username);
         LOGGER.debug("Base DN is '{}' and filter is '{}'.", base, filter);
 
         List<?> foundUsers = ldapTemplate.search(base, filter,
@@ -86,25 +88,22 @@ public class DsUsersRepository {
                 throws NamingException {
             DsUser user = new DsUser();
 
-            String usernameId = ldapProperties.getProperty(USER_USERNAME);
-            user.setUsername((String) attributes.get(usernameId).get());
+            Attribute username = attributes.get(usernameAttr);
+            user.setUsername((String) username.get());
 
-            String firstnameId = ldapProperties.getProperty(USER_FIRSTNAME);
-            Attribute firstnameAttr = attributes.get(firstnameId);
-            if (firstnameAttr != null) {
-                user.setFirstname((String) firstnameAttr.get());
+            Attribute firstname = attributes.get(firstnameAttr);
+            if (firstname != null) {
+                user.setFirstname((String) firstname.get());
             }
 
-            String lastnameId = ldapProperties.getProperty(USER_LASTNAME);
-            Attribute lastnameAttr = attributes.get(lastnameId);
-            if (lastnameAttr != null) {
-                user.setLastname((String) lastnameAttr.get());
+            Attribute lastname = attributes.get(lastnameAttr);
+            if (lastname != null) {
+                user.setLastname((String) lastname.get());
             }
 
-            String mailId = ldapProperties.getProperty(USER_MAIL);
-            Attribute mailAttr = attributes.get(mailId);
-            if (mailAttr != null) {
-                user.setMail((String) mailAttr.get());
+            Attribute mail = attributes.get(mailAttr);
+            if (mail != null) {
+                user.setMail((String) mail.get());
             }
 
             return user;

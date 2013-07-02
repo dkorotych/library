@@ -7,13 +7,11 @@
         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
 
     <util:properties id="mailProperties" location="classpath:mail.properties" />
-    <bean id="mailPropertiesConfigurer"
-        class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
-        p:properties-ref="mailProperties" p:placeholderPrefix="mail-${" />
 
     <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl"
-        p:host="mail-${mail.host}" p:port="mail-${mail.port}" p:username="mail-${mail.username}"
-        p:password="mail-${mail.password}" p:defaultEncoding="mail-${mail.encoding}">
+        p:host="#{mailProperties['mail.host']}" p:port="#{mailProperties['mail.port']}"
+        p:username="#{mailProperties['mail.username']}" p:password="#{mailProperties['mail.password']}"
+        p:defaultEncoding="#{mailProperties['mail.encoding']}">
 
         <property name="javaMailProperties">
             <props>

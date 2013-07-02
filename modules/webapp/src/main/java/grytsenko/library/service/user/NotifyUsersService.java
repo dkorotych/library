@@ -5,13 +5,13 @@ import grytsenko.library.model.book.SharedBook;
 import grytsenko.library.model.user.User;
 
 import java.util.Collection;
-import java.util.Properties;
 
 import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
@@ -45,12 +45,11 @@ public class NotifyUsersService {
     public static final String RETURNED_SUBJECT = "bookReturnedSubject";
     public static final String RETURNED_TEMPLATE = "bookReturnedText";
 
-    public static final String FEEDBACK_EMAIL = "mail.feedback";
-
     @Autowired
     MailSender mailSender;
-    @Autowired
-    Properties mailProperties;
+
+    @Value("#{mailProperties['mail.feedback']}")
+    String emailForFeedback;
 
     private STGroup templates;
 
@@ -155,7 +154,7 @@ public class NotifyUsersService {
     private void notify(SharedBook book, User user, String subjectId,
             String templateId, boolean important)
             throws UserNotNotifiedException {
-        String from = mailProperties.getProperty(FEEDBACK_EMAIL);
+        String from = emailForFeedback;
 
         String to = user.getMail();
         if (isNullOrEmpty(to)) {
