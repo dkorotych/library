@@ -1,0 +1,110 @@
+group mails;
+
+header(user)  ::= <<
+Hello $user.firstname; null=user.username$.
+>>
+
+footer()  ::= <<
+If you received this mail by mistake, please, forward it to $manager.mail$ with your comments.
+>>
+
+details(book) ::= <<
+Book Details:
+    Title: $book.details.title$
+    Authors: $book.details.authors$
+    Year: $book.details.year$
+>>
+
+
+
+bookAvailableSubject() ::= <<
+Book is available.
+>>
+
+bookAvailableText(book, user, manager) ::= <<
+$header(user)$
+
+A book is available and you can reserve it.
+
+$details(book)$
+
+$footer()$
+
+Thanks.
+>>
+
+
+
+bookReservedSubject() ::= <<
+Book has been reserved for you.
+>>
+
+bookReservedText(book, user, manager) ::= <<
+$header(user)$
+
+Book has been reserved for you.
+You can borrow this book from a library.
+
+$details(book)$
+
+$footer()$
+
+Thanks.
+>>
+
+
+
+bookReleasedSubject() ::= <<
+Book is no longer reserved for you.
+>>
+
+bookReleasedText(book, user, manager) ::= <<
+$header(user)$
+
+A book is no longer reserved for you.
+
+$details(book)$
+
+$footer()$
+
+Thanks.
+>>
+
+
+
+bookBorrowedSubject() ::= <<
+You've borrowed the book from library.
+>>
+
+bookBorrowedText(book, user, manager) ::= <<
+$header(user)$
+
+You've borrowed the book from library.
+Please remember to return it.
+
+$details(book)$
+
+$footer()$
+
+Thanks.
+
+>>
+
+
+
+bookReturnedSubject() ::= <<
+You've returned a book to library.
+>>
+
+bookReturnedText(book, user, manager) ::= <<
+$header(user)$
+
+You've returned a book to library.
+
+$details(book)$
+
+$footer()$
+
+Thanks.
+
+>>

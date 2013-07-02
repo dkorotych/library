@@ -5,13 +5,13 @@ import grytsenko.library.model.book.SharedBook;
 import grytsenko.library.model.user.User;
 
 import java.util.Collection;
-import java.util.Locale;
 import java.util.Properties;
+
+import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
@@ -19,7 +19,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
-import org.stringtemplate.v4.STGroupDir;
+import org.stringtemplate.v4.STGroupFile;
 
 /**
  * Sends notifications to users.
@@ -30,20 +30,20 @@ public class NotifyUsersService {
     private static final Logger LOGGER = LoggerFactory
             .getLogger(NotifyUsersService.class);
 
-    public static final String AVAILABLE_SUBJECT = "mail.subject.available";
-    public static final String AVAILABLE_TEMPLATE = "notifyAvailable";
+    public static final String AVAILABLE_SUBJECT = "bookAvailableSubject";
+    public static final String AVAILABLE_TEMPLATE = "bookAvailableText";
 
-    public static final String RESERVED_SUBJECT = "mail.subject.reserved";
-    public static final String RESERVED_TEMPLATE = "notifyReserved";
+    public static final String RESERVED_SUBJECT = "bookReservedSubject";
+    public static final String RESERVED_TEMPLATE = "bookReservedText";
 
-    public static final String RELEASED_SUBJECT = "mail.subject.released";
-    public static final String RELEASED_TEMPLATE = "notifyReleased";
+    public static final String RELEASED_SUBJECT = "bookReleasedSubject";
+    public static final String RELEASED_TEMPLATE = "bookReleasedText";
 
-    public static final String BORROWED_SUBJECT = "mail.subject.borrowed";
-    public static final String BORROWED_TEMPLATE = "notifyBorrowed";
+    public static final String BORROWED_SUBJECT = "bookBorrowedSubject";
+    public static final String BORROWED_TEMPLATE = "bookBorrowedText";
 
-    public static final String RETURNED_SUBJECT = "mail.subject.returned";
-    public static final String RETURNED_TEMPLATE = "notifyReturned";
+    public static final String RETURNED_SUBJECT = "bookReturnedSubject";
+    public static final String RETURNED_TEMPLATE = "bookReturnedText";
 
     public static final String FEEDBACK_EMAIL = "mail.feedback";
 
@@ -52,8 +52,12 @@ public class NotifyUsersService {
     @Autowired
     Properties mailProperties;
 
-    @Autowired
-    MessageSource messageSource;
+    private STGroup templates;
+
+    @PostConstruct
+    public void initTemplates() {
+        templates = new STGroupFile("mail/mails.stg", '$', '$');
+    }
 
     /**
      * Notifies users that book is available.
@@ -169,8 +173,8 @@ public class NotifyUsersService {
             LOGGER.debug("Copy of email will be sent to {}.", cc);
         }
 
-        String subject = getSubject(subjectId);
-        String text = getText(book, user, templateId);
+        String subject = renderSubject(subjectId);
+        String text = renderText(templateId, book, user);
 
         SimpleMailMessage message = compose(from, to, cc, subject, text);
 
@@ -187,16 +191,16 @@ public class NotifyUsersService {
     /**
      * Creates a subject for message.
      */
-    private String getSubject(String subjectId) {
-        return messageSource.getMessage(subjectId, null, Locale.getDefault());
+    private String renderSubject(String templateName) {
+        ST template = templates.getInstanceOf(templateName);
+        return template.render();
     }
 
     /**
      * Creates a text for message.
      */
-    private String getText(SharedBook book, User user, String templateId) {
-        STGroup templates = new STGroupDir("email", '$', '$');
-        ST template = templates.getInstanceOf(templateId);
+    private String renderText(String templateName, SharedBook book, User user) {
+        ST template = templates.getInstanceOf(templateName);
 
         template.add("book", book);
         template.add("user", user);
