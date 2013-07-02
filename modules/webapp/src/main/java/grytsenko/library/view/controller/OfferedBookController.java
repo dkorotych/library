@@ -1,8 +1,8 @@
 package grytsenko.library.view.controller;
 
 import static grytsenko.library.view.Navigation.BOOK_ID_PARAM;
-import static grytsenko.library.view.Navigation.OFFERED_BOOK_PATH;
 import static grytsenko.library.view.Navigation.CURRENT_USER_ATTR;
+import static grytsenko.library.view.Navigation.OFFERED_BOOK_PATH;
 import static grytsenko.library.view.Navigation.getBookIdFromRequest;
 import static grytsenko.library.view.Navigation.redirectToOfferedBook;
 import static grytsenko.library.view.Navigation.redirectToSharedBook;
@@ -15,6 +15,7 @@ import grytsenko.library.service.book.BookNotUpdatedException;
 import grytsenko.library.service.book.ManageOfferedBooksService;
 import grytsenko.library.service.book.SearchOfferedBooksService;
 import grytsenko.library.service.user.ManageUsersService;
+import grytsenko.library.service.user.NotifyUsersService;
 
 import java.security.Principal;
 
@@ -47,6 +48,8 @@ public class OfferedBookController {
 
     @Autowired
     ManageUsersService manageUsersService;
+    @Autowired
+    NotifyUsersService notifyUsersService;
 
     @Autowired
     SearchOfferedBooksService searchOfferedBooksService;
@@ -98,9 +101,11 @@ public class OfferedBookController {
         LOGGER.debug("{} shares book {}.", user.getUsername(), bookId);
 
         OfferedBook book = searchOfferedBooksService.findVoted(bookId);
-        SharedBook addedBook = manageOfferedBooksService.share(book, user);
+        SharedBook sharedBook = manageOfferedBooksService.share(book, user);
+        notifyUsersService.notifyAvailable(sharedBook,
+                sharedBook.getSubscribers());
 
-        return redirectToSharedBook(addedBook.getId());
+        return redirectToSharedBook(sharedBook.getId());
     }
 
     /**
