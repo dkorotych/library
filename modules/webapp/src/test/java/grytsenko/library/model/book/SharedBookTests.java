@@ -1,4 +1,4 @@
-package grytsenko.library.model;
+package grytsenko.library.model.book;
 
 import static grytsenko.library.test.Books.availableBook;
 import static grytsenko.library.test.Books.borrowedBook;
@@ -8,6 +8,10 @@ import static grytsenko.library.test.Users.manager;
 import static grytsenko.library.util.DateUtils.now;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+
+import grytsenko.library.model.book.SharedBook;
+import grytsenko.library.model.book.SharedBookStatus;
+import grytsenko.library.model.user.User;
 
 import java.util.Date;
 

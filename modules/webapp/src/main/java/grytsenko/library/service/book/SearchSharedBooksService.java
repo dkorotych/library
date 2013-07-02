@@ -1,8 +1,8 @@
 package grytsenko.library.service.book;
 
-import grytsenko.library.model.SearchResults;
-import grytsenko.library.model.SharedBook;
-import grytsenko.library.model.User;
+import grytsenko.library.model.book.SearchResults;
+import grytsenko.library.model.book.SharedBook;
+import grytsenko.library.model.user.User;
 import grytsenko.library.repository.SharedBooksRepository;
 
 import java.util.List;

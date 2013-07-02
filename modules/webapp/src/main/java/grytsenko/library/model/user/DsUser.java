@@ -1,4 +1,4 @@
-package grytsenko.library.model;
+package grytsenko.library.model.user;
 
 /**
  * Information about user, which is stored in corporate directory service.

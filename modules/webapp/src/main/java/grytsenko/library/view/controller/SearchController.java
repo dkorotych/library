@@ -4,9 +4,9 @@ import static grytsenko.library.view.Navigation.CURRENT_USER_ATTR;
 import static grytsenko.library.view.Navigation.PAGE_NUM_PARAM;
 import static grytsenko.library.view.Navigation.SEARCH_PATH;
 import static grytsenko.library.view.ViewConstants.THUMBNAILS_PER_PAGE;
-import grytsenko.library.model.SearchResults;
-import grytsenko.library.model.SharedBook;
-import grytsenko.library.model.User;
+import grytsenko.library.model.book.SearchResults;
+import grytsenko.library.model.book.SharedBook;
+import grytsenko.library.model.user.User;
 import grytsenko.library.service.book.SearchSharedBooksService;
 import grytsenko.library.service.user.ManageUsersService;
 

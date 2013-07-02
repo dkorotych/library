@@ -2,8 +2,8 @@ package grytsenko.library.service.book;
 
 import static grytsenko.library.repository.BooksRepositoryUtils.save;
 import static grytsenko.library.util.DateUtils.now;
-import grytsenko.library.model.SharedBook;
-import grytsenko.library.model.User;
+import grytsenko.library.model.book.SharedBook;
+import grytsenko.library.model.user.User;
 import grytsenko.library.repository.SharedBooksRepository;
 
 import org.slf4j.Logger;

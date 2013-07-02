@@ -1,6 +1,6 @@
 package grytsenko.library.repository;
 
-import grytsenko.library.model.OfferedBook;
+import grytsenko.library.model.book.OfferedBook;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

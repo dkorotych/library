@@ -1,6 +1,6 @@
 package grytsenko.library.repository;
 
-import grytsenko.library.model.DsUser;
+import grytsenko.library.model.user.DsUser;
 
 import java.text.MessageFormat;
 import java.util.List;

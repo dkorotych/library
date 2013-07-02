@@ -3,10 +3,10 @@ package grytsenko.library.service.book;
 import static grytsenko.library.repository.BooksRepositoryUtils.delete;
 import static grytsenko.library.repository.BooksRepositoryUtils.save;
 import static grytsenko.library.util.DateUtils.now;
-import grytsenko.library.model.BookDetails;
-import grytsenko.library.model.OfferedBook;
-import grytsenko.library.model.SharedBook;
-import grytsenko.library.model.User;
+import grytsenko.library.model.book.BookDetails;
+import grytsenko.library.model.book.OfferedBook;
+import grytsenko.library.model.book.SharedBook;
+import grytsenko.library.model.user.User;
 import grytsenko.library.repository.OfferedBooksRepository;
 import grytsenko.library.repository.SharedBooksRepository;
 

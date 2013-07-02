@@ -1,8 +1,8 @@
 package grytsenko.library.test;
 
-import grytsenko.library.model.DsUser;
-import grytsenko.library.model.User;
-import grytsenko.library.model.UserRole;
+import grytsenko.library.model.user.DsUser;
+import grytsenko.library.model.user.User;
+import grytsenko.library.model.user.UserRole;
 
 /**
  * Utilities for work with users in tests.

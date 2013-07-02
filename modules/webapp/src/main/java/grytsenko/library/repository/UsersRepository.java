@@ -1,6 +1,6 @@
 package grytsenko.library.repository;
 
-import grytsenko.library.model.User;
+import grytsenko.library.model.user.User;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

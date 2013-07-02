@@ -1,10 +1,10 @@
 package grytsenko.library.test;
 
 import static grytsenko.library.test.Users.manager;
-import grytsenko.library.model.OfferedBook;
-import grytsenko.library.model.SharedBook;
-import grytsenko.library.model.SharedBookStatus;
-import grytsenko.library.model.User;
+import grytsenko.library.model.book.OfferedBook;
+import grytsenko.library.model.book.SharedBook;
+import grytsenko.library.model.book.SharedBookStatus;
+import grytsenko.library.model.user.User;
 
 import java.util.ArrayList;
 

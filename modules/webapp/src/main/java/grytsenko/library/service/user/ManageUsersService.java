@@ -1,7 +1,7 @@
 package grytsenko.library.service.user;
 
-import grytsenko.library.model.DsUser;
-import grytsenko.library.model.User;
+import grytsenko.library.model.user.DsUser;
+import grytsenko.library.model.user.User;
 import grytsenko.library.repository.DsUsersRepository;
 import grytsenko.library.repository.UsersRepository;
 

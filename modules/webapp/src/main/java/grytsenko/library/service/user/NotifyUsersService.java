@@ -1,8 +1,8 @@
 package grytsenko.library.service.user;
 
 import static grytsenko.library.util.StringUtils.isNullOrEmpty;
-import grytsenko.library.model.SharedBook;
-import grytsenko.library.model.User;
+import grytsenko.library.model.book.SharedBook;
+import grytsenko.library.model.user.User;
 
 import java.util.Collection;
 import java.util.Locale;

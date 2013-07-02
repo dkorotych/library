@@ -1,4 +1,4 @@
-package grytsenko.library.model;
+package grytsenko.library.model.user;
 
 import static grytsenko.library.util.StringUtils.isNullOrEmpty;
 

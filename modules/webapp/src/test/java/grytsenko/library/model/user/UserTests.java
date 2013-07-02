@@ -1,4 +1,4 @@
-package grytsenko.library.model;
+package grytsenko.library.model.user;
 
 import static grytsenko.library.test.Users.guest;
 import static grytsenko.library.test.Users.guestFromDs;
@@ -6,6 +6,8 @@ import static grytsenko.library.test.Users.manager;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import grytsenko.library.model.user.DsUser;
+import grytsenko.library.model.user.User;
 
 import org.junit.Test;
 

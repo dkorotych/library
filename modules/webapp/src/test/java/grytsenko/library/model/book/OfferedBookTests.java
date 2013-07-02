@@ -1,9 +1,11 @@
-package grytsenko.library.model;
+package grytsenko.library.model.book;
 
 import static grytsenko.library.test.Books.offeredBook;
 import static grytsenko.library.test.Users.guest;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import grytsenko.library.model.book.OfferedBook;
+import grytsenko.library.model.user.User;
 
 import org.junit.Test;
 

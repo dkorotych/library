@@ -1,4 +1,4 @@
-package grytsenko.library.model;
+package grytsenko.library.model.book;
 
 /**
  * Status of shared book.

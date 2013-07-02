@@ -1,7 +1,7 @@
 package grytsenko.library.service.book;
 
-import grytsenko.library.model.OfferedBook;
-import grytsenko.library.model.SearchResults;
+import grytsenko.library.model.book.OfferedBook;
+import grytsenko.library.model.book.SearchResults;
 import grytsenko.library.repository.OfferedBooksRepository;
 
 import org.slf4j.Logger;

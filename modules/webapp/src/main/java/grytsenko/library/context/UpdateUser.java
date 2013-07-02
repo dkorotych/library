@@ -1,6 +1,6 @@
 package grytsenko.library.context;
 
-import grytsenko.library.model.User;
+import grytsenko.library.model.user.User;
 import grytsenko.library.service.user.ManageUsersService;
 
 import org.slf4j.Logger;
