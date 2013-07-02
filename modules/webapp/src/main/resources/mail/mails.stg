@@ -8,11 +8,11 @@ footer()  ::= <<
 If you received this mail by mistake, please, forward it to $manager.mail$ with your comments.
 >>
 
-details(book) ::= <<
+details(bookDetails) ::= <<
 Book Details:
-    Title: $book.details.title$
-    Authors: $book.details.authors$
-    Year: $book.details.year$
+    Title: $bookDetails.title$
+    Authors: $bookDetails.authors$
+    Year: $bookDetails.year$
 >>
 
 
@@ -21,12 +21,12 @@ bookAvailableSubject() ::= <<
 Book is available.
 >>
 
-bookAvailableText(book, user, manager) ::= <<
+bookAvailableText(bookDetails, user, manager) ::= <<
 $header(user)$
 
 A book is available and you can reserve it.
 
-$details(book)$
+$details(bookDetails)$
 
 $footer()$
 
@@ -39,13 +39,13 @@ bookReservedSubject() ::= <<
 Book has been reserved for you.
 >>
 
-bookReservedText(book, user, manager) ::= <<
+bookReservedText(bookDetails, user, manager) ::= <<
 $header(user)$
 
 Book has been reserved for you.
 You can borrow this book from a library.
 
-$details(book)$
+$details(bookDetails)$
 
 $footer()$
 
@@ -58,12 +58,12 @@ bookReleasedSubject() ::= <<
 Book is no longer reserved for you.
 >>
 
-bookReleasedText(book, user, manager) ::= <<
+bookReleasedText(bookDetails, user, manager) ::= <<
 $header(user)$
 
 A book is no longer reserved for you.
 
-$details(book)$
+$details(bookDetails)$
 
 $footer()$
 
@@ -76,13 +76,13 @@ bookBorrowedSubject() ::= <<
 You've borrowed the book from library.
 >>
 
-bookBorrowedText(book, user, manager) ::= <<
+bookBorrowedText(bookDetails, user, manager) ::= <<
 $header(user)$
 
 You've borrowed the book from library.
 Please remember to return it.
 
-$details(book)$
+$details(bookDetails)$
 
 $footer()$
 
@@ -96,12 +96,12 @@ bookReturnedSubject() ::= <<
 You've returned a book to library.
 >>
 
-bookReturnedText(book, user, manager) ::= <<
+bookReturnedText(bookDetails, user, manager) ::= <<
 $header(user)$
 
 You've returned a book to library.
 
-$details(book)$
+$details(bookDetails)$
 
 $footer()$
 

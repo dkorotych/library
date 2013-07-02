@@ -1,6 +1,5 @@
 package grytsenko.library.service.user;
 
-import static grytsenko.library.util.StringUtils.isNullOrEmpty;
 import grytsenko.library.model.book.SharedBook;
 import grytsenko.library.model.user.User;
 
@@ -12,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.scheduling.annotation.Async;
@@ -31,19 +29,19 @@ public class NotifyUsersService {
             .getLogger(NotifyUsersService.class);
 
     public static final String AVAILABLE_SUBJECT = "bookAvailableSubject";
-    public static final String AVAILABLE_TEMPLATE = "bookAvailableText";
+    public static final String AVAILABLE_TEXT = "bookAvailableText";
 
     public static final String RESERVED_SUBJECT = "bookReservedSubject";
-    public static final String RESERVED_TEMPLATE = "bookReservedText";
+    public static final String RESERVED_TEXT = "bookReservedText";
 
     public static final String RELEASED_SUBJECT = "bookReleasedSubject";
-    public static final String RELEASED_TEMPLATE = "bookReleasedText";
+    public static final String RELEASED_TEXT = "bookReleasedText";
 
     public static final String BORROWED_SUBJECT = "bookBorrowedSubject";
-    public static final String BORROWED_TEMPLATE = "bookBorrowedText";
+    public static final String BORROWED_TEXT = "bookBorrowedText";
 
     public static final String RETURNED_SUBJECT = "bookReturnedSubject";
-    public static final String RETURNED_TEMPLATE = "bookReturnedText";
+    public static final String RETURNED_TEXT = "bookReturnedText";
 
     @Autowired
     MailSender mailSender;
@@ -53,9 +51,31 @@ public class NotifyUsersService {
 
     private STGroup templates;
 
+    private SharedBookMailTemplate bookAvailable;
+    private SharedBookMailTemplate bookReserved;
+    private SharedBookMailTemplate bookReleased;
+    private SharedBookMailTemplate bookBorrowed;
+    private SharedBookMailTemplate bookReturned;
+
     @PostConstruct
-    public void initTemplates() {
+    public void prepareTemplates() {
         templates = new STGroupFile("mail/mails.stg", '$', '$');
+
+        bookAvailable = createMailTemplate(AVAILABLE_SUBJECT, AVAILABLE_TEXT,
+                false);
+        bookReserved = createMailTemplate(RESERVED_SUBJECT, RESERVED_TEXT, true);
+        bookReleased = createMailTemplate(RELEASED_SUBJECT, RELEASED_TEXT, true);
+        bookBorrowed = createMailTemplate(BORROWED_SUBJECT, BORROWED_TEXT, true);
+        bookReturned = createMailTemplate(RETURNED_SUBJECT, RETURNED_TEXT, true);
+    }
+
+    private SharedBookMailTemplate createMailTemplate(
+            String subjectTemplateName, String textTemplateName,
+            boolean important) {
+        ST subjectTemplate = templates.getInstanceOf(subjectTemplateName);
+        ST textTemplate = templates.getInstanceOf(textTemplateName);
+        return new SharedBookMailTemplate(subjectTemplate, textTemplate,
+                emailForFeedback, important);
     }
 
     /**
@@ -76,12 +96,7 @@ public class NotifyUsersService {
         LOGGER.debug("Notify {} that the book {} is available.",
                 user.getUsername(), book.getId());
 
-        try {
-            notify(book, user, AVAILABLE_SUBJECT, AVAILABLE_TEMPLATE, false);
-        } catch (UserNotNotifiedException exception) {
-            LOGGER.warn("User {} was not notified, because: '{}'.",
-                    user.getUsername(), exception.getMessage());
-        }
+        notify(bookAvailable, book, user);
     }
 
     /**
@@ -92,12 +107,7 @@ public class NotifyUsersService {
         LOGGER.debug("Notify {} that the book {} was reserved.",
                 user.getUsername(), book.getId());
 
-        try {
-            notify(book, user, RESERVED_SUBJECT, RESERVED_TEMPLATE, true);
-        } catch (UserNotNotifiedException exception) {
-            LOGGER.warn("User {} was not notified, because: '{}'.",
-                    user.getUsername(), exception.getMessage());
-        }
+        notify(bookReserved, book, user);
     }
 
     /**
@@ -108,12 +118,7 @@ public class NotifyUsersService {
         LOGGER.debug("Notify {} that the book {} was released.",
                 user.getUsername(), book.getId());
 
-        try {
-            notify(book, user, RELEASED_SUBJECT, RELEASED_TEMPLATE, true);
-        } catch (UserNotNotifiedException exception) {
-            LOGGER.warn("User {} was not notified, because: '{}'.",
-                    user.getUsername(), exception.getMessage());
-        }
+        notify(bookReleased, book, user);
     }
 
     /**
@@ -124,12 +129,7 @@ public class NotifyUsersService {
         LOGGER.debug("Notify {} that the book {} was borrowed.",
                 user.getUsername(), book.getId());
 
-        try {
-            notify(book, user, BORROWED_SUBJECT, BORROWED_TEMPLATE, true);
-        } catch (UserNotNotifiedException exception) {
-            LOGGER.warn("User {} was not notified, because: '{}'.",
-                    user.getUsername(), exception.getMessage());
-        }
+        notify(bookBorrowed, book, user);
     }
 
     /**
@@ -140,91 +140,18 @@ public class NotifyUsersService {
         LOGGER.debug("Notify {} that the book {} was returned.",
                 user.getUsername(), book.getId());
 
-        try {
-            notify(book, user, RETURNED_SUBJECT, RETURNED_TEMPLATE, true);
-        } catch (UserNotNotifiedException exception) {
-            LOGGER.warn("User {} was not notified, because: '{}'.",
-                    user.getUsername(), exception.getMessage());
-        }
+        notify(bookReturned, book, user);
     }
 
-    /**
-     * Sends notification.
-     */
-    private void notify(SharedBook book, User user, String subjectId,
-            String templateId, boolean important)
-            throws UserNotNotifiedException {
-        String from = emailForFeedback;
-
-        String to = user.getMail();
-        if (isNullOrEmpty(to)) {
-            throw new UserNotNotifiedException("Email of user is not defined.");
-        }
-        LOGGER.debug("Email will be sent to {}.", to);
-
-        String cc = null;
-        if (important) {
-            cc = book.getManagedBy().getMail();
-            if (isNullOrEmpty(cc)) {
-                throw new UserNotNotifiedException(
-                        "Email of manager is not defined.");
-            }
-            LOGGER.debug("Copy of email will be sent to {}.", cc);
-        }
-
-        String subject = renderSubject(subjectId);
-        String text = renderText(templateId, book, user);
-
-        SimpleMailMessage message = compose(from, to, cc, subject, text);
-
+    private void notify(SharedBookMailTemplate template, SharedBook book,
+            User user) {
         try {
+            SimpleMailMessage message = template.compose(book, user);
             mailSender.send(message);
-        } catch (MailException exception) {
+        } catch (Exception exception) {
             LOGGER.warn("Can not send email for book {}, because: '{}'.",
                     book.getId(), exception.getMessage());
-
-            throw new UserNotNotifiedException("Can not send email.");
         }
-    }
-
-    /**
-     * Creates a subject for message.
-     */
-    private String renderSubject(String templateName) {
-        ST template = templates.getInstanceOf(templateName);
-        return template.render();
-    }
-
-    /**
-     * Creates a text for message.
-     */
-    private String renderText(String templateName, SharedBook book, User user) {
-        ST template = templates.getInstanceOf(templateName);
-
-        template.add("book", book);
-        template.add("user", user);
-        template.add("manager", book.getManagedBy());
-
-        return template.render();
-    }
-
-    /**
-     * Composes message from its parts.
-     */
-    private SimpleMailMessage compose(String from, String to, String cc,
-            String subject, String text) {
-        SimpleMailMessage message = new SimpleMailMessage();
-
-        message.setFrom(from);
-        message.setTo(to);
-        if (cc != null) {
-            message.setCc(cc);
-        }
-
-        message.setSubject(subject);
-        message.setText(text);
-
-        return message;
     }
 
 }
