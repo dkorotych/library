@@ -14,14 +14,18 @@
                     <li>
                         <a href="${searchUrl}">
                             <i class="icon-search"></i>
-                            <fmt:message key="app.page.search" />
+                            <strong>
+                                <fmt:message key="app.page.search" />
+                            </strong>
                         </a>
                     </li>
                     <c:url var="voteUrl" value="/vote" />
                     <li>
                         <a href="${voteUrl}">
                             <i class="icon-thumbs-up"></i>
-                            <fmt:message key="app.page.vote" />
+                            <strong>
+                                <fmt:message key="app.page.vote" />
+                            </strong>
                         </a>
                     </li>
                 </ul>
@@ -34,12 +38,15 @@
                                 <strong>${currentUser.username}</strong>
                             </a>
                         </li>
+                        <li class="divider-vertical"></li>
+                        <li>
+                            <c:url var="logoutUrl"
+                                value="j_spring_security_logout" />
+                            <a href="${logoutUrl}">
+                                <i class="icon-off"></i>
+                            </a>
+                        </li>
                     </ul>
-
-                    <c:url var="logoutUrl" value="j_spring_security_logout" />
-                    <a href="${logoutUrl}" class="btn btn-inverse">
-                        <fmt:message key="app.logout" />
-                    </a>
                 </div>
             </div>
         </div>
