@@ -2,7 +2,6 @@ package grytsenko.library.model.book;
 
 import java.io.Serializable;
 
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,40 +17,38 @@ public class BookDetails implements Serializable {
 
     private static final long serialVersionUID = 341757671464199966L;
 
+    public static final int TITLE_LENGTH_MAX = 100;
+    public static final int AUTHORS_LENGTH_MAX = 100;
+    public static final int PUBLISHER_LENGTH_MAX = 50;
+    public static final int ISBN_LENGTH_MAX = 20;
+    public static final int LANGUAGE_LENGTH_MAX = 20;
+    public static final int URL_LENGTH_MAX = 200;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Basic
-    @Column(name = "authors", length = 100)
+    @Column(name = "authors", length = AUTHORS_LENGTH_MAX)
     private String authors;
-    @Basic
-    @Column(name = "title", length = 100)
+    @Column(name = "title", length = TITLE_LENGTH_MAX)
     private String title;
 
-    @Basic
-    @Column(name = "publisher")
+    @Column(name = "publisher", length = PUBLISHER_LENGTH_MAX)
     private String publisher;
-    @Basic
     @Column(name = "year")
     private Integer year;
 
-    @Basic
-    @Column(name = "language", length = 20)
+    @Column(name = "language", length = LANGUAGE_LENGTH_MAX)
     private String language;
-    @Basic
     @Column(name = "pages")
     private Integer pages;
 
-    @Basic
-    @Column(name = "isbn", length = 20)
+    @Column(name = "isbn", length = ISBN_LENGTH_MAX)
     private String isbn;
 
-    @Basic
-    @Column(name = "thumbnail_url", length = 200)
+    @Column(name = "thumbnail_url", length = URL_LENGTH_MAX)
     private String thumbnailUrl;
-    @Basic
-    @Column(name = "image_url", length = 200)
+    @Column(name = "image_url", length = URL_LENGTH_MAX)
     private String imageUrl;
 
     @Version

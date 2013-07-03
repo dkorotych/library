@@ -5,7 +5,6 @@ import static grytsenko.library.util.StringUtils.isNullOrEmpty;
 import java.io.Serializable;
 import java.text.MessageFormat;
 
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -23,6 +22,10 @@ public class User implements Serializable {
 
     private static final long serialVersionUID = -1054189841782371536L;
 
+    public static final int NAME_LENGTH_MAX = 20;
+    public static final int MAIL_LENGTH_MAX = 50;
+    public static final int ROLE_LENGTH_MAX = 10;
+
     /**
      * Creates the new user with the given name.
      */
@@ -37,23 +40,19 @@ public class User implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Basic
-    @Column(name = "username", length = 20)
+    @Column(name = "username", length = NAME_LENGTH_MAX)
     private String username;
 
-    @Basic
-    @Column(name = "firstname", length = 20)
+    @Column(name = "firstname", length = NAME_LENGTH_MAX)
     private String firstname;
-    @Basic
-    @Column(name = "lastname", length = 20)
+    @Column(name = "lastname", length = NAME_LENGTH_MAX)
     private String lastname;
 
-    @Basic
-    @Column(name = "mail", length = 50)
+    @Column(name = "mail", length = MAIL_LENGTH_MAX)
     private String mail;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role", length = 10)
+    @Column(name = "role", length = ROLE_LENGTH_MAX)
     private UserRole role;
 
     @Version
