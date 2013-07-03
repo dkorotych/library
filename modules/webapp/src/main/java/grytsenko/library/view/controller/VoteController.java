@@ -35,9 +35,9 @@ public class VoteController {
             .getLogger(VoteController.class);
 
     @Autowired
-    ManageUsersService manageUsersService;
+    protected ManageUsersService manageUsersService;
     @Autowired
-    SearchOfferedBooksService searchOfferedBooksService;
+    protected SearchOfferedBooksService searchOfferedBooksService;
 
     @ModelAttribute(CURRENT_USER_ATTR)
     public User currentUser(Principal principal) {

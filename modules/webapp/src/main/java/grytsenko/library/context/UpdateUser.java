@@ -10,6 +10,9 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.security.core.Authentication;
 
+/**
+ * Updates information about user in application database.
+ */
 public class UpdateUser implements
         ApplicationListener<AuthenticationSuccessEvent> {
 
@@ -17,7 +20,7 @@ public class UpdateUser implements
             .getLogger(UpdateUser.class);
 
     @Autowired
-    ManageUsersService manageUsersService;
+    protected ManageUsersService manageUsersService;
 
     @Override
     public void onApplicationEvent(AuthenticationSuccessEvent event) {

@@ -22,7 +22,7 @@ public class ManageSharedBooksService {
             .getLogger(ManageSharedBooksService.class);
 
     @Autowired
-    SharedBooksRepository sharedBooksRepository;
+    protected SharedBooksRepository sharedBooksRepository;
 
     /**
      * Reserves a book for user.

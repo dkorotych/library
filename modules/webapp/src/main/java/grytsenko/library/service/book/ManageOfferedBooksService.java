@@ -26,9 +26,9 @@ public class ManageOfferedBooksService {
             .getLogger(ManageOfferedBooksService.class);
 
     @Autowired
-    OfferedBooksRepository offeredBooksRepository;
+    protected OfferedBooksRepository offeredBooksRepository;
     @Autowired
-    SharedBooksRepository sharedBooksRepository;
+    protected SharedBooksRepository sharedBooksRepository;
 
     /**
      * Reserves a book for user.

@@ -20,9 +20,9 @@ public class ManageUsersService {
             .getLogger(ManageUsersService.class);
 
     @Autowired
-    UsersRepository usersRepository;
+    protected UsersRepository usersRepository;
     @Autowired
-    DsUsersRepository dsUsersRepository;
+    protected DsUsersRepository dsUsersRepository;
 
     /**
      * Finds a user by its name.

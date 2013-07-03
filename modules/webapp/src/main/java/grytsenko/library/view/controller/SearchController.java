@@ -38,9 +38,9 @@ public class SearchController {
             .getLogger(SearchController.class);
 
     @Autowired
-    ManageUsersService manageUsersService;
+    protected ManageUsersService manageUsersService;
     @Autowired
-    SearchSharedBooksService searchSharedBooksService;
+    protected SearchSharedBooksService searchSharedBooksService;
 
     @ModelAttribute(CURRENT_USER_ATTR)
     public User currentUser(Principal principal) {

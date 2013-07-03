@@ -24,7 +24,7 @@ public class SearchSharedBooksService {
             .getLogger(SearchSharedBooksService.class);
 
     @Autowired
-    SharedBooksRepository sharedBooksRepository;
+    protected SharedBooksRepository sharedBooksRepository;
 
     /**
      * Finds a book.

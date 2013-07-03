@@ -31,7 +31,7 @@ public class DsUsersRepository {
             .getLogger(DsUsersRepository.class);
 
     @Autowired
-    LdapContextSource ldapContextSource;
+    protected LdapContextSource ldapContextSource;
 
     @Value("#{ldapProperties['ldap.users']}")
     String base;

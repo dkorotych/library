@@ -1,8 +1,8 @@
 package grytsenko.library.view.controller;
 
 import static grytsenko.library.view.Navigation.BOOK_ID_PARAM;
-import static grytsenko.library.view.Navigation.SHARED_BOOK_PATH;
 import static grytsenko.library.view.Navigation.CURRENT_USER_ATTR;
+import static grytsenko.library.view.Navigation.SHARED_BOOK_PATH;
 import static grytsenko.library.view.Navigation.getBookIdFromRequest;
 import static grytsenko.library.view.Navigation.redirectToSearch;
 import static grytsenko.library.view.Navigation.redirectToSharedBook;
@@ -45,14 +45,14 @@ public class SharedBookController {
             .getLogger(SharedBookController.class);
 
     @Autowired
-    ManageUsersService manageUsersService;
+    protected ManageUsersService manageUsersService;
     @Autowired
-    NotifyUsersService notifyUsersService;
+    protected NotifyUsersService notifyUsersService;
 
     @Autowired
-    SearchSharedBooksService searchSharedBooksService;
+    protected SearchSharedBooksService searchSharedBooksService;
     @Autowired
-    ManageSharedBooksService manageSharedBooksService;
+    protected ManageSharedBooksService manageSharedBooksService;
 
     @ModelAttribute(CURRENT_USER_ATTR)
     public User currentUser(Principal principal) {

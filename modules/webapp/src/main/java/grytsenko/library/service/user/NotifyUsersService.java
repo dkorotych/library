@@ -44,7 +44,7 @@ public class NotifyUsersService {
     public static final String RETURNED_TEXT = "bookReturnedText";
 
     @Autowired
-    MailSender mailSender;
+    protected MailSender mailSender;
 
     @Value("#{mailProperties['mail.feedback']}")
     String emailForFeedback;

@@ -21,7 +21,7 @@ public class SearchOfferedBooksService {
             .getLogger(SearchOfferedBooksService.class);
 
     @Autowired
-    OfferedBooksRepository offeredBooksRepository;
+    protected OfferedBooksRepository offeredBooksRepository;
 
     /**
      * Finds a book.

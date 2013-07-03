@@ -47,14 +47,14 @@ public class OfferedBookController {
             .getLogger(OfferedBookController.class);
 
     @Autowired
-    ManageUsersService manageUsersService;
+    protected ManageUsersService manageUsersService;
     @Autowired
-    NotifyUsersService notifyUsersService;
+    protected NotifyUsersService notifyUsersService;
 
     @Autowired
-    SearchOfferedBooksService searchOfferedBooksService;
+    protected SearchOfferedBooksService searchOfferedBooksService;
     @Autowired
-    ManageOfferedBooksService manageOfferedBooksService;
+    protected ManageOfferedBooksService manageOfferedBooksService;
 
     @ModelAttribute(CURRENT_USER_ATTR)
     public User currentUser(Principal principal) {
