@@ -23,7 +23,7 @@
             <!-- Last attempt to login has failed. -->
             <div class="alert alert-error">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
-                <fmt:message key="app.login.error" />
+                <fmt:message key="error.login" />
             </div>
         </c:if>
 
