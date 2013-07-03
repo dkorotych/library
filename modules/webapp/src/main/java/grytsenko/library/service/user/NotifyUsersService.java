@@ -51,30 +51,28 @@ public class NotifyUsersService {
 
     private STGroup templates;
 
-    private SharedBookMailTemplate bookAvailable;
-    private SharedBookMailTemplate bookReserved;
-    private SharedBookMailTemplate bookReleased;
-    private SharedBookMailTemplate bookBorrowed;
-    private SharedBookMailTemplate bookReturned;
+    private MailMessageTemplate bookAvailable;
+    private MailMessageTemplate bookReserved;
+    private MailMessageTemplate bookReleased;
+    private MailMessageTemplate bookBorrowed;
+    private MailMessageTemplate bookReturned;
 
     @PostConstruct
     public void prepareTemplates() {
         templates = new STGroupFile("mail/mails.stg", '$', '$');
 
-        bookAvailable = createMailTemplate(AVAILABLE_SUBJECT, AVAILABLE_TEXT,
-                false);
-        bookReserved = createMailTemplate(RESERVED_SUBJECT, RESERVED_TEXT, true);
-        bookReleased = createMailTemplate(RELEASED_SUBJECT, RELEASED_TEXT, true);
-        bookBorrowed = createMailTemplate(BORROWED_SUBJECT, BORROWED_TEXT, true);
-        bookReturned = createMailTemplate(RETURNED_SUBJECT, RETURNED_TEXT, true);
+        bookAvailable = createTemplate(AVAILABLE_SUBJECT, AVAILABLE_TEXT, false);
+        bookReserved = createTemplate(RESERVED_SUBJECT, RESERVED_TEXT, true);
+        bookReleased = createTemplate(RELEASED_SUBJECT, RELEASED_TEXT, true);
+        bookBorrowed = createTemplate(BORROWED_SUBJECT, BORROWED_TEXT, true);
+        bookReturned = createTemplate(RETURNED_SUBJECT, RETURNED_TEXT, true);
     }
 
-    private SharedBookMailTemplate createMailTemplate(
-            String subjectTemplateName, String textTemplateName,
-            boolean important) {
+    private MailMessageTemplate createTemplate(String subjectTemplateName,
+            String textTemplateName, boolean important) {
         ST subjectTemplate = templates.getInstanceOf(subjectTemplateName);
         ST textTemplate = templates.getInstanceOf(textTemplateName);
-        return new SharedBookMailTemplate(subjectTemplate, textTemplate,
+        return new MailMessageTemplate(subjectTemplate, textTemplate,
                 emailForFeedback, important);
     }
 
@@ -143,8 +141,7 @@ public class NotifyUsersService {
         notify(bookReturned, book, user);
     }
 
-    private void notify(SharedBookMailTemplate template, SharedBook book,
-            User user) {
+    private void notify(MailMessageTemplate template, SharedBook book, User user) {
         try {
             SimpleMailMessage message = template.compose(book, user);
             mailSender.send(message);

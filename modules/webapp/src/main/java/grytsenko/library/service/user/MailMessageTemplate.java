@@ -10,7 +10,7 @@ import org.stringtemplate.v4.ST;
 /**
  * Template for mail about a shared book.
  */
-public class SharedBookMailTemplate {
+public class MailMessageTemplate {
 
     private static final String BOOK_DETAILS_ATTR = "bookDetails";
     private static final String USER_ATTR = "user";
@@ -35,7 +35,7 @@ public class SharedBookMailTemplate {
      * @param important
      *            the flag, which shows that mail is important.
      */
-    public SharedBookMailTemplate(ST subjectTemplate, ST textTemplate,
+    public MailMessageTemplate(ST subjectTemplate, ST textTemplate,
             String emailForFeedback, boolean important) {
         this.subjectTemplate = subjectTemplate;
         this.textTemplate = textTemplate;
@@ -46,7 +46,7 @@ public class SharedBookMailTemplate {
     }
 
     /**
-     * Composes a mail message.
+     * Composes a message about shared book.
      */
     public SimpleMailMessage compose(SharedBook book, User user) {
         SimpleMailMessage message = new SimpleMailMessage();
