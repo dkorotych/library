@@ -33,9 +33,13 @@ public class ManageSharedBooksService {
         if (!book.canBeReserved()) {
             throw new BookNotUpdatedException("Book can not be reserved.");
         }
-        LOGGER.debug("Reserved book {}.", book.getId());
 
+        LOGGER.debug("Reserve book {}.", book.getId());
         book.reserve(user, now());
+
+        LOGGER.debug("Remove {} from subsribers.", user.getUsername());
+        book.removeSubscriber(user);
+
         return save(book, sharedBooksRepository);
     }
 
