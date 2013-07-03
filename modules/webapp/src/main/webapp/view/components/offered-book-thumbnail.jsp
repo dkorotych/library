@@ -2,7 +2,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
-<!-- Offered Book -->
+<!-- Offered Book Thumbnail -->
 <div class="thumbnail">
     <c:url var="bookDetailsUrl" value="/offered-book">
         <c:param name="bookId" value="${book.id}" />
@@ -15,6 +15,7 @@
         </a>
     </div>
 
+    <!-- Details -->
     <div class="caption">
         <!-- Number of Votes -->
         <div class="pull-right">
@@ -23,7 +24,6 @@
 
         <br />
 
-        <!-- Details -->
         <h4>${book.details.title}</h4>
         <p>${book.details.authors}</p>
 

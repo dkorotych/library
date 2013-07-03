@@ -2,7 +2,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
-<!-- Details. -->
+<!-- Book Details -->
 <div class="media">
     <div class="pull-left">
         <a class="fancybox" href="${bookDetails.imageUrl}">

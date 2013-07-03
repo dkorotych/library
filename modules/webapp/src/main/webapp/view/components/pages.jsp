@@ -2,6 +2,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
+<!-- Pagination -->
 <c:if test="${searchResults.pagesTotal gt 1}">
     <div class="pagination pagination-centered">
         <ul>

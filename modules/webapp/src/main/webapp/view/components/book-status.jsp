@@ -2,7 +2,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
-<!-- Status -->
+<!-- Book Status -->
 <c:if test="${book.available}">
     <span class="label label-success">
         <fmt:message key="book.status.available" />

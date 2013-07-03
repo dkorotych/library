@@ -30,7 +30,7 @@
         <hr />
 
         <c:if test="${not empty bookNotUpdated}">
-            <!-- Notifications -->
+            <!-- Notification -->
             <div class="row-fluid">
                 <!-- Book was not updated. -->
                 <div class="alert alert-error">
@@ -43,7 +43,6 @@
         <!-- Actions -->
         <div class="row-fluid">
             <form:form method="POST">
-                <!-- Manage -->
                 <c:if test="${currentUser.manager}">
                     <div class="pull-right">
                         <p>
@@ -59,7 +58,6 @@
                     </div>
                 </c:if>
 
-                <!-- Vote -->
                 <c:if test="${not book.hasVoter(currentUser)}">
                     <p>
                         <button name="vote" type="submit"

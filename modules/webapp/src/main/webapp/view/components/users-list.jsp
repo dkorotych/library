@@ -2,6 +2,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
+<!-- List of Users -->
 <c:forEach items="${users}" var="user" varStatus="loop">
     <c:choose>
         <c:when test="${currentUser.equals(user)}">

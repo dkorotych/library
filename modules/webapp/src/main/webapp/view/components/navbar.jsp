@@ -2,6 +2,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
+<!-- Navigation Bar -->
 <div class="navbar navbar-fixed-top">
     <div class="navbar-inner">
         <div class="container">
@@ -10,8 +11,8 @@
             </div>
             <div class="nav-collapse collapse">
                 <ul class="nav">
-                    <c:url var="searchUrl" value="/search" />
                     <li>
+                        <c:url var="searchUrl" value="/search" />
                         <a href="${searchUrl}">
                             <i class="icon-search"></i>
                             <strong>
@@ -19,8 +20,8 @@
                             </strong>
                         </a>
                     </li>
-                    <c:url var="voteUrl" value="/vote" />
                     <li>
+                        <c:url var="voteUrl" value="/vote" />
                         <a href="${voteUrl}">
                             <i class="icon-thumbs-up"></i>
                             <strong>

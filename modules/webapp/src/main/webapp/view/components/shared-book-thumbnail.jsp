@@ -2,7 +2,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
-<!-- Book -->
+<!-- Shared Book Thumbnail -->
 <div class="thumbnail">
     <c:url var="bookDetailsUrl" value="/shared-book">
         <c:param name="bookId" value="${book.id}" />
@@ -15,15 +15,14 @@
         </a>
     </div>
 
+    <!-- Details -->
     <div class="caption">
-        <!-- Status -->
         <div class="pull-right">
             <%@include file="book-status.jsp"%>
         </div>
 
         <br />
 
-        <!-- Details -->
         <h4>${book.details.title}</h4>
         <p>${book.details.authors}</p>
 

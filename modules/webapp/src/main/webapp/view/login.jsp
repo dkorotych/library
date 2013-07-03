@@ -9,7 +9,7 @@
 <head>
 <meta charset="utf-8">
 
-<title>Library</title>
+<title><fmt:message key="app.title" /></title>
 
 <link href="<c:url value="/libs/bootstrap/css/bootstrap.css" />"
     rel="stylesheet" media="screen" />
@@ -20,14 +20,14 @@
 <body>
     <div class="container">
         <c:if test="${not empty lastLoginFailed}">
-            <!-- Last attempt to login has failed. -->
+            <!-- Notification -->
             <div class="alert alert-error">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                 <fmt:message key="error.login" />
             </div>
         </c:if>
 
-        <!--  Form for login. -->
+        <!--  Form for Login -->
         <form name="loginForm" action="<c:url value="j_spring_security_check"/>"
             method="POST" class="form-signin">
             <h2 class="form-signin-heading">
