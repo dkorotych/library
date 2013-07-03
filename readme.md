@@ -10,7 +10,7 @@ This application is developed with [Spring][].
 
 Also it uses:
 
-1. Spring MVC and [Twitter Bootstrap][] - for user interface.
+1. Spring MVC and [Twitter Bootstrap][] (also [jQuery][] and [fancyBox][]) - for user interface.
 2. [Hibernate][] and [Spring JPA][] - for data.
 3. [StringTemplate][] - for creating emails.
 
@@ -22,7 +22,7 @@ The following tools are needed:
 2. [Tomcat][] - to run app.
 4. [MySQL][] - to store data.
 
-Also [OpenDJ][] is used for data about users.
+Also we've used [OpenDJ][] to store data about users.
 
 ### How To Start
 
@@ -44,8 +44,11 @@ At last deploy application on web server.
 [Spring]: http://www.springsource.org/
 [Spring JPA]: http://www.springsource.org/spring-data/jpa
 [Hibernate]: http://www.hibernate.org/
-[Twitter Bootstrap]: http://twitter.github.io/bootstrap/
 [StringTemplate]: http://www.stringtemplate.org/
+
+[Twitter Bootstrap]: http://twitter.github.io/bootstrap/
+[jQuery]: http://jquery.com/
+[fancyBox]: http://fancyapps.com/fancybox/
 
 [Maven]: http://maven.apache.org/
 [Tomcat]: http://tomcat.apache.org/
