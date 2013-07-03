@@ -15,21 +15,18 @@
                         <c:url var="searchUrl" value="/search" />
                         <a href="${searchUrl}">
                             <i class="icon-search"></i>
-                            <strong>
-                                <fmt:message key="app.page.search" />
-                            </strong>
+                            <fmt:message key="app.page.search" />
                         </a>
                     </li>
                     <li>
                         <c:url var="voteUrl" value="/vote" />
                         <a href="${voteUrl}">
                             <i class="icon-thumbs-up"></i>
-                            <strong>
-                                <fmt:message key="app.page.vote" />
-                            </strong>
+                            <fmt:message key="app.page.vote" />
                         </a>
                     </li>
                 </ul>
+
                 <div class="pull-right">
                     <ul class="nav">
                         <li>

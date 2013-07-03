@@ -28,7 +28,7 @@
             <c:if test="${books.isEmpty()}">
                 <!-- Message about empty list of books. -->
                 <p class="text-info">
-                    <fmt:message key="book.message.empty" />
+                    <fmt:message key="warning.books.not.found" />
                 </p>
             </c:if>
 
