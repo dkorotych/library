@@ -8,8 +8,6 @@
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
         http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd">
 
-    <mvc:annotation-driven />
-
     <bean id="viewResolver"
         class="org.springframework.web.servlet.view.InternalResourceViewResolver"
         p:prefix="/view/" p:suffix=".jsp" />
@@ -17,6 +15,8 @@
     <bean id="exceptionResolver"
         class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver"
         p:defaultErrorView="error" />
+
+    <mvc:annotation-driven />
 
     <context:component-scan base-package="grytsenko.library.view" />
 
