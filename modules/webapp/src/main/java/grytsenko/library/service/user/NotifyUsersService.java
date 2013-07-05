@@ -47,7 +47,7 @@ public class NotifyUsersService {
     protected MailSender mailSender;
 
     @Value("#{mailProperties['mail.feedback']}")
-    String emailForFeedback;
+    protected String emailForFeedback;
 
     private STGroup templates;
 

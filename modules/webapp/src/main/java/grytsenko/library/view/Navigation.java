@@ -40,8 +40,7 @@ public class Navigation {
     }
 
     public static Long getBookIdFromRequest(HttpServletRequest request) {
-        Long bookId = Long.parseLong(request.getParameter(BOOK_ID_PARAM));
-        return bookId;
+        return Long.parseLong(request.getParameter(BOOK_ID_PARAM));
     }
 
     private Navigation() {

@@ -34,18 +34,18 @@ public class DsUsersRepository {
     protected LdapContextSource ldapContextSource;
 
     @Value("#{ldapProperties['ldap.users']}")
-    String base;
+    protected String base;
     @Value("#{ldapProperties['ldap.users.filter']}")
-    String filterTemplate;
+    protected String filterTemplate;
 
     @Value("#{ldapProperties['ldap.user.username']}")
-    String usernameAttr;
+    protected String usernameAttr;
     @Value("#{ldapProperties['ldap.user.firstname']}")
-    String firstnameAttr;
+    protected String firstnameAttr;
     @Value("#{ldapProperties['ldap.user.lastname']}")
-    String lastnameAttr;
+    protected String lastnameAttr;
     @Value("#{ldapProperties['ldap.user.mail']}")
-    String mailAttr;
+    protected String mailAttr;
 
     /**
      * Finds a user in directory service.
