@@ -1,7 +1,7 @@
 package grytsenko.library.service.book;
 
-import static grytsenko.library.repository.BooksRepositoryUtils.delete;
-import static grytsenko.library.repository.BooksRepositoryUtils.save;
+import static grytsenko.library.service.book.ManageBooksHelper.delete;
+import static grytsenko.library.service.book.ManageBooksHelper.save;
 import static grytsenko.library.util.DateUtils.now;
 import grytsenko.library.model.book.BookDetails;
 import grytsenko.library.model.book.OfferedBook;

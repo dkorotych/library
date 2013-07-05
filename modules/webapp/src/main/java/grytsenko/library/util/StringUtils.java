@@ -3,7 +3,7 @@ package grytsenko.library.util;
 /**
  * Utilities for strings.
  */
-public class StringUtils {
+public final class StringUtils {
 
     /**
      * Determines that string is <code>null</code> or empty.

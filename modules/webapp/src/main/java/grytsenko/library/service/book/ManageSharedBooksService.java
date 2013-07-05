@@ -1,6 +1,6 @@
 package grytsenko.library.service.book;
 
-import static grytsenko.library.repository.BooksRepositoryUtils.save;
+import static grytsenko.library.service.book.ManageBooksHelper.save;
 import static grytsenko.library.util.DateUtils.now;
 import grytsenko.library.model.book.SharedBook;
 import grytsenko.library.model.user.User;

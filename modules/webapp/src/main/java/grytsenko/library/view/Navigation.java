@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * Constants for requests mapping.
  */
-public class Navigation {
+public final class Navigation {
 
     public static final String LOGIN_PATH = "/login";
     public static final String SEARCH_PATH = "/search";

@@ -1,16 +1,13 @@
-package grytsenko.library.repository;
-
-import grytsenko.library.service.book.BookNotUpdatedException;
-import grytsenko.library.service.book.ManageOfferedBooksService;
+package grytsenko.library.service.book;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
- * Utilities for books.
+ * Helps manage books in repositories.
  */
-public class BooksRepositoryUtils {
+public final class ManageBooksHelper {
 
     private static final Logger LOGGER = LoggerFactory
             .getLogger(ManageOfferedBooksService.class);
@@ -26,7 +23,7 @@ public class BooksRepositoryUtils {
             LOGGER.warn("Can not save book, because: '{}'.",
                     exception.getMessage());
 
-            throw new BookNotUpdatedException("Can not save book.");
+            throw new BookNotUpdatedException("Can not save book.", exception);
         }
     }
 
@@ -41,8 +38,11 @@ public class BooksRepositoryUtils {
             LOGGER.warn("Can not delete book, because: '{}'.",
                     exception.getMessage());
 
-            throw new BookNotUpdatedException("Can not delete book.");
+            throw new BookNotUpdatedException("Can not delete book.", exception);
         }
+    }
+
+    private ManageBooksHelper() {
     }
 
 }
