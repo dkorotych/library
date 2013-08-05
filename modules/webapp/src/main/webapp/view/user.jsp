@@ -11,6 +11,7 @@
 
 <title><fmt:message key="app.title" /></title>
 
+<link href="<c:url value="/favicon.ico" />" rel="shortcut icon">
 <link href="<c:url value="/libs/bootstrap/css/bootstrap.css" />"
     rel="stylesheet" media="screen" />
 <link href="<c:url value="/libs/library/css/common.css" />" rel="stylesheet" />

@@ -16,6 +16,8 @@
         class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver"
         p:defaultErrorView="error" />
 
+    <mvc:resources mapping="/favicon.ico" location="/libs/library/img/favicon.ico" />
+
     <mvc:annotation-driven />
 
     <context:component-scan base-package="grytsenko.library.view" />
