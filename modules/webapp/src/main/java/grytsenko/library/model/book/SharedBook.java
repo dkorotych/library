@@ -1,6 +1,7 @@
 package grytsenko.library.model.book;
 
 import grytsenko.library.model.user.User;
+import grytsenko.library.util.DateUtils;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -176,13 +177,6 @@ public class SharedBook implements Serializable {
     }
 
     /**
-     * Checks that book can be reserved.
-     */
-    public boolean canBeReserved() {
-        return isAvailable();
-    }
-
-    /**
      * Checks that book is reserved.
      */
     public boolean isReserved() {
@@ -204,6 +198,24 @@ public class SharedBook implements Serializable {
     }
 
     /**
+     * Determines the number of days within which the book is used.
+     * 
+     * <p>
+     * The minimum value is the one day, i.e. today.
+     */
+    public int usedWithin() {
+        if (isAvailable()) {
+            throw new IllegalStateException("Book is not used.");
+        }
+        if (usedSince == null) {
+            throw new IllegalStateException(
+                    "Unknown when used has started to use book.");
+        }
+
+        return DateUtils.daysBefore(usedSince) + 1;
+    }
+
+    /**
      * Checks that book is managed by user.
      */
     public boolean isManagedBy(User user) {
@@ -212,6 +224,13 @@ public class SharedBook implements Serializable {
         }
 
         return user.equals(managedBy);
+    }
+
+    /**
+     * Checks that book can be reserved.
+     */
+    public boolean canBeReserved() {
+        return isAvailable();
     }
 
     /**

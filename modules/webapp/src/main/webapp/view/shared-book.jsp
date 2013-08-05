@@ -51,24 +51,24 @@
                 <c:when test="${book.reserved}">
                     <p class="text-info">
                         <fmt:message key="book.message.reserved">
-                            <fmt:param
-                                value="<strong>${book.usedBy.readableName}</strong>" />
+                            <fmt:param value="${book.usedBy.readableName}" />
                             <fmt:param>
                                 <fmt:formatDate type="date" dateStyle="short"
                                     value="${book.usedSince}" />
                             </fmt:param>
+                            <fmt:param value="${book.usedWithin()}" />
                         </fmt:message>
                     </p>
                 </c:when>
                 <c:when test="${book.borrowed}">
                     <p class="text-info">
                         <fmt:message key="book.message.borrowed">
-                            <fmt:param
-                                value="<strong>${book.usedBy.readableName}</strong>" />
+                            <fmt:param value="${book.usedBy.readableName}" />
                             <fmt:param>
                                 <fmt:formatDate type="date" dateStyle="short"
                                     value="${book.usedSince}" />
                             </fmt:param>
+                            <fmt:param value="${book.usedWithin()}" />
                         </fmt:message>
                     </p>
                 </c:when>

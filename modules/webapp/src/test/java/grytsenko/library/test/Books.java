@@ -1,6 +1,7 @@
 package grytsenko.library.test;
 
 import static grytsenko.library.test.Users.manager;
+import static grytsenko.library.util.DateUtils.now;
 import grytsenko.library.model.book.OfferedBook;
 import grytsenko.library.model.book.SharedBook;
 import grytsenko.library.model.book.SharedBookStatus;
@@ -27,6 +28,7 @@ public final class Books {
         SharedBook book = availableBook();
         book.setStatus(SharedBookStatus.RESERVED);
         book.setUsedBy(reservedBy);
+        book.setUsedSince(now());
         return book;
     }
 
@@ -34,6 +36,7 @@ public final class Books {
         SharedBook book = availableBook();
         book.setStatus(SharedBookStatus.BORROWED);
         book.setUsedBy(borrowedBy);
+        book.setUsedSince(now());
         return book;
     }
 

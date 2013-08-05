@@ -8,12 +8,11 @@ import static grytsenko.library.test.Users.manager;
 import static grytsenko.library.util.DateUtils.now;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-
-import grytsenko.library.model.book.SharedBook;
-import grytsenko.library.model.book.SharedBookStatus;
 import grytsenko.library.model.user.User;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import org.junit.Test;
 
@@ -141,6 +140,34 @@ public class SharedBookTests {
         SharedBook book = reservedBook(guest());
 
         book.takeBack(guest(), now());
+    }
+
+    @Test
+    public void testUsedWithinOneDay() {
+        SharedBook book = availableBook();
+        book.reserve(guest(), now());
+
+        assertEquals(1, book.usedWithin());
+    }
+
+    @Test
+    public void testUsedWithinOneWeek() {
+        SharedBook book = availableBook();
+
+        Calendar calendar = GregorianCalendar.getInstance();
+        calendar.add(Calendar.DATE, -7);
+
+        Date weekAgo = calendar.getTime();
+        book.reserve(guest(), weekAgo);
+
+        assertEquals(8, book.usedWithin());
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testUsedWithinForAvailable() {
+        SharedBook book = availableBook();
+
+        book.usedWithin();
     }
 
 }
