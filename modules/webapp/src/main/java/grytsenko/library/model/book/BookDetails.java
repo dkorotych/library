@@ -7,12 +7,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.persistence.Version;
 
 /**
  * Information about book.
  */
-@Entity(name = "books_details")
+@Entity
+@Table(name = "books_details")
 public class BookDetails implements Serializable {
 
     private static final long serialVersionUID = 341757671464199966L;

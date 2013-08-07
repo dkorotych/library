@@ -19,6 +19,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
@@ -26,7 +27,8 @@ import javax.persistence.Version;
 /**
  * A copy of book that is shared.
  */
-@Entity(name = "shared_books")
+@Entity
+@Table(name = "shared_books")
 public class SharedBook implements Serializable {
 
     private static final long serialVersionUID = 6759600794860542365L;

@@ -14,12 +14,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.persistence.Version;
 
 /**
  * Users can vote for offered book.
  */
-@Entity(name = "offered_books")
+@Entity
+@Table(name = "offered_books")
 public class OfferedBook implements Serializable {
 
     private static final long serialVersionUID = 6232675600589204785L;

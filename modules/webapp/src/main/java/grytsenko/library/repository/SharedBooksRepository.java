@@ -22,7 +22,7 @@ public interface SharedBooksRepository extends JpaRepository<SharedBook, Long> {
     /**
      * Finds all books of the given subscriber.
      */
-    @Query("SELECT book FROM shared_books book INNER JOIN book.subscribers AS subscriber WHERE subscriber = :user GROUP BY book.id")
+    @Query("SELECT book FROM SharedBook book INNER JOIN book.subscribers AS subscriber WHERE subscriber = :user GROUP BY book.id")
     List<SharedBook> findBySubscriber(@Param("user") User user);
 
 }

@@ -12,12 +12,14 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.persistence.Version;
 
 /**
  * User of library.
  */
-@Entity(name = "users")
+@Entity
+@Table(name = "users")
 public class User implements Serializable {
 
     private static final long serialVersionUID = -1054189841782371536L;
