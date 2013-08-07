@@ -69,7 +69,7 @@ public class OfferedBookController {
             Model model) {
         LOGGER.debug("Find book {}.", bookId);
 
-        OfferedBook book = searchOfferedBooksService.findVoted(bookId);
+        OfferedBook book = searchOfferedBooksService.find(bookId);
         model.addAttribute("book", book);
 
         LOGGER.debug("Book has {} voters.", book.getVotersNum());
@@ -85,7 +85,7 @@ public class OfferedBookController {
             throws BookNotUpdatedException {
         LOGGER.debug("{} votes for book {}.", user.getUsername(), bookId);
 
-        OfferedBook book = searchOfferedBooksService.findVoted(bookId);
+        OfferedBook book = searchOfferedBooksService.find(bookId);
         manageOfferedBooksService.vote(book, user);
 
         return redirectToOfferedBook(bookId);
@@ -100,7 +100,7 @@ public class OfferedBookController {
             throws BookNotUpdatedException {
         LOGGER.debug("{} shares book {}.", user.getUsername(), bookId);
 
-        OfferedBook book = searchOfferedBooksService.findVoted(bookId);
+        OfferedBook book = searchOfferedBooksService.find(bookId);
         SharedBook sharedBook = manageOfferedBooksService.share(book, user);
         notifyUsersService.notifyAvailable(sharedBook,
                 sharedBook.getSubscribers());
@@ -117,7 +117,7 @@ public class OfferedBookController {
             throws BookNotUpdatedException {
         LOGGER.debug("{} removes book {}.", user.getUsername(), bookId);
 
-        OfferedBook book = searchOfferedBooksService.findVoted(bookId);
+        OfferedBook book = searchOfferedBooksService.find(bookId);
         manageOfferedBooksService.remove(book, user);
 
         return redirectToVote();

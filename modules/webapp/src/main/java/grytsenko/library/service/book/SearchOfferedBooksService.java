@@ -26,7 +26,7 @@ public class SearchOfferedBooksService {
     /**
      * Finds a book.
      */
-    public OfferedBook findVoted(long bookId) {
+    public OfferedBook find(long bookId) {
         OfferedBook book = offeredBooksRepository.findOne(bookId);
 
         if (book == null) {
