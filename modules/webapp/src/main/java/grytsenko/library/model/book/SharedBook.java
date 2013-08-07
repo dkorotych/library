@@ -212,7 +212,7 @@ public class SharedBook implements Serializable {
                     "Unknown when used has started to use book.");
         }
 
-        return DateUtils.daysBefore(usedSince) + 1;
+        return DateUtils.daysAfter(usedSince) + 1;
     }
 
     /**

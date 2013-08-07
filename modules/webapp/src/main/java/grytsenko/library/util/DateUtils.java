@@ -18,9 +18,9 @@ public final class DateUtils {
     }
 
     /**
-     * Computes the number of days from given date before now.
+     * Computes the number of days after the given day to now.
      */
-    public static int daysBefore(Date when) {
+    public static int daysAfter(Date when) {
         LocalDate before = LocalDate.fromDateFields(when);
         LocalDate now = new LocalDate();
 
