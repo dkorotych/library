@@ -26,7 +26,6 @@ public class User implements Serializable {
 
     public static final int NAME_LENGTH_MAX = 20;
     public static final int MAIL_LENGTH_MAX = 50;
-    public static final int ROLE_LENGTH_MAX = 10;
 
     /**
      * Creates the new user with the given name.
@@ -54,7 +53,7 @@ public class User implements Serializable {
     private String mail;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role", length = ROLE_LENGTH_MAX)
+    @Column(name = "role", length = UserRole.LENGTH_MAX)
     private UserRole role;
 
     @Version

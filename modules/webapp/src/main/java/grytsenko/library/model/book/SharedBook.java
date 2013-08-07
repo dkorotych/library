@@ -33,8 +33,6 @@ public class SharedBook implements Serializable {
 
     private static final long serialVersionUID = 6759600794860542365L;
 
-    public static final int STATUS_LENGTH_MAX = 10;
-
     /**
      * Creates a shared book.
      */
@@ -61,7 +59,7 @@ public class SharedBook implements Serializable {
     private BookDetails details;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", length = STATUS_LENGTH_MAX)
+    @Column(name = "status", length = SharedBookStatus.LENGTH_MAX)
     private SharedBookStatus status;
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "status_changed")

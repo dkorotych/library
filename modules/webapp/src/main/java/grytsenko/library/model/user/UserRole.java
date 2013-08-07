@@ -13,6 +13,11 @@ public enum UserRole {
     /**
      * The role for users, who manage books in library.
      */
-    MANAGER
+    MANAGER;
+
+    /**
+     * The maximum length for names of constants in this enumeration.
+     */
+    public static final int LENGTH_MAX = 10;
 
 }

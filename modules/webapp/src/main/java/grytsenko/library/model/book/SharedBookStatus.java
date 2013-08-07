@@ -20,4 +20,9 @@ public enum SharedBookStatus {
      */
     BORROWED;
 
+    /**
+     * The maximum length for names of constants in this enumeration.
+     */
+    public static final int LENGTH_MAX = 10;
+
 }
