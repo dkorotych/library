@@ -12,8 +12,7 @@
         class="org.springframework.web.servlet.view.InternalResourceViewResolver"
         p:prefix="/view/" p:suffix=".jsp" />
 
-    <bean id="exceptionResolver"
-        class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver"
+    <bean id="exceptionResolver" class="grytsenko.library.servlet.LoggingExceptionResolver"
         p:defaultErrorView="error" />
 
     <mvc:resources mapping="/favicon.ico" location="/libs/library/img/favicon.ico" />
