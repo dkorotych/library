@@ -325,6 +325,13 @@ public class SharedBook implements Serializable {
     }
 
     /**
+     * Returns total number of subscribers.
+     */
+     public int getSubscribersNum() {
+        return subscribers.size();
+    }
+
+    /**
      * Adds new subscriber.
      */
     public void addSubscriber(User subscriber) {

@@ -1,5 +1,6 @@
 body {
-    background-color: #f5f5f5;
+    padding-top: 60px;
+    padding-bottom: 40px;
 }
 
 .form-signin {
@@ -27,4 +28,8 @@ body {
 .alert {
     max-width: 300px;
     margin: 0 auto 20px;
+}
+
+table .book-title {
+    width: 100%;
 }

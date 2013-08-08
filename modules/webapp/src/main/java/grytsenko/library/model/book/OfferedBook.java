@@ -77,7 +77,7 @@ public class OfferedBook implements Serializable {
     }
 
     /**
-     * Returns total number of votes.
+     * Returns total number of voters.
      */
     public int getVotersNum() {
         return voters.size();

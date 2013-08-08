@@ -34,7 +34,7 @@ public class LoginController {
     public String loginFailed(Model model) {
         LOGGER.debug("Login failed.");
 
-        model.addAttribute("lastLoginFailed", true);
+        model.addAttribute("lastLoginFailed", Boolean.TRUE);
         return LOGIN_PATH;
     }
 
