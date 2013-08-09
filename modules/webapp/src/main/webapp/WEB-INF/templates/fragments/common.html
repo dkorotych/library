@@ -68,9 +68,18 @@
     <div th:fragment="paginator" th:if="${total > 1}">
         <div class="pagination pagination-centered">
             <ul>
+                <li th:class="${pageNum == 0} ? 'disabled'">
+                    <a
+                        th:href="@{${pageUrl}(pageNum=${pageNum &gt; 0 ? pageNum - 1 : 0})}">«</a>
+                </li>
                 <li th:each="i : ${#numbers.sequence(0, pagesTotal - 1)}"
                     th:class="${i == pageNum} ? 'active'">
                     <a th:href="@{${pageUrl}(pageNum=${i})}" th:text="${i}"></a>
+                </li>
+                <li th:with="lastPageNum=${pagesTotal - 1}"
+                    th:class="${pageNum >= lastPageNum} ? 'disabled'">
+                    <a
+                        th:href="@{${pageUrl}(pageNum=${pageNum &lt; lastPageNum ? pageNum + 1 : lastPageNum})}">»</a>
                 </li>
             </ul>
         </div>
