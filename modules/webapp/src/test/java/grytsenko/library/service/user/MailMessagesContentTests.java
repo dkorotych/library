@@ -41,6 +41,8 @@ import org.springframework.mail.SimpleMailMessage;
 public class MailMessagesContentTests {
 
     private static final String LIBRARIAN_EMAIL = "librarian@test.com";
+    private static final String READER_USERNAME = "reader";
+    private static final String READER_FIRST_NAME = "Ivan";
     private static final String READER_EMAIL = "reader@test.com";
     @Autowired
     private NotifyUsersService notifyUsersService;
@@ -54,7 +56,7 @@ public class MailMessagesContentTests {
         User librarian = User.create("librarian");
         librarian.setRole(UserRole.MANAGER);
         librarian.setMail(LIBRARIAN_EMAIL);
-        reader = User.create("reader");
+        reader = User.create(READER_USERNAME);
         reader.setMail(READER_EMAIL);
         BookDetails bookDetails = new BookDetails();
         bookDetails.setTitle("Book Title");
@@ -94,8 +96,17 @@ public class MailMessagesContentTests {
     }
 
     private void executeNotifyTest(NotifyTestContext context) {
+        oneTestPass(context);
+        reset(mailSender);
+        reader.setFirstname(READER_FIRST_NAME);
+        reader.setLastname("Ivanov");
+        context.secondPass = true;
+        oneTestPass(context);
+    }
+
+    private void oneTestPass(NotifyTestContext context) {
         context.executeNotify();
-        SimpleMailMessage expectedMessage = createExceptedMessage(context.getSubject(), context.getText(), context.isAddCC());
+        SimpleMailMessage expectedMessage = createExceptedMessage(context.getSubject(), context.getText(), context.isImportant());
         verify(mailSender).send(expectedMessage);
         verifyNoMoreInteractions(mailSender);
     }
@@ -112,18 +123,26 @@ public class MailMessagesContentTests {
         return returnValue;
     }
 
-    private interface NotifyTestContext {
+    private abstract class NotifyTestContext {
 
-        void executeNotify();
+        private boolean secondPass = false;
 
-        String getSubject();
+        abstract void executeNotify();
 
-        String getText();
+        abstract String getSubject();
 
-        boolean isAddCC();
+        String getName() {
+            return secondPass ? READER_FIRST_NAME : READER_USERNAME;
+        }
+
+        abstract String getText();
+
+        boolean isImportant() {
+            return true;
+        }
     }
 
-    private class BookAvailableContext implements NotifyTestContext {
+    private class BookAvailableContext extends NotifyTestContext {
 
         @Override
         public void executeNotify() {
@@ -137,7 +156,7 @@ public class MailMessagesContentTests {
 
         @Override
         public String getText() {
-            return "Hello reader.\n"
+            return "Hello " + getName() + ".\n"
                     + "\n"
                     + "A book is available and you can reserve it.\n"
                     + "\n"
@@ -152,12 +171,12 @@ public class MailMessagesContentTests {
         }
 
         @Override
-        public boolean isAddCC() {
+        public boolean isImportant() {
             return false;
         }
     }
 
-    private class BookBorrowedContext implements NotifyTestContext {
+    private class BookBorrowedContext extends NotifyTestContext {
 
         @Override
         public void executeNotify() {
@@ -171,7 +190,7 @@ public class MailMessagesContentTests {
 
         @Override
         public String getText() {
-            return "Hello reader.\n"
+            return "Hello " + getName() + ".\n"
                     + "\n"
                     + "You've borrowed the book from library.\n"
                     + "Please remember to return it.\n"
@@ -185,14 +204,9 @@ public class MailMessagesContentTests {
                     + "\n"
                     + "Thanks.\n";
         }
-
-        @Override
-        public boolean isAddCC() {
-            return true;
-        }
     }
 
-    private class BookReservedContext implements NotifyTestContext {
+    private class BookReservedContext extends NotifyTestContext {
 
         @Override
         public void executeNotify() {
@@ -206,7 +220,7 @@ public class MailMessagesContentTests {
 
         @Override
         public String getText() {
-            return "Hello reader.\n"
+            return "Hello " + getName() + ".\n"
                     + "\n"
                     + "Book has been reserved for you.\n"
                     + "You can borrow this book from a library.\n"
@@ -220,14 +234,9 @@ public class MailMessagesContentTests {
                     + "\n"
                     + "Thanks.";
         }
-
-        @Override
-        public boolean isAddCC() {
-            return true;
-        }
     }
 
-    private class BookReleasedContext implements NotifyTestContext {
+    private class BookReleasedContext extends NotifyTestContext {
 
         @Override
         public void executeNotify() {
@@ -241,7 +250,7 @@ public class MailMessagesContentTests {
 
         @Override
         public String getText() {
-            return "Hello reader.\n"
+            return "Hello " + getName() + ".\n"
                     + "\n"
                     + "A book is no longer reserved for you.\n"
                     + "\n"
@@ -254,14 +263,9 @@ public class MailMessagesContentTests {
                     + "\n"
                     + "Thanks.";
         }
-
-        @Override
-        public boolean isAddCC() {
-            return true;
-        }
     }
 
-    private class BookReturnedContext implements NotifyTestContext {
+    private class BookReturnedContext extends NotifyTestContext {
 
         @Override
         public void executeNotify() {
@@ -275,7 +279,7 @@ public class MailMessagesContentTests {
 
         @Override
         public String getText() {
-            return "Hello reader.\n"
+            return "Hello " + getName() + ".\n"
                     + "\n"
                     + "You've returned a book to library.\n"
                     + "\n"
@@ -287,11 +291,6 @@ public class MailMessagesContentTests {
                     + "If you received this mail by mistake, please, forward it to librarian@test.com with your comments.\n"
                     + "\n"
                     + "Thanks.\n";
-        }
-
-        @Override
-        public boolean isAddCC() {
-            return true;
         }
     }
 }
