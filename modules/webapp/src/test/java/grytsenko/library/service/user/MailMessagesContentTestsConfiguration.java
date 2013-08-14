@@ -15,6 +15,7 @@
  */
 package grytsenko.library.service.user;
 
+import grytsenko.library.repository.MailMessageTemplateRepository;
 import java.io.IOException;
 import java.util.Properties;
 import org.mockito.Mockito;
@@ -44,5 +45,10 @@ public class MailMessagesContentTestsConfiguration {
     @Bean
     public NotifyUsersService notifyUsersService() {
         return new NotifyUsersService();
+    }
+
+    @Bean
+    public MailMessageTemplateRepository mailMessageTemplateRepository() {
+        return new StringTemplateMailMessageRepository();
     }
 }

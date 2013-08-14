@@ -2,22 +2,17 @@ package grytsenko.library.service.user;
 
 import grytsenko.library.model.book.SharedBook;
 import grytsenko.library.model.user.User;
+import grytsenko.library.repository.MailMessageTemplateRepository;
 
 import java.util.Collection;
-
-import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.stringtemplate.v4.ST;
-import org.stringtemplate.v4.STGroup;
-import org.stringtemplate.v4.STGroupFile;
 
 /**
  * Sends notifications to users.
@@ -28,53 +23,11 @@ public class NotifyUsersService {
     private static final Logger LOGGER = LoggerFactory
             .getLogger(NotifyUsersService.class);
 
-    public static final String AVAILABLE_SUBJECT = "bookAvailableSubject";
-    public static final String AVAILABLE_TEXT = "bookAvailableText";
-
-    public static final String RESERVED_SUBJECT = "bookReservedSubject";
-    public static final String RESERVED_TEXT = "bookReservedText";
-
-    public static final String RELEASED_SUBJECT = "bookReleasedSubject";
-    public static final String RELEASED_TEXT = "bookReleasedText";
-
-    public static final String BORROWED_SUBJECT = "bookBorrowedSubject";
-    public static final String BORROWED_TEXT = "bookBorrowedText";
-
-    public static final String RETURNED_SUBJECT = "bookReturnedSubject";
-    public static final String RETURNED_TEXT = "bookReturnedText";
-
     @Autowired
     protected MailSender mailSender;
 
-    @Value("#{mailProperties['mail.feedback']}")
-    protected String emailForFeedback;
-
-    private STGroup templates;
-
-    private MailMessageTemplate bookAvailable;
-    private MailMessageTemplate bookReserved;
-    private MailMessageTemplate bookReleased;
-    private MailMessageTemplate bookBorrowed;
-    private MailMessageTemplate bookReturned;
-
-    @PostConstruct
-    public void prepareTemplates() {
-        templates = new STGroupFile("mail/mails.stg", '$', '$');
-
-        bookAvailable = createTemplate(AVAILABLE_SUBJECT, AVAILABLE_TEXT, false);
-        bookReserved = createTemplate(RESERVED_SUBJECT, RESERVED_TEXT, true);
-        bookReleased = createTemplate(RELEASED_SUBJECT, RELEASED_TEXT, true);
-        bookBorrowed = createTemplate(BORROWED_SUBJECT, BORROWED_TEXT, true);
-        bookReturned = createTemplate(RETURNED_SUBJECT, RETURNED_TEXT, true);
-    }
-
-    private MailMessageTemplate createTemplate(String subjectTemplateName,
-            String textTemplateName, boolean important) {
-        ST subjectTemplate = templates.getInstanceOf(subjectTemplateName);
-        ST textTemplate = templates.getInstanceOf(textTemplateName);
-        return new MailMessageTemplate(subjectTemplate, textTemplate,
-                emailForFeedback, important);
-    }
+    @Autowired
+    private MailMessageTemplateRepository templateRepository;
 
     /**
      * Notifies users that book is available.
@@ -94,7 +47,7 @@ public class NotifyUsersService {
         LOGGER.debug("Notify {} that the book {} is available.",
                 user.getUsername(), book.getId());
 
-        notify(bookAvailable, book, user);
+        notify(templateRepository.getBookAvailable(), book, user);
     }
 
     /**
@@ -105,7 +58,7 @@ public class NotifyUsersService {
         LOGGER.debug("Notify {} that the book {} was reserved.",
                 user.getUsername(), book.getId());
 
-        notify(bookReserved, book, user);
+        notify(templateRepository.getBookReserved(), book, user);
     }
 
     /**
@@ -116,7 +69,7 @@ public class NotifyUsersService {
         LOGGER.debug("Notify {} that the book {} was released.",
                 user.getUsername(), book.getId());
 
-        notify(bookReleased, book, user);
+        notify(templateRepository.getBookReleased(), book, user);
     }
 
     /**
@@ -127,7 +80,7 @@ public class NotifyUsersService {
         LOGGER.debug("Notify {} that the book {} was borrowed.",
                 user.getUsername(), book.getId());
 
-        notify(bookBorrowed, book, user);
+        notify(templateRepository.getBookBorrowed(), book, user);
     }
 
     /**
@@ -138,10 +91,10 @@ public class NotifyUsersService {
         LOGGER.debug("Notify {} that the book {} was returned.",
                 user.getUsername(), book.getId());
 
-        notify(bookReturned, book, user);
+        notify(templateRepository.getBookReturned(), book, user);
     }
 
-    private void notify(MailMessageTemplate template, SharedBook book, User user) {
+    private void notify(MailMessageTemplateRepository.MailMessageTemplate template, SharedBook book, User user) {
         try {
             SimpleMailMessage message = template.compose(book, user);
             mailSender.send(message);
