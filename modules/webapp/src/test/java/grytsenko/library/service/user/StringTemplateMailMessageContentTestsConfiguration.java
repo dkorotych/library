@@ -15,6 +15,7 @@
  */
 package grytsenko.library.service.user;
 
+import grytsenko.library.repository.stringtemplate.StringTemplateMailMessageRepository;
 import grytsenko.library.repository.MailMessageTemplateRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

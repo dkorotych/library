@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package grytsenko.library.service.user;
+package grytsenko.library.repository.stringtemplate;
 
 import com.google.common.base.Function;
 import grytsenko.library.repository.AbstractMailMessageTemplateRepository;

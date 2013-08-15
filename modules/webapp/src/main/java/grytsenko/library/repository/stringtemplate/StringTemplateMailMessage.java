@@ -1,4 +1,4 @@
-package grytsenko.library.service.user;
+package grytsenko.library.repository.stringtemplate;
 
 import grytsenko.library.model.book.BookDetails;
 import grytsenko.library.model.book.SharedBook;
