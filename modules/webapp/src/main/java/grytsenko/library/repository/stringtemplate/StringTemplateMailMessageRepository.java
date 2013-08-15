@@ -31,7 +31,7 @@ import org.stringtemplate.v4.STGroupFile;
  * @author Dmitry Korotych &lt;dkorotych at gmail dot com&gt;
  */
 @Repository
-public class StringTemplateMailMessageRepository extends AbstractMailMessageTemplateRepository<StringTemplateMailMessage> {
+public class StringTemplateMailMessageRepository extends AbstractMailMessageTemplateRepository<StringTemplateMailMessageTemplate> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StringTemplateMailMessageRepository.class);
 
@@ -39,7 +39,7 @@ public class StringTemplateMailMessageRepository extends AbstractMailMessageTemp
         super(new TemplateCreator());
     }
 
-    private static class TemplateCreator implements Function<String, StringTemplateMailMessage> {
+    private static class TemplateCreator implements Function<String, StringTemplateMailMessageTemplate> {
 
         private final STGroup templates;
 
@@ -48,8 +48,8 @@ public class StringTemplateMailMessageRepository extends AbstractMailMessageTemp
         }
 
         @Override
-        public StringTemplateMailMessage apply(String eventName) {
-            StringTemplateMailMessage returnValue = null;
+        public StringTemplateMailMessageTemplate apply(String eventName) {
+            StringTemplateMailMessageTemplate returnValue = null;
             Validate.notNull(eventName, "The \"eventName\" is null");
             String name = eventName.toUpperCase(Locale.ENGLISH);
             try {
@@ -61,11 +61,11 @@ public class StringTemplateMailMessageRepository extends AbstractMailMessageTemp
             return returnValue;
         }
 
-        private StringTemplateMailMessage createTemplateMessage(String subjectTemplateName,
+        private StringTemplateMailMessageTemplate createTemplateMessage(String subjectTemplateName,
                 String textTemplateName, boolean important) {
             ST subjectTemplate = templates.getInstanceOf(subjectTemplateName);
             ST textTemplate = templates.getInstanceOf(textTemplateName);
-            return new StringTemplateMailMessage(subjectTemplate, textTemplate, important);
+            return new StringTemplateMailMessageTemplate(subjectTemplate, textTemplate, important);
         }
 
         private static enum Template {

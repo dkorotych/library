@@ -1,68 +1,37 @@
 package grytsenko.library.repository.stringtemplate;
 
 import grytsenko.library.model.book.BookDetails;
-import grytsenko.library.model.book.SharedBook;
 import grytsenko.library.model.user.User;
-import grytsenko.library.repository.MailMessageTemplateRepository;
+import grytsenko.library.repository.AbstractMailMessageTemplate;
 
-import org.springframework.mail.SimpleMailMessage;
 import org.stringtemplate.v4.ST;
 
 /**
  * Template for mail about a shared book.
  */
-public class StringTemplateMailMessage implements MailMessageTemplateRepository.MailMessageTemplate {
+public class StringTemplateMailMessageTemplate extends AbstractMailMessageTemplate {
 
     private static final String BOOK_DETAILS_ATTR = "bookDetails";
     private static final String USER_ATTR = "user";
     private static final String MANAGER_ATTR = "manager";
-
     private ST subjectTemplate;
     private ST textTemplate;
 
-    private boolean important;
-
     /**
      * Creates a template.
-     * 
+     *
      * @param subjectTemplate
      *            the template for subject.
      * @param textTemplate
      *            the template for text.
-     * @param emailForFeedback
-     *            the email for feedback.
      * @param important
      *            the flag, which shows that mail is important.
      */
-    public StringTemplateMailMessage(ST subjectTemplate, ST textTemplate,
+    public StringTemplateMailMessageTemplate(ST subjectTemplate, ST textTemplate,
             boolean important) {
+        super(subjectTemplate.getName(), textTemplate.getName(), important);
         this.subjectTemplate = subjectTemplate;
         this.textTemplate = textTemplate;
-
-        this.important = important;
-    }
-
-    /**
-     * Composes a message about shared book.
-     */
-    @Override
-    public SimpleMailMessage compose(SharedBook book, User user) {
-        SimpleMailMessage message = new SimpleMailMessage();
-
-        message.setTo(user.getMail());
-
-        User manager = book.getManagedBy();
-        if (important) {
-            message.setCc(manager.getMail());
-        }
-
-        String subject = renderSubject();
-        message.setSubject(subject);
-
-        String text = renderText(book.getDetails(), user, manager);
-        message.setText(text);
-
-        return message;
     }
 
     private String renderSubject() {
@@ -80,5 +49,15 @@ public class StringTemplateMailMessage implements MailMessageTemplateRepository.
         textTemplate.add(MANAGER_ATTR, manager);
 
         return textTemplate.render();
+    }
+
+    @Override
+    protected String renderSubject(String templateName) {
+        return renderSubject();
+    }
+
+    @Override
+    protected String renderText(String templateName, BookDetails book, User user, User manager) {
+        return renderText(book, user, manager);
     }
 }
