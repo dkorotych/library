@@ -20,8 +20,6 @@ public class StringTemplateMailMessage implements MailMessageTemplateRepository.
     private ST subjectTemplate;
     private ST textTemplate;
 
-    private String emailForFeedback;
-
     private boolean important;
 
     /**
@@ -51,7 +49,6 @@ public class StringTemplateMailMessage implements MailMessageTemplateRepository.
     public SimpleMailMessage compose(SharedBook book, User user) {
         SimpleMailMessage message = new SimpleMailMessage();
 
-        message.setFrom(emailForFeedback);
         message.setTo(user.getMail());
 
         User manager = book.getManagedBy();
@@ -84,10 +81,4 @@ public class StringTemplateMailMessage implements MailMessageTemplateRepository.
 
         return textTemplate.render();
     }
-
-    @Override
-    public void setEmailForFeedback(String emailForFeedback) {
-        this.emailForFeedback = emailForFeedback;
-    }
-
 }

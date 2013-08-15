@@ -37,8 +37,6 @@ public interface MailMessageTemplateRepository<Type extends MailMessageTemplateR
 
     public interface MailMessageTemplate {
 
-        void setEmailForFeedback(String emailForFeedback);
-
         SimpleMailMessage compose(SharedBook book, User user);
     }
 }

@@ -9,6 +9,7 @@ import java.util.Collection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.scheduling.annotation.Async;
@@ -25,6 +26,9 @@ public class NotifyUsersService {
 
     @Autowired
     protected MailSender mailSender;
+
+    @Value("#{mailProperties['mail.feedback']}")
+    private String emailForFeedback;
 
     @Autowired
     private MailMessageTemplateRepository templateRepository;
@@ -97,6 +101,7 @@ public class NotifyUsersService {
     private void notify(MailMessageTemplateRepository.MailMessageTemplate template, SharedBook book, User user) {
         try {
             SimpleMailMessage message = template.compose(book, user);
+            message.setFrom(emailForFeedback);
             mailSender.send(message);
         } catch (Exception exception) {
             LOGGER.warn("Can not send email for book {}, because: '{}'.",

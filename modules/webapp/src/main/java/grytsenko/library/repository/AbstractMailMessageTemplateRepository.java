@@ -23,7 +23,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.PostConstruct;
 import org.apache.commons.lang.Validate;
-import org.springframework.beans.factory.annotation.Value;
 
 /**
  *
@@ -32,8 +31,6 @@ import org.springframework.beans.factory.annotation.Value;
 public abstract class AbstractMailMessageTemplateRepository<Type extends MailMessageTemplateRepository.MailMessageTemplate> implements MailMessageTemplateRepository<Type> {
 
     private LoadingCache<String, Type> repository;
-    @Value("#{mailProperties['mail.feedback']}")
-    private String emailForFeedback;
     private final Function<String, Type> templateCreationFunction;
 
     public AbstractMailMessageTemplateRepository(Function<String, Type> templateCreationFunction) {
@@ -76,9 +73,7 @@ public abstract class AbstractMailMessageTemplateRepository<Type extends MailMes
 
     protected Type get(String name) {
         try {
-            Type returnValue = repository.get(name);
-            returnValue.setEmailForFeedback(emailForFeedback);
-            return returnValue;
+            return repository.get(name);
         } catch (ExecutionException exception) {
             throw new RuntimeException(exception);
         }
