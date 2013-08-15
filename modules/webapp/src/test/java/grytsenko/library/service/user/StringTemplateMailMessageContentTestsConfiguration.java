@@ -15,34 +15,21 @@
  */
 package grytsenko.library.service.user;
 
-import java.io.IOException;
-import java.util.Properties;
-import org.mockito.Mockito;
+import grytsenko.library.repository.MailMessageTemplateRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.mail.MailSender;
+import org.springframework.context.annotation.Import;
 
 /**
  *
  * @author Dmitry Korotych &lt;dkorotych at gmail dot com&gt;
  */
 @Configuration
-public class MailMessagesContentTestsConfiguration {
+@Import(MailMessagesContentTestsConfiguration.class)
+public class StringTemplateMailMessageContentTestsConfiguration {
 
     @Bean
-    public MailSender mailSender() {
-        return Mockito.mock(MailSender.class);
-    }
-
-    @Bean
-    public Properties mailProperties() throws IOException {
-        Properties properties = new Properties();
-        properties.load(getClass().getResourceAsStream("/mail.properties"));
-        return properties;
-    }
-
-    @Bean
-    public NotifyUsersService notifyUsersService() {
-        return new NotifyUsersService();
+    public MailMessageTemplateRepository mailMessageTemplateRepository() {
+        return new StringTemplateMailMessageRepository();
     }
 }
