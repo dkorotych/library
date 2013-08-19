@@ -58,7 +58,6 @@
 
         <!-- Mail -->
         <javax.mail.version>1.4.7</javax.mail.version>
-        <stringtemplate.version>4.0.2</stringtemplate.version>
 
         <!-- Data -->
         <hibernate.version>4.2.1.Final</hibernate.version>
@@ -191,11 +190,6 @@
             <groupId>javax.mail</groupId>
             <artifactId>mail</artifactId>
             <version>${javax.mail.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.antlr</groupId>
-            <artifactId>stringtemplate</artifactId>
-            <version>${stringtemplate.version}</version>
         </dependency>
 
         <!-- Data -->
