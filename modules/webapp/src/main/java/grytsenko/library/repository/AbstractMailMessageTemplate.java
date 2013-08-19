@@ -35,7 +35,6 @@ public abstract class AbstractMailMessageTemplate implements MailMessageTemplate
      *
      * @param subjectTemplate the template for subject.
      * @param textTemplate the template for text.
-     * @param emailForFeedback the email for feedback.
      * @param important the flag, which shows that mail is important.
      */
     public AbstractMailMessageTemplate(String subjectTemplate, String textTemplate, boolean important) {

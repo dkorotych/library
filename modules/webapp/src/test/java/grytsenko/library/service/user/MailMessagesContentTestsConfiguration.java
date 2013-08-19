@@ -18,8 +18,10 @@ package grytsenko.library.service.user;
 import java.io.IOException;
 import java.util.Properties;
 import org.mockito.Mockito;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.mail.MailSender;
 
 /**
@@ -32,6 +34,13 @@ public class MailMessagesContentTestsConfiguration {
     @Bean
     public MailSender mailSender() {
         return Mockito.mock(MailSender.class);
+    }
+
+    @Bean
+    public MessageSource messageSource() {
+        ReloadableResourceBundleMessageSource source = new ReloadableResourceBundleMessageSource();
+        source.setBasename("i18n/messages");
+        return source;
     }
 
     @Bean

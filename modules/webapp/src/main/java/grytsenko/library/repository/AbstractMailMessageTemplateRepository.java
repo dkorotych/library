@@ -42,7 +42,7 @@ public abstract class AbstractMailMessageTemplateRepository<Type extends MailMes
     public void prepareTemplates() {
         repository = CacheBuilder.newBuilder()
                 .maximumSize(5)
-                .expireAfterWrite(10, TimeUnit.MINUTES)
+                .expireAfterWrite(5, TimeUnit.MINUTES)
                 .build(CacheLoader.from(templateCreationFunction));
     }
 

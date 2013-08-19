@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml11-thymeleaf-spring3-3.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head th:include="book/common.xhtml :: head"/>
+    <body>
+        <div th:substituteby="book/common.xhtml :: header">Mail Header</div>
+        <p th:text="#{mail.book.__${eventType}__.text}"/>
+        <div th:substituteby="book/common.xhtml :: bookDetails">Information about book</div>
+        <div th:substituteby="book/common.xhtml :: footer">Mail Footer</div>
+    </body>
+</html>
